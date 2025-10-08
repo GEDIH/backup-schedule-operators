@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Backup Operators Schedule</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+/* === LOGO STYLES === */
+.logo-container {
+    text-align: center; /* Center the image */
+    margin-bottom: 10px;
+}
+.logo-container img {
+    max-width: 150px; /* Adjust the size of the logo */
+    height: auto;
+    border-radius: 5px;
+}
+/* === End Logo Styles === */
+
+/* === NEXT SHIFTS SLIDER STYLES (DIMLIGHTED) === */
+#nextShiftsWrapper {
+    margin: 0 auto 20px auto;
+    max-width: 1000px;
+}
+#nextShiftsContainer {
+    display: flex;
+    overflow-x: auto; /* Enables horizontal sliding/scrolling */
+    gap: 10px;
+    padding: 10px 0;
+    white-space: nowrap; /* Prevents wrapping */
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch; /* Improves mobile scrolling */
+    border: 1px solid #c9c9c9;
+    border-radius: 6px;
+    background-color: #f0f0f0; /* Soft, subtle background color */
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); /* Subtle inner shadow for depth */
+}
+.shift-card {
+    flex: 0 0 200px; /* Card size: fixed width, no growing/shrinkinng */
+    padding: 10px 15px;
+    background-color: #E7E8EA; /* Dimmer card background */
+    border-radius: 4px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.05); /* Soft, dim shadow */
+    border-left: 5px solid #00A8E8; /* Blue accent remains */
+    transition: transform 0.2s;
+}
+.shift-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* Slightly brighter on hover */
+}
+.shift-card-header {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: #444; /* Soft dark text */
+    margin-bottom: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.shift-card p {
+    margin: 2px 0;
+    font-size: 0.9em;
+    color: #555; /* Slightly muted date text */
+}
+.shift-card .date-range {
+    font-weight: bold;
+    color: #4D8BCA;
+}
+/* === End Next Shifts Slider Styles === */
+
+
+/* === Color Palette === */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #ABB8C3;
+}
+h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Top Section */
+.top-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+.top-section label {
+    font-weight: bold;
+}
+.top-section input[type="date"], .top-section select {
+    padding: 6px 10px;
+    font-size: 14px;
+    border: 1px solid #999;
+    border-radius: 4px;
+}
+.top-section button {
+    padding: 8px 14px;
+    font-size: 14px;
+    background-color: #94C83D;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.top-section button:hover {
+    background-color: #7DAE2F;
+}
+
+/* Authentication */
+#authSection {
+    text-align: center;
+    margin-bottom: 20px;
+}
+#authSection input, #authSection button {
+    padding: 6px 10px;
+    font-size: 14px;
+    margin: 5px;
+    border-radius: 4px;
+    border: none;
+}
+#authSection button {
+    background-color: #4D8BCA; /* Blue for Login */
+    color: white;
+    cursor: pointer;
+}
+#authSection button:hover {
+    background-color: #386B99;
+}
+
+/* Controls */
+.controls {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.controls h3 {
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+.controls input, .controls button {
+    padding: 6px 10px;
+    font-size: 15px;
+    margin-right: 10px;
+    border-radius: 4px;
+    border: none;
+}
+.controls button {
+    background-color: #94C83D;
+    color: white;
+    cursor: pointer;
+}
+.controls button:hover {
+    background-color: #7DAE2F;
+}
+
+/* Shift Calculator */
+#shiftCalculator {
+    margin: 20px auto;
+    padding: 15px;
+    background-color: #e6f3ff;
+    border: 1px solid #a8d5ff;
+    border-radius: 5px;
+    max-width: 500px;
+    text-align: left;
+}
+#shiftCalculator label {
+    font-weight: bold;
+    display: block;
+    margin-top: 10px;
+}
+#shiftCalculator input[type="date"] {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+#shiftCalculator .result {
+    margin-top: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #007bff;
+}
+
+/* Table */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+}
+th, td {
+    border: 1px solid #999;
+    padding: 10px;
+    text-align: left;
+    font-size: 14px;
+    white-space: nowrap;
+}
+th {
+    background-color: #94C83D;
+    color: white;
+    text-align: center;
+}
+/* Ensure highlights override zebra striping */
+tr:not(.highlight-today):not(.highlight-next):nth-child(even) { background-color: #F0F0F0; }
+tr:not(.highlight-today):not(.highlight-next):nth-child(odd) { background-color: #E7E8EA; }
+tbody tr {
+    cursor: pointer; /* Indicate rows are clickable */
+}
+
+/* === Highlighting Styles === */
+.highlight-today {
+    background-color: #FFEA00 !important; /* Yellow */
+    font-weight: bold;
+}
+.highlight-next {
+    background-color: #C8FFC8 !important; /* Light Green */
+}
+
+
+/* Footer */
+.note {
+    text-align: center;
+    background-color: #94C83D;
+    color: white;
+    font-weight: bold;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+.footer {
+    text-align: center;
+    font-size: 13px;
+    color: #FFFFFF; /* Text color set to White for contrast */
+    background-color: #00A8E8; /* FOOTER BACKGROUND COLOR (Cyan Blue) */
+    font-style: italic;
+    margin-top: 20px;
+    padding: 10px 0;
+    border-radius: 5px;
+}
+
+/* Action Buttons (Visible only to Full Admin) */
+.rename-btn, .reset-btn, .delete-btn {
+    padding: 4px 8px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    margin: 2px;
+    font-size: 13px;
+}
+.rename-btn { background-color: #888A8C; color: #fff; }
+.rename-btn:hover { background-color: #6E7072; }
+.reset-btn { background-color: #17a2b8; color: #fff; }
+.reset-btn:hover { background-color: #117a8b; }
+.delete-btn { background-color: #cc0000; color: #fff; }
+.delete-btn:hover { background-color: #ff4444; }
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 10;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+}
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 25px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 450px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+.close:hover, .close:focus {
+    color: #000;
+    cursor: pointer;
+}
+.modal-content label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+.modal-content input {
+    width: 95%;
+    padding: 8px;
+    margin: 5px 0 15px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.modal-content button {
+    padding: 8px 15px;
+    margin-right: 10px;
+}
+
+/* Responsive */
+@media(max-width:600px){
+    th, td { font-size: 13px; padding: 8px; }
+    .top-section { flex-direction: column; align-items: stretch; }
+    .controls, #authSection {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .controls input, .controls button, #authSection input, #authSection button {
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+    }
+    .modal-content {
+        margin: 5% auto;
+        width: 90%;
+    }
+    .shift-card {
+        flex: 0 0 160px; /* Smaller cards for mobile */
+        padding: 8px 12px;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="logo-container">
+    <img src="OROMIA BANK.png" alt="OROMIA BANK">
+</div>
+
+<h2>Backup Operators Schedule</h2>
+
+<div id="nextShiftsWrapper">
+    <div id="nextShiftsContainer">
+        </div>
+</div>
+<div class="top-section">
+    <label for="startDate">Schedule Start Date:</label>
+    <input type="date" id="startDate" onchange="generateScheduleByDate(this.value)">
+    <button onclick="downloadPDF()">Download PDF</button>
+
+    <label for="operatorFilter" id="filterLabel" style="display:none;">View Schedule:</label>
+    <select id="operatorFilter" onchange="renderTable()" style="display:none;">
+        <option value="">-- All Operators --</option>
+    </select>
+    
+    <button onclick="openChangePasswordModal()" id="changePwdBtn" style="display:none;">Change Password</button>
+
+    <button onclick="scrollToAdd()" id="adminActionsBtn">Admin Actions</button>
+</div>
+
+<div id="authSection">
+    <input type="text" id="loginUsername" placeholder="Enter username (e.g., admin, view, or Your Name)">
+    <input type="password" id="adminPassword" placeholder="Enter password">
+    <button onclick="authenticate()">Login</button>
+</div>
+
+<div class="controls" id="adminControls" style="display:none;">
+    <h3>Full Admin Controls (Add/Reset/Generate)</h3>
+    <input type="text" id="operatorName" placeholder="Operator Name">
+    <input type="text" id="mobileNumber" placeholder="Mobile Number">
+    <button onclick="addOperator()">Add Operator</button>
+    <button onclick="generateScheduleButton()">Generate Full Schedule</button>
+    <button onclick="resetAll()">Clear ALL Data</button>
+
+    <div id="shiftCalculator">
+        <h3>Shift Range Calculator (10 Working Days)</h3>
+        <label for="calcStartDate">Enter Start Date:</label>
+        <input type="date" id="calcStartDate" onchange="calculateShiftRange()">
+        <div class="result">Shift End Date: <span id="calcEndDate">--</span></div>
+        <div class="result">Total Working Days: <span id="calcWorkingDays">--</span></div>
+    </div>
+</div>
+
+<div class="table-container">
+    <table id="scheduleTable">
+        <thead>
+            <tr>
+                <th>S/N</th>
+                <th>Taken by</th>
+                <th>Checked by</th>
+                <th>Mobile number</th>
+                <th>Date Range</th>
+                <th id="actionsHeader">Actions</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<div class="note">BACKUP OPERATORS SCHEDULE</div>
+
+<div class="footer">© 2025 Backup Operators Schedule | All rights reserved | Developed by HAMBISA ADAMU.</div>
+
+<div id="renameModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeRenameModal()">&times;</span>
+        <h3>Rename Operator</h3>
+        <label for="newName">New Name:</label>
+        <input type="text" id="newName">
+        <button onclick="confirmRename()">Rename</button>
+        <button onclick="closeRenameModal()">Cancel</button>
+    </div>
+</div>
+
+<div id="detailModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeDetailModal()">&times;</span>
+        <h3>Schedule Details</h3>
+        <p><strong>Operator:</strong> <span id="detailOperatorName"></span></p>
+        <p><strong>Mobile:</strong> <span id="detailMobile"></span></p>
+        <p><strong>Shift Start:</strong> <span id="detailStart"></span></p>
+        <p><strong>Shift End:</strong> <span id="detailEnd"></span></p>
+        <p><strong>Working Days:</strong> <span id="detailWorkingDays"></span></p>
+    </div>
+</div>
+
+<div id="changePasswordModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeChangePasswordModal()">&times;</span>
+        <h3>Change Password</h3>
+        <label for="newOpPassword">New Password:</label>
+        <input type="password" id="newOpPassword" placeholder="Enter new password">
+        <label for="confirmOpPassword">Confirm Password:</label>
+        <input type="password" id="confirmOpPassword" placeholder="Confirm new password">
+        <button onclick="confirmPasswordChange()">Change Password</button>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+// --- HARDCODED OPERATOR LIST ---
+const INITIAL_OPERATORS_DATA = [
+    { name: "HAMBISA ADAMU", mobile: "0913456466" },
+    { name: "DAME TERFASSA", mobile: "0911117524" },
+    { name: "TSION GIRMA", mobile: "0946700418" },
+    { name: "ABRIHAM CHALA", mobile: "0913564114" },
+    { name: "BERISO SHIBIRU", mobile: "0902911411" }
+];
+// -----------------------------------------------------
+
+let operators = JSON.parse(localStorage.getItem('operators') || '[]');
+let operatorPasswords = JSON.parse(localStorage.getItem('operatorPasswords') || '{}');
+
+// Check if local storage is empty or operators are missing. If so, initialize with hardcoded data.
+if (operators.length === 0 || !operators.some(op => INITIAL_OPERATORS_DATA.some(initOp => initOp.name === op.name))) {
+    // Initialize operators with placeholder data
+    operators = INITIAL_OPERATORS_DATA.map(op => ({
+        ...op,
+        checkedBy: op.name,
+        start: new Date().toISOString().split('T')[0], // Placeholder
+        end: new Date().toISOString().split('T')[0] // Placeholder
+    }));
+    
+    // Initialize passwords for all new operators
+    INITIAL_OPERATORS_DATA.forEach(op => {
+        if (!operatorPasswords[op.name]) {
+            operatorPasswords[op.name] = 'op123';
+        }
+    });
+    localStorage.setItem('operators', JSON.stringify(operators));
+    localStorage.setItem('operatorPasswords', JSON.stringify(operatorPasswords));
+}
+
+
+let isAdmin = false; 
+let isRestrictedAdmin = false;
+let isOperator = false;
+let loggedInUser = null; 
+let renameIndex = null;
+
+// Helper to get a clean date for comparison (00:00:00)
+function getCleanDate(dateInput) {
+    const d = new Date(dateInput);
+    d.setHours(0, 0, 0, 0);
+    return d;
+}
+const today = getCleanDate(new Date());
+
+
+// --- Usernames and Passwords ---
+const FULL_ADMIN_USER = 'admin';
+const FULL_ADMIN_PWD = 'Admin@1234!@#$';
+
+const RESTRICTED_ADMIN_PWD = 'view123'; // Fixed password for Restricted Admin Access
+const RESTRICTED_ADMIN_USER = 'view'; // <-- DEFINED RESTRICTED USERNAME
+
+const SHIFT_LENGTH = 10; // 10 working days
+
+
+/* Helper: Format date with month name */
+function formatDate(date) {
+    const options = { day: '2-digit', month: 'short', year: 'numeric' };
+    const d = new Date(date);
+    return isNaN(d) ? 'Invalid Date' : d.toLocaleDateString('en-US', options);
+}
+
+/* Helper: Calculate 10 working days (skip Sundays) - FIXED LOGIC */
+function calculateEndDate(startDate) {
+    let workingDays = 0;
+    let current = getCleanDate(startDate);
+
+    // The starting date is the first working day
+    if (current.getDay() !== 0) { // If it's not Sunday (0)
+        workingDays = 1;
+    }
+    
+    // Advance one day to start the counting loop
+    current.setDate(current.getDate() + 1);
+
+    while (workingDays < SHIFT_LENGTH) {
+        if (current.getDay() !== 0) { // 0 = Sunday
+            workingDays++;
+        }
+        // Advance the date for the next iteration if the count hasn't reached the limit yet
+        if (workingDays < SHIFT_LENGTH) { 
+            current.setDate(current.getDate() + 1);
+        }
+    }
+    
+    // The loop ensures the end date is the 10th working day.
+    return current;
+}
+
+/* Helper: Count working days in a date range (excluding Sundays) - FIXED LOGIC */
+function countWorkingDays(startDate, endDate) {
+    let count = 0;
+    let current = getCleanDate(startDate);
+    const end = getCleanDate(endDate);
+    
+    // Iterate through each day from start to end (inclusive)
+    while (current.getTime() <= end.getTime()) {
+        if (current.getDay() !== 0) { // 0 = Sunday
+            count++;
+        }
+        current.setDate(current.getDate() + 1);
+    }
+    return count;
+}
+
+
+/* --- Manual Shift Calculator (For checking one shift range) --- */
+function calculateShiftRange() {
+    const startDateInput = document.getElementById('calcStartDate').value;
+    const endDateSpan = document.getElementById('calcEndDate');
+    const workingDaysSpan = document.getElementById('calcWorkingDays');
+
+    endDateSpan.textContent = '--';
+    workingDaysSpan.textContent = '--';
+
+    if (!startDateInput) return;
+
+    const startDate = getCleanDate(startDateInput);
+    if (isNaN(startDate)) return;
+
+    const endDate = calculateEndDate(startDate);
+    const workingDays = countWorkingDays(startDate, endDate);
+
+    endDateSpan.textContent = formatDate(endDate);
+    workingDaysSpan.textContent = `${workingDays} working days (Should be ${SHIFT_LENGTH})`;
+}
+/* ------------------------------------------- */
+
+
+/**
+ * Core function to generate the schedule based on a specific start date.
+ * @param {string | Date} officialStartDate - The date string or object to start the schedule from.
+ */
+function generateFullSchedule(officialStartDate) {
+    if (INITIAL_OPERATORS_DATA.length === 0) return;
+
+    let startFromDate = getCleanDate(officialStartDate || today);
+
+    // 1. Identify unique operator details (names, mobiles) from the INITIAL_OPERATORS_DATA
+    const uniqueOperators = INITIAL_OPERATORS_DATA.map(op => ({ 
+        name: op.name, 
+        mobile: op.mobile 
+    }));
+
+    // 2. Define the target end date (one year from the chosen start date)
+    const targetEnd = getCleanDate(startFromDate);
+    targetEnd.setFullYear(targetEnd.getFullYear() + 1);
+    targetEnd.setDate(targetEnd.getDate() - 1); // Set to one day before the next year starts for proper boundary.
+
+    // 3. Clear existing schedule and rebuild from the ground up 
+    operators = [];
+    
+    let opIndex = 0;
+    let nextShiftStart = new Date(startFromDate);
+    nextShiftStart.setHours(0, 0, 0, 0);
+    
+
+    // 4. Generate shifts until the target end date (1 year)
+    while (nextShiftStart.getTime() <= targetEnd.getTime() && operators.length < 500) { // Safety break at 500 shifts
+        const opDetails = uniqueOperators[opIndex];
+        
+        const shiftStart = new Date(nextShiftStart);
+        const shiftEnd = calculateEndDate(shiftStart);
+        shiftEnd.setHours(0, 0, 0, 0); // Ensure end date is clean
+        
+        // Only include the shift if its start is within the year range
+        if (shiftStart.getTime() <= targetEnd.getTime()) {
+             const newShift = {
+                 name: opDetails.name,
+                 checkedBy: opDetails.name,
+                 mobile: opDetails.mobile,
+                 start: shiftStart.toISOString().split('T')[0],
+                 end: shiftEnd.toISOString().split('T')[0]
+             };
+             operators.push(newShift);
+        } else {
+            break; // Stop if the next shift starts outside the target range
+        }
+
+
+        // Prepare for the next shift: Start the day after the current shift ends.
+        nextShiftStart = new Date(shiftEnd);
+        nextShiftStart.setDate(nextShiftStart.getDate() + 1);
+        nextShiftStart.setHours(0, 0, 0, 0);
+        
+        opIndex = (opIndex + 1) % uniqueOperators.length;
+    }
+    
+    localStorage.setItem('operators', JSON.stringify(operators));
+}
+
+/**
+ * Triggered by the main date picker change.
+ * This function now allows ALL authenticated users to change the view date.
+ */
+function generateScheduleByDate(dateString) {
+    if (!dateString) return;
+    
+    // *** SECURITY CHECK REMOVED HERE to allow all users to change the view date ***
+    
+    const inputDate = getCleanDate(dateString);
+    
+    // Only re-generate the schedule if a date other than the currently generated start date is chosen.
+    const currentScheduleStart = operators.length > 0 ? getCleanDate(operators[0].start) : null;
+    
+    // If the input date differs from the current schedule's start date, regenerate the schedule 
+    // for viewing purposes based on the new start date. 
+    if (!currentScheduleStart || currentScheduleStart.getTime() !== inputDate.getTime()) {
+          generateFullSchedule(dateString);
+    }
+    
+    renderTable();
+    renderNextShifts(); // Update the sliding bar
+}
+
+
+function generateScheduleButton() {
+    if (!isAdmin) return alert('Full Admin privileges required to generate the schedule.');
+    const startDate = document.getElementById('startDate').value;
+    if (!startDate) return alert('Please set the Schedule Start Date at the top.');
+    
+    generateFullSchedule(startDate);
+    renderTable();
+    renderNextShifts(); // Update the sliding bar
+    alert("One-year schedule successfully generated!");
+}
+
+/* Populate Filter Dropdown */
+function populateFilter() {
+    const filter = document.getElementById('operatorFilter');
+    const uniqueNames = [...new Set(INITIAL_OPERATORS_DATA.map(op => op.name).filter(n => n))];  
+    const currentSelection = filter.value;
+    filter.innerHTML = '<option value="">-- All Operators --</option>';
+
+    uniqueNames.forEach(name => {
+        const option = document.createElement('option');
+        option.value = name;
+        option.textContent = name;
+        if (name === currentSelection) {
+            option.selected = true;
+        }
+        filter.appendChild(option);
+    });
+}
+
+/* Render Table */
+function renderTable() {
+    const tbody = document.querySelector('#scheduleTable tbody');
+    tbody.innerHTML = '';
+    
+    // Get the date from the input field for comparison
+    const scheduleStartDateString = document.getElementById('startDate').value || today.toISOString().split('T')[0];
+    const inputDate = getCleanDate(scheduleStartDateString);
+    const isInputDateToday = inputDate.getTime() === today.getTime();
+
+    // 1. Ensure the schedule is generated (starting from the input date)
+    const currentScheduleStart = operators.length > 0 ? getCleanDate(operators[0].start) : null;
+    if (!currentScheduleStart || currentScheduleStart.getTime() !== inputDate.getTime()) {
+        generateFullSchedule(scheduleStartDateString);
+    }
+
+    // 2. Determine base list (Full schedule, Operator's shifts, or Filtered operator's shifts)
+    let baseOperators = operators;
+    const selectedOperator = document.getElementById('operatorFilter').value;
+
+    if (isOperator) {
+        baseOperators = operators.filter(op => op.name === loggedInUser);
+    } else if (selectedOperator) {
+        baseOperators = operators.filter(op => op.name === selectedOperator);  
+    }
+    
+    // 3. Apply view filtering based on input date (if input date is today)
+    let filteredOperators = baseOperators;
+    let activeShiftIndexInFilteredList = -1;
+    let nextShiftIndexInFilteredList = -1;
+    
+    if (isInputDateToday && !isOperator && !selectedOperator) {  
+        // Find the currently active shift (today) in the FULL list
+        const activeShiftGlobalIndex = operators.findIndex(op => {
+            const opStart = getCleanDate(op.start);
+            const opEnd = getCleanDate(op.end);
+            return (today.getTime() >= opStart.getTime() && today.getTime() <= opEnd.getTime());
+        });
+        
+        // If an active shift is found, slice the next 6 shifts (current + 5 next)
+        if (activeShiftGlobalIndex !== -1) {
+            filteredOperators = operators.slice(activeShiftGlobalIndex, activeShiftGlobalIndex + 6);
+            activeShiftIndexInFilteredList = 0; // The active shift is now the first one in this small list
+            nextShiftIndexInFilteredList = 1;
+        } else {
+            // If no active shift, find the nearest upcoming one and show 6 from there
+            const upcomingShiftGlobalIndex = operators.findIndex(op => getCleanDate(op.start).getTime() > today.getTime());
+            if (upcomingShiftGlobalIndex !== -1) {
+                filteredOperators = operators.slice(upcomingShiftGlobalIndex, upcomingShiftGlobalIndex + 6);
+                nextShiftIndexInFilteredList = 0; // The upcoming shift is now the first one in this small list
+            }
+        }
+        
+    } else {
+        // If input date is NOT today, or if a user/operator filter is active, show the full list or filtered list
+        filteredOperators = baseOperators;
+        
+        // Calculate the active shift and next shift in the *filtered* view for highlighting
+        activeShiftIndexInFilteredList = filteredOperators.findIndex(op => {
+            const opStart = getCleanDate(op.start);
+            const opEnd = getCleanDate(op.end);
+            return (today.getTime() >= opStart.getTime() && today.getTime() <= opEnd.getTime());
+        });
+        
+        if (activeShiftIndexInFilteredList !== -1) {
+              nextShiftIndexInFilteredList = activeShiftIndexInFilteredList + 1;
+              if (nextShiftIndexInFilteredList >= filteredOperators.length) nextShiftIndexInFilteredList = -1;
+        } else {
+              nextShiftIndexInFilteredList = filteredOperators.findIndex(op => getCleanDate(op.start).getTime() > today.getTime());
+        }
+    }
+    
+    // Control visibility of the Actions column header
+    const actionsHeader = document.getElementById('actionsHeader');
+    actionsHeader.style.display = isAdmin ? 'table-cell' : 'none';
+
+    // Calculate the number of unique operators for S/N resetting
+    const uniqueOperatorCount = INITIAL_OPERATORS_DATA.length;
+
+    // 4. Render the table with highlights
+    filteredOperators.forEach((op, index) => {
+        const tr = document.createElement('tr');
+        tr.onclick = () => showDetailModal(op);
+
+        let highlightClass = '';
+        
+        if (index === activeShiftIndexInFilteredList) {
+            highlightClass = 'highlight-today';
+        } else if (index === nextShiftIndexInFilteredList) {
+            highlightClass = 'highlight-next';
+        }
+
+        tr.className = highlightClass;
+        
+        // --- START: S/N Reset Logic ---
+        let serialNumber;
+        if (uniqueOperatorCount > 0) {
+            // Find the index of the operator name in the INITIAL_OPERATORS_DATA list
+            const initialOperatorIndex = INITIAL_OPERATORS_DATA.findIndex(initialOp => initialOp.name === op.name);
+            
+            // This is the S/N within the current cycle (1, 2, 3, 4, 5, 1, 2, ...)
+            serialNumber = initialOperatorIndex !== -1 ? initialOperatorIndex + 1 : '-'; 
+            
+            // If a filter is applied (operator view or Today's view), S/N should be sequential
+            if (isOperator || selectedOperator || isInputDateToday) {
+                serialNumber = index + 1;
+            }
+        } else {
+            serialNumber = index + 1;
+        }
+        // --- END: S/N Reset Logic ---
+        
+        const globalIndex = operators.findIndex(o => o.start === op.start && o.name === op.name); 
+        const actionsCell = isAdmin ? 
+            `<td>
+                <button class="rename-btn" onclick="event.stopPropagation(); openRenameModal(${globalIndex})">Rename</button>
+                <button class="reset-btn" onclick="event.stopPropagation(); resetOperator(${globalIndex})">Reset</button>
+                <button class="delete-btn" onclick="event.stopPropagation(); deleteOperator(${globalIndex})">Delete</button>
+            </td>` : 
+            `<td style="display:none;">—</td>`;
+            
+        tr.innerHTML = `
+            <td>${serialNumber}</td>
+            <td>${op.name}</td>
+            <td>${op.checkedBy}</td>
+            <td>${op.mobile}</td>
+            <td>${formatDate(op.start)} - ${formatDate(op.end)}</td>
+            ${actionsCell}
+        `;
+        tbody.appendChild(tr);
+    });
+    
+    localStorage.setItem('operators', JSON.stringify(operators));
+    populateFilter();
+    renderNextShifts(); // Call the new function to update the slider
+}
+
+/**
+ * Renders the next 5 upcoming shifts into the sliding bar.
+ */
+function renderNextShifts() {
+    const container = document.getElementById('nextShiftsContainer');
+    container.innerHTML = '';
+    
+    // 1. Find the current shift index in the full list
+    let currentShiftIndex = operators.findIndex(op => {
+        const opStart = getCleanDate(op.start);
+        const opEnd = getCleanDate(op.end);
+        return (today.getTime() >= opStart.getTime() && today.getTime() <= opEnd.getTime());
+    });
+    
+    // If no active shift is found, find the nearest upcoming one
+    if (currentShiftIndex === -1) {
+        currentShiftIndex = operators.findIndex(op => getCleanDate(op.start).getTime() > today.getTime());
+        // If still -1, schedule is not started or empty, so we start from the beginning if it's the first shift
+        if (currentShiftIndex === -1) currentShiftIndex = 0;
+    } else {
+        // Start from the NEXT shift after the current one
+        currentShiftIndex += 1;
+    }
+
+    // 2. Determine the range of shifts to display (next 5)
+    const shiftsToShow = operators.slice(currentShiftIndex, currentShiftIndex + 5);
+
+    if (shiftsToShow.length === 0) {
+        container.innerHTML = '<p style="padding: 0 15px; color:#999;">No upcoming shifts found in the current schedule.</p>';
+        return;
+    }
+
+    // 3. Create and append the cards
+    shiftsToShow.forEach(op => {
+        const card = document.createElement('div');
+        card.className = 'shift-card';
+        card.innerHTML = `
+            <div class="shift-card-header">${op.name}</div>
+            <p>Shift Start: <span class="date-range">${formatDate(op.start)}</span></p>
+            <p>Shift End: <span class="date-range">${formatDate(op.end)}</span></p>
+        `;
+        container.appendChild(card);
+    });
+}
+
+
+/* Add Operator (Full Admin Only) */
+function addOperator() {
+    if (!isAdmin) return alert('Full Admin privileges required for editing.');
+    const name = document.getElementById('operatorName').value.trim();
+    const mobile = document.getElementById('mobileNumber').value.trim();
+    const startDate = document.getElementById('startDate').value;
+
+    if (!name || !mobile) return alert('Please fill in both Operator Name and Mobile Number.');
+    if (!startDate) return alert('Please set the Schedule Start Date at the top.');
+
+    const exists = INITIAL_OPERATORS_DATA.some(op => op.name.toLowerCase() === name.toLowerCase());
+    if (exists) return alert('This operator name already exists.');
+
+    INITIAL_OPERATORS_DATA.push({ name, mobile });
+    
+    if (!operatorPasswords[name]) {
+        operatorPasswords[name] = 'op123';
+        localStorage.setItem('operatorPasswords', JSON.stringify(operatorPasswords));
+    }
+    
+    document.getElementById('operatorName').value = '';
+    document.getElementById('mobileNumber').value = '';
+    
+    generateFullSchedule(startDate);
+    renderTable();
+    renderNextShifts(); // Update the sliding bar
+    alert(`Operator ${name} added. Schedule re-generated for 1 year.`);
+}
+
+/* Reset Operator, Delete Operator, Reset All (Full Admin Only) */
+function resetOperator(index) {
+    if (!isAdmin) return alert('Full Admin privileges required for editing.');
+    const startDate = document.getElementById('startDate').value;
+    if (!startDate) return alert('Please set the Schedule Start Date at the top.');
+    
+    if (!confirm(`Reset the schedule to start from ${formatDate(startDate)}? This will restart the entire rotation.`)) return;
+    
+    generateFullSchedule(startDate);
+    renderTable();
+    renderNextShifts(); // Update the sliding bar
+}
+
+function deleteOperator(index) {
+    if (!isAdmin) return alert('Full Admin privileges required for editing.');
+    const startDate = document.getElementById('startDate').value;
+    if (!startDate) return alert('Please set the Schedule Start Date at the top.');
+    
+    const nameToDelete = operators[index].name;
+    if (!confirm(`Delete operator ${nameToDelete} and their schedule? This will reset the entire future rotation.`)) return;
+
+    const initialIndex = INITIAL_OPERATORS_DATA.findIndex(op => op.name === nameToDelete);
+    if (initialIndex !== -1) {
+        INITIAL_OPERATORS_DATA.splice(initialIndex, 1);
+    }
+    
+    delete operatorPasswords[nameToDelete];
+    localStorage.setItem('operatorPasswords', JSON.stringify(operatorPasswords));
+    
+    generateFullSchedule(startDate);
+    renderTable();
+    renderNextShifts(); // Update the sliding bar
+}
+
+function resetAll() {
+    if (!isAdmin) return alert('Full Admin privileges required for editing.');
+    if (!confirm('This will permanently clear ALL custom data. Operators will revert to the default list. Continue?')) return;
+    
+    localStorage.removeItem('operators');
+    localStorage.removeItem('operatorPasswords');
+    
+    window.location.reload(); 
+}
+
+// --- MODAL FUNCTIONS ---
+function openRenameModal(index) {
+    if (!isAdmin) return alert('Full Admin privileges required.');
+    renameIndex = index;
+    document.getElementById('newName').value = operators[index].name;
+    document.getElementById('renameModal').style.display = 'block';
+}
+
+function closeRenameModal() {
+    renameIndex = null;
+    document.getElementById('renameModal').style.display = 'none';
+}
+
+function confirmRename() {
+    if (renameIndex === null) return;
+    const newName = document.getElementById('newName').value.trim();
+    const startDate = document.getElementById('startDate').value;
+
+    if (!newName) return alert('New name cannot be empty.');
+    if (!startDate) return alert('Please set the Schedule Start Date at the top.');
+
+    // 1. Update the INITIAL_OPERATORS_DATA list
+    const oldName = operators[renameIndex].name;
+    const initialOp = INITIAL_OPERATORS_DATA.find(op => op.name === oldName);
+    if (initialOp) {
+        initialOp.name = newName;
+    }
+    
+    // 2. Update passwords (reassign the password to the new name and delete the old key)
+    if (operatorPasswords[oldName]) {
+        operatorPasswords[newName] = operatorPasswords[oldName];
+        delete operatorPasswords[oldName];
+        localStorage.setItem('operatorPasswords', JSON.stringify(operatorPasswords));
+    }
+
+    // 3. Re-generate the entire schedule from the start date to reflect the name change in all future shifts
+    generateFullSchedule(startDate);
+    renderTable();
+    closeRenameModal();
+    alert(`Operator ${oldName} successfully renamed to ${newName}. Schedule re-generated.`);
+}
+
+function showDetailModal(op) {
+    document.getElementById('detailOperatorName').textContent = op.name;
+    document.getElementById('detailMobile').textContent = op.mobile;
+    document.getElementById('detailStart').textContent = formatDate(op.start);
+    document.getElementById('detailEnd').textContent = formatDate(op.end);
+    document.getElementById('detailWorkingDays').textContent = countWorkingDays(op.start, op.end);
+    document.getElementById('detailModal').style.display = 'block';
+}
+
+function closeDetailModal() {
+    document.getElementById('detailModal').style.display = 'none';
+}
+
+function openChangePasswordModal() {
+    if (!isOperator) return alert("Only operators can change their passwords via this interface.");
+    document.getElementById('newOpPassword').value = '';
+    document.getElementById('confirmOpPassword').value = '';
+    document.getElementById('changePasswordModal').style.display = 'block';
+}
+
+function closeChangePasswordModal() {
+    document.getElementById('changePasswordModal').style.display = 'none';
+}
+
+function confirmPasswordChange() {
+    if (!isOperator) return;
+    
+    const newPwd = document.getElementById('newOpPassword').value;
+    const confirmPwd = document.getElementById('confirmOpPassword').value;
+
+    if (newPwd.length < 5) return alert("Password must be at least 5 characters long.");
+    if (newPwd !== confirmPwd) return alert("New password and confirmation do not match.");
+    
+    operatorPasswords[loggedInUser] = newPwd;
+    localStorage.setItem('operatorPasswords', JSON.stringify(operatorPasswords));
+    closeChangePasswordModal();
+    alert('Password successfully changed!');
+}
+// --- END MODAL FUNCTIONS ---
+
+function scrollToAdd() {
+    // Scroll to the relevant control section based on privilege
+    const targetId = isAdmin ? 'adminControls' : 'scheduleTable';
+    const targetElement = document.getElementById(targetId);
+    if (targetElement) {
+        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
+
+/* Auth */
+function authenticate() {
+    const usernameInput = document.getElementById('loginUsername').value.trim();
+    const pwd = document.getElementById('adminPassword').value;
+
+    const lowerUsernameInput = usernameInput.toLowerCase();
+
+    isAdmin = false;
+    isRestrictedAdmin = false;
+    isOperator = false;
+    loggedInUser = null;
+    let loginSuccessful = false;
+    
+    const scheduleStartDate = document.getElementById('startDate').value || today.toISOString().split('T')[0];
+
+    // --- FULL ADMIN LOGIN ---
+    if (lowerUsernameInput === FULL_ADMIN_USER.toLowerCase() && pwd === FULL_ADMIN_PWD) {
+        isAdmin = true;
+        loggedInUser = FULL_ADMIN_USER;
+        document.getElementById('adminActionsBtn').textContent = 'Admin Actions (Full)';
+        loginSuccessful = true;
+    }
+    
+    // --- RESTRICTED ADMIN LOGIN (Implementation) ---
+    if (!loginSuccessful && lowerUsernameInput === RESTRICTED_ADMIN_USER && pwd === RESTRICTED_ADMIN_PWD) {
+        isRestrictedAdmin = true;
+        loggedInUser = 'Restricted Admin';
+        document.getElementById('adminActionsBtn').textContent = 'Admin Actions (Restricted)';
+        loginSuccessful = true;
+    }
+
+    // --- OPERATOR LOGIN ---
+    const operatorNames = INITIAL_OPERATORS_DATA.map(op => op.name);
+    const matchingOperator = operatorNames.find(name => name.toLowerCase() === lowerUsernameInput);
+
+    if (!loginSuccessful && matchingOperator && operatorPasswords[matchingOperator] === pwd) {
+        isOperator = true;
+        loggedInUser = matchingOperator;
+        document.getElementById('adminActionsBtn').textContent = 'View My Shifts';
+        loginSuccessful = true;
+    }
+
+    // --- FINAL STEP (Common for all successful logins) ---
+    if (loginSuccessful) {
+        document.getElementById('authSection').style.display = 'none'; // Hide login form
+        // Show/Hide controls based on role
+        document.getElementById('adminControls').style.display = (isAdmin) ? 'block' : 'none';
+        document.getElementById('changePwdBtn').style.display = isOperator ? 'inline-block' : 'none';
+        document.getElementById('filterLabel').style.display = 'inline-block';
+        document.getElementById('operatorFilter').style.display = 'inline-block';
+        document.getElementById('startDate').value = scheduleStartDate; // Set the schedule start date
+        
+        // Restricted Admin and Operator can only *view*, Full Admin *views and controls*
+        if (isOperator) {
+            // Operators only see their own shifts by default
+            const filterSelect = document.getElementById('operatorFilter');
+            filterSelect.value = loggedInUser;
+            filterSelect.disabled = true; // Cannot change filter
+        } else {
+            // Admins (Full and Restricted) can change filter
+            document.getElementById('operatorFilter').disabled = false;
+        }
+        
+        // Must call render table to update the display based on new role
+        generateFullSchedule(scheduleStartDate); // Ensure schedule is generated from the start date
+        renderTable();
+        alert(`Login successful as ${loggedInUser}!`);
+    } else {
+        alert('Invalid username or password.');
+    }
+}
+
+
+// --- INITIALIZATION ---
+window.onload = function() {
+    // Set the initial start date to today's date if not already set
+    const todayISO = new Date().toISOString().split('T')[0];
+    const startDateInput = document.getElementById('startDate');
+    if (!startDateInput.value) {
+        startDateInput.value = todayISO;
+    }
+    
+    // Initial schedule generation and render
+    generateFullSchedule(startDateInput.value);
+    renderTable(); // This will also call renderNextShifts
+}
+</script>
+</body>
+</html>

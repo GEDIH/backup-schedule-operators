@@ -625,6 +625,8 @@ function generateFullSchedule(officialStartDate) {
         nextShiftStart.setHours(0, 0, 0, 0);
         
         // --- CORE ROTATION LOGIC ---
+        // This ensures that when the last operator (opIndex = N-1) finishes, 
+        // opIndex becomes (N-1 + 1) % N = 0 (the first operator).
         opIndex = (opIndex + 1) % uniqueOperators.length;
     }
     
@@ -723,8 +725,7 @@ function authenticate() {
         }
 
         renderTable();
-        // 🌟 MODIFIED WELCOME MESSAGE 🌟
-        alert("Welcome to Oromia Bank Backup Operators Schedule");
+        alert(`Welcome, ${loggedInUser}!`);
     } else {
         alert('Authentication failed. Check your username and password.');
         document.getElementById('adminPassword').value = '';
@@ -1029,7 +1030,7 @@ function openSwapModal(globalIndex) {
     // Populate the dropdown list
     operatorSelect.innerHTML = '';
     initialOperators.forEach(op => {
-        // Option to exclude the current operator from the swap list for clarity
+        // Option to include or exclude the current operator from the swap list, excluding for simplicity
         if (op.name !== shift.name) { 
              const option = document.createElement('option');
              option.value = op.name;

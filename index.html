@@ -5,7 +5,6 @@
 <title>Backup Operators Schedule</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-/* ... (CSS Styles remain the same) ... */
 /* === LOGO STYLES === */
 .logo-container {
     text-align: center;
@@ -67,6 +66,46 @@
     color: #4D8BCA;
 }
 /* === End Next Shifts Slider Styles === */
+
+/* === NOTIFICATION BANNER STYLES === */
+#notificationBanner {
+    display: none; /* Controlled by JS */
+    margin: 15px auto;
+    padding: 15px 20px;
+    background-color: #FFC107; /* Warning yellow */
+    color: #333;
+    border: 2px solid #FFA000;
+    border-radius: 8px;
+    max-width: 1000px;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+#notificationBanner strong {
+    color: #CC0000;
+    font-size: 1.1em;
+}
+.banner-detail {
+    margin: 5px 0;
+    font-size: 1.0em;
+}
+/* === End Notification Banner Styles === */
+
+/* === NEW ADMIN MONITORING STYLES === */
+#adminMonitoringStatus {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    color: #fff;
+}
+.status-urgent {
+    background-color: #CC0000; /* Red */
+}
+.status-ok {
+    background-color: #28a745; /* Green */
+}
+/* === End New Admin Monitoring Styles === */
 
 
 /* === Color Palette and General Styles === */
@@ -137,23 +176,30 @@ h2 {
 /* Controls */
 .controls {
     text-align: center;
-    margin-bottom: 20px;
+    margin: 20px auto;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    max-width: 1000px;
 }
 .controls h3 {
     margin-top: 15px;
     margin-bottom: 10px;
+    color: #333;
 }
-.controls input, .controls button {
+.controls input, .controls button, .controls select {
     padding: 6px 10px;
     font-size: 15px;
-    margin-right: 10px;
+    margin: 5px;
     border-radius: 4px;
-    border: none;
+    border: 1px solid #ccc;
 }
 .controls button {
     background-color: #94C83D;
     color: white;
     cursor: pointer;
+    border: none;
 }
 .controls button:hover {
     background-color: #7DAE2F;
@@ -164,9 +210,8 @@ h2 {
 #logoutBtn:hover {
     background-color: #a30000;
 }
-/* New Button Style for clarity */
 #resetMyPwdBtn {
-    background-color: #FF5733; /* A distinct, action-oriented color */
+    background-color: #FF5733; 
 }
 #resetMyPwdBtn:hover {
     background-color: #C70039;
@@ -207,6 +252,7 @@ h2 {
     padding: 15px;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    margin-bottom: 25px;
 }
 table {
     width: 100%;
@@ -226,8 +272,8 @@ th {
     text-align: center;
 }
 /* Ensure highlights override zebra striping */
-tr:not(.highlight-today):not(.highlight-next):nth-child(even) { background-color: #F0F0F0; }
-tr:not(.highlight-today):not(.highlight-next):nth-child(odd) { background-color: #E7E8EA; }
+tr:not(.highlight-today):not(.highlight-next):not(.highlight-finished):nth-child(even) { background-color: #F0F0F0; }
+tr:not(.highlight-today):not(.highlight-next):not(.highlight-finished):nth-child(odd) { background-color: #E7E8EA; }
 tbody tr {
     cursor: pointer;
 }
@@ -239,6 +285,61 @@ tbody tr {
 }
 .highlight-next {
     background-color: #C8FFC8 !important;
+}
+.highlight-finished { /* Light green for finished */
+    background-color: #B2D9B2 !important; 
+    color: #555;
+    text-decoration: line-through;
+    opacity: 0.8;
+}
+
+/* Action Buttons */
+.rename-btn, .reset-btn, .delete-btn, .swap-btn, .reset-status-btn {
+    padding: 4px 8px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    margin: 2px;
+    font-size: 13px;
+}
+.rename-btn { background-color: #888A8C; color: #fff; }
+.rename-btn:hover { background-color: #6E7072; }
+.reset-btn { background-color: #17a2b8; color: #fff; }
+.reset-btn:hover { background-color: #117a8b; }
+.delete-btn { background-color: #cc0000; color: #fff; }
+.delete-btn:hover { background-color: #ff4444; }
+.swap-btn { background-color: #00A8E8; color: #fff; } 
+.swap-btn:hover { background-color: #0087b8; }
+.finish-btn { /* Operator Mark Finished */
+    background-color: #28a745;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 13px;
+    border: none;
+    cursor: pointer;
+}
+.finish-btn:hover {
+    background-color: #1e7e34;
+}
+.reset-status-btn { /* Admin Reset Status */
+    background-color: #ffc107;
+    color: #333;
+}
+.reset-status-btn:hover {
+    background-color: #e0a800;
+}
+
+/* Audit Log Styling */
+#auditLogView {
+    display: none;
+}
+#auditLogTable th {
+    background-color: #343a40; /* Darker header for log */
+}
+#auditLogTable td {
+    font-size: 12px;
 }
 
 
@@ -264,26 +365,8 @@ tbody tr {
     border-radius: 5px;
 }
 
-/* Action Buttons (Visible only to Full Admin) */
-.rename-btn, .reset-btn, .delete-btn, .swap-btn {
-    padding: 4px 8px;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    margin: 2px;
-    font-size: 13px;
-}
-.rename-btn { background-color: #888A8C; color: #fff; }
-.rename-btn:hover { background-color: #6E7072; }
-.reset-btn { background-color: #17a2b8; color: #fff; }
-.reset-btn:hover { background-color: #117a8b; }
-.delete-btn { background-color: #cc0000; color: #fff; }
-.delete-btn:hover { background-color: #ff4444; }
-.swap-btn { background-color: #00A8E8; color: #fff; } /* NEW SWAP BUTTON STYLE */
-.swap-btn:hover { background-color: #0087b8; }
 
-
-/* Modal Styles */
+/* Modal Styles (same as before) */
 .modal {
     display: none;
     position: fixed;
@@ -324,7 +407,7 @@ tbody tr {
     margin: 5px 0 15px 0;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box; /* Crucial for input/select sizing */
+    box-sizing: border-box; 
 }
 .modal-content button {
     padding: 8px 15px;
@@ -361,9 +444,6 @@ tbody tr {
     <img src="images/oromia bank.png" alt="Oromia Bank">
 </div>
 
-
-
-
 <h2>Backup Operators Schedule</h2>
 
 <div id="nextShiftsWrapper">
@@ -371,8 +451,11 @@ tbody tr {
         </div>
 </div>
 
+<div id="notificationBanner">
+    </div>
+
 <div class="top-section">
-    <label for="startDate">Schedule Start Date:</label>
+    <label for="startDate">Schedule Start Date (Shifts start the day after this date):</label>
     <input type="date" id="startDate" onchange="generateScheduleByDate(this.value)">
     <button id="downloadPdfBtn" onclick="downloadPdf()" style="display:none;">Download PDF</button>
 
@@ -386,7 +469,7 @@ tbody tr {
     <button onclick="openChangePasswordModal()" id="changePwdBtn" style="display:none;">Set New Password</button>
 
     <button onclick="logout()" id="logoutBtn" style="display:none;">Logout</button>
-    <button onclick="scrollToAdd()" id="adminActionsBtn">Admin Actions</button>
+    <button onclick="scrollToAdminActions()" id="adminActionsBtn">Admin Actions</button>
 </div>
 
 <div id="authSection">
@@ -396,12 +479,12 @@ tbody tr {
 </div>
 
 <div class="controls" id="adminControls" style="display:none;">
-    <h3>Full Admin Controls </h3>
-    <input type="text" id="operatorName" placeholder="Operator Name">
-    <input type="text" id="mobileNumber" placeholder="Mobile Number">
-    <button onclick="addOperator()">Add Operator</button>
+    <div id="adminMonitoringStatus"></div> 
+    
+    <h3>Schedule Generation & Utilities</h3>
     <button onclick="generateScheduleButton()">Generate Full Schedule</button>
-    <button onclick="resetAll()">Clear ALL Data</button>
+    <button onclick="resetAll()" style="background-color: #cc0000;">Clear ALL Data</button>
+    <button onclick="openAuditLogView()" style="background-color: #343a40;">View Audit Log</button>
 
     <div id="shiftCalculator">
         <h3>Shift Range Calculator (10 Working Days, No Sundays)</h3>
@@ -409,6 +492,56 @@ tbody tr {
         <input type="date" id="calcStartDate" onchange="calculateShiftRange()">
         <div class="result">Shift End Date: <span id="calcEndDate">--</span></div>
         <div class="result">Total Working Days: <span id="calcWorkingDays">--</span></div>
+    </div>
+    
+    <h3>Send Upcoming Shift Reminder (Simulated)</h3>
+    <div style="margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;">
+        <label for="notifyDays" style="font-weight: normal; margin: 0;">Notify operators this many days before shift start:</label>
+        <input type="number" id="notifyDays" value="7" min="1" max="30" style="width: 80px; margin: 0;">
+        <button onclick="saveNotificationSettings()" style="background-color: #00A8E8; margin: 0;">Save Settings</button>
+        <button onclick="checkAndSendNotifications(true)" style="background-color: #FF5733; margin: 0;">Send Upcoming Shift Reminder Now</button>
+    </div>
+    <button onclick="openNotificationLogView()" style="background-color: #4D8BCA;">View Notification Log</button>
+    </div>
+
+<div class="table-container" id="operatorManagementView" style="display:none;">
+    <h3 style="text-align: center;">Master Operator List Management</h3>
+    <div style="text-align: center; margin-bottom: 10px;">
+        <input type="text" id="operatorName" placeholder="Operator Name (e.g., JEMA DIRIBA)">
+        <input type="text" id="mobileNumber" placeholder="Mobile Number">
+        <input type="email" id="emailAddress" placeholder="Email Address"> <button onclick="addOperator()">Add New Operator</button>
+    </div>
+    <table id="operatorManagementTable">
+        <thead>
+            <tr>
+                <th>S/N</th>
+                <th>Operator Name</th>
+                <th>Mobile Number</th>
+                <th>Email Address</th> <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            </tbody>
+    </table>
+</div>
+
+<div class="table-container" id="auditLogView">
+    <h3 style="text-align: center;">System Audit Log</h3>
+    <table id="auditLogTable">
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>User</th>
+                <th>Action Type</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <div style="text-align: center; margin-top: 15px;">
+        <button onclick="clearAuditLog()" style="background-color: #f0ad4e;">Clear Log</button>
+        <button onclick="closeAuditLogView()" style="background-color: #5bc0de;">Close Log View</button>
     </div>
 </div>
 
@@ -421,10 +554,12 @@ tbody tr {
                 <th>Checked by</th>
                 <th>Mobile number</th>
                 <th>Date Range</th>
+                <th>Status</th>
                 <th id="actionsHeader">Actions</th>
             </tr>
         </thead>
-        <tbody></tbody>
+        <tbody>
+            </tbody>
     </table>
 </div>
 
@@ -435,7 +570,7 @@ tbody tr {
 <div id="renameModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeRenameModal()">&times;</span>
-        <h3>Rename Operator</h3>
+        <h3>Rename Operator (This Shift Only)</h3>
         <label for="newName">New Name:</label>
         <input type="text" id="newName">
         <button onclick="confirmRename()">Rename</button>
@@ -449,8 +584,9 @@ tbody tr {
         <h3>Schedule Details</h3>
         <p><strong>Operator:</strong> <span id="detailOperatorName"></span></p>
         <p><strong>Mobile:</strong> <span id="detailMobile"></span></p>
-        <p><strong>Shift Start:</strong> <span id="detailStart"></span></p>
+        <p><strong>Email:</strong> <span id="detailEmail"></span></p> <p><strong>Shift Start:</strong> <span id="detailStart"></span></p>
         <p><strong>Shift End:</strong> <span id="detailEnd"></span></p>
+        <p><strong>Status:</strong> <span id="detailStatus"></span></p>
         <p><strong>Working Days:</strong> <span id="detailWorkingDays"></span></p>
     </div>
 </div>
@@ -481,45 +617,86 @@ tbody tr {
     </div>
 </div>
 
+<div id="editOperatorModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeEditOperatorModal()">&times;</span>
+        <h3>Edit Operator Details</h3>
+        <label for="editOperatorName">Name:</label>
+        <input type="text" id="editOperatorName">
+        <label for="editMobileNumber">Mobile Number:</label>
+        <input type="text" id="editMobileNumber">
+        <label for="editEmailAddress">Email Address:</label> <input type="email" id="editEmailAddress">
+        <button onclick="confirmEditOperator()">Save Changes</button>
+        <button onclick="closeEditOperatorModal()">Cancel</button>
+    </div>
+</div>
+
+<div id="notificationLogModal" class="modal">
+    <div class="modal-content" style="max-width: 800px;">
+        <span class="close" onclick="closeNotificationLogView()">&times;</span>
+        <h3>Sent Notification Log (Admin Monitoring)</h3>
+        <p>This log tracks which shifts reminders have been processed for, based on the set schedule.</p>
+        <div class="table-container" style="padding: 5px; margin-top: 10px; max-height: 400px; overflow-y: scroll;">
+            <table id="notificationLogTable" style="min-width: 100%;">
+                <thead>
+                    <tr>
+                        <th>Date Sent (Simulated)</th>
+                        <th>Operator</th>
+                        <th>Shift Start</th>
+                        <th>Notification Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div style="text-align: center; margin-top: 15px;">
+            <button onclick="clearNotificationLog()" style="background-color: #f0ad4e;">Clear Notification Log</button>
+        </div>
+    </div>
+</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.1/jspdf.plugin.autotable.min.js"></script>
 
 <script>
-// --- HARDCODED OPERATOR LIST (Initial Data) ---
+// --- GLOBAL CONSTANTS AND DATA ---
 const INITIAL_OPERATORS_DATA_KEY = 'initialOperators';
+const AUDIT_LOG_KEY = 'auditLog'; 
+const NOTIFICATION_LOG_KEY = 'notificationLog'; // NEW
+const NOTIFICATION_SETTINGS_KEY = 'notificationSettings'; // NEW
+
 let initialOperators = JSON.parse(localStorage.getItem(INITIAL_OPERATORS_DATA_KEY)) || [
-    { name: "ABRAHAM CHALA", mobile: "0913564114" },
-    { name: "BERISO SHIBIRU", mobile: "0902911411" },
-    { name: "HAMBISA ADAMU", mobile: "0913456466" } ,
-    { name: "DAME TERFASSA", mobile: "0911117524" },
-    { name: "TSION GIRMA", mobile: "0946700418" }
+    // UPDATED INITIAL OPERATOR LIST WITH NEW EMAILS
+    { name: "ABRAHAM CHALA", mobile: "0913564114", email: "abrishc101@gmail.com" },
+    { name: "BERISO SHIBIRU", mobile: "0902911411", email: "bariidanse2012@gmail.com" },
+    { name: "HAMBISA ADAMU", mobile: "0913456466", email: "adamuhambisa033@gmail.com" } ,
+    { name: "DAME TERFASSA", mobile: "0911117524", email: "maldame@gmail.com" },
+    { name: "TSION GIRMA", mobile: "0946700418", email: "tsion22girma@gmail.com" }
 ];
-// -----------------------------------------------------
 
 let operators = JSON.parse(localStorage.getItem('operators') || '[]');
 let operatorPasswords = JSON.parse(localStorage.getItem('operatorPasswords') || '{}');
+let notificationLog = JSON.parse(localStorage.getItem(NOTIFICATION_LOG_KEY) || '[]'); // NEW
+let notificationSettings = JSON.parse(localStorage.getItem(NOTIFICATION_SETTINGS_KEY) || '{"notifyDays": 7}'); // NEW
 
 let isAdmin = false;    
 let isRestrictedAdmin = false;
 let isOperator = false;
 let loggedInUser = null;    
-let renameIndex = null;
 let renameTargetGlobalIndex = null;
-let swapTargetGlobalIndex = null; // For Shift Swap
+let swapTargetGlobalIndex = null;
+let editOperatorIndex = null; 
 
-// --- Usernames and Passwords ---
 const FULL_ADMIN_USER = 'admin';
-const FULL_ADMIN_PWD = 'Admin@1234!@#$';
+const FULL_ADMIN_PWD = 'Admin@1234!@#$'; 
 
 const RESTRICTED_ADMIN_PWD = 'view123';    
-const RESTRICTED_ADMIN_USER = 'view';    
+const RESTRICTED_ADMIN_USER = 'view'; 
 const DEFAULT_OPERATOR_PWD = 'op123';    
 
-const SHIFT_LENGTH = 10; // 10 working days
+const SHIFT_LENGTH = 10; 
 
-// Set the date for current highlight based on the current system time.
 const today = getCleanDate(new Date());    
-// Set the default schedule start date as requested (shifts begin on the day *after* this date)
 const DEFAULT_SCHEDULE_START_DATE = '2025-10-08';    
 
 // --- Core Helper Functions ---
@@ -537,6 +714,20 @@ function formatDate(date) {
     const options = { day: '2-digit', month: 'short', year: 'numeric' };
     const d = new Date(date);
     return isNaN(d) ? 'Invalid Date' : d.toLocaleDateString('en-US', options);
+}
+
+/** Formats a timestamp for the Audit Log. */
+function formatTimestamp(date) {
+    const d = new Date(date);
+    const dateOptions = { year: 'numeric', month: 'short', day: '2-digit' };
+    const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+    return `${d.toLocaleDateString('en-US', dateOptions)} ${d.toLocaleTimeString('en-US', timeOptions)}`;
+}
+
+/** Calculates the difference between two dates in days. */
+function daysBetween(date1, date2) {
+    const oneDay = 1000 * 60 * 60 * 24;
+    return Math.round((getCleanDate(date2).getTime() - getCleanDate(date1).getTime()) / oneDay);
 }
 
 /** Calculates the end date by counting exactly 10 working days (excluding Sundays), starting from the provided startDate (inclusive). */
@@ -570,9 +761,195 @@ function countWorkingDays(startDate, endDate) {
     return count;
 }
 
-// --- Schedule Generation and Initialization ---
 
-/** Core function to generate the schedule. The first shift starts the day *after* officialStartDate. */
+// --- Audit Log Module Functions ---
+
+function logAuditAction(actionType, description) {
+    const log = JSON.parse(localStorage.getItem(AUDIT_LOG_KEY) || '[]');
+    const user = loggedInUser || 'SYSTEM';
+
+    const newEntry = {
+        timestamp: new Date().toISOString(),
+        user: user,
+        actionType: actionType,
+        description: description
+    };
+
+    log.unshift(newEntry); // Add to the front
+    
+    // Keep log limited to last 100 entries for performance
+    while (log.length > 100) {
+        log.pop();
+    }
+
+    localStorage.setItem(AUDIT_LOG_KEY, JSON.stringify(log));
+}
+
+function renderAuditLog() {
+    const tbody = document.querySelector('#auditLogTable tbody');
+    tbody.innerHTML = '';
+    const log = JSON.parse(localStorage.getItem(AUDIT_LOG_KEY) || '[]');
+
+    log.forEach(entry => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${formatTimestamp(entry.timestamp)}</td>
+            <td>${entry.user}</td>
+            <td><strong>${entry.actionType}</strong></td>
+            <td>${entry.description}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function openAuditLogView() {
+    if (!isAdmin) return;
+    renderAuditLog();
+    document.getElementById('scheduleView').style.display = 'none';
+    document.getElementById('operatorManagementView').style.display = 'none';
+    document.getElementById('auditLogView').style.display = 'block';
+}
+
+function closeAuditLogView() {
+    if (!isAdmin) return;
+    document.getElementById('auditLogView').style.display = 'none';
+    document.getElementById('scheduleView').style.display = 'block';
+    document.getElementById('operatorManagementView').style.display = 'block';
+}
+
+function clearAuditLog() {
+    if (!isAdmin) return;
+    if (confirm("WARNING: This will permanently clear the entire Audit Log. Are you sure?")) {
+        localStorage.removeItem(AUDIT_LOG_KEY);
+        logAuditAction('LOG_RESET', 'The entire audit log was cleared.');
+        renderAuditLog();
+        alert("Audit Log cleared.");
+    }
+}
+
+
+// --- NEW Notification Module Functions ---
+
+function saveNotificationSettings() {
+    if (!isAdmin) return;
+    const days = parseInt(document.getElementById('notifyDays').value);
+    if (isNaN(days) || days < 1 || days > 30) {
+        alert('Please enter a valid number of days (1-30).');
+        return;
+    }
+    notificationSettings.notifyDays = days;
+    localStorage.setItem(NOTIFICATION_SETTINGS_KEY, JSON.stringify(notificationSettings));
+    logAuditAction('NOTIF_SETTINGS', `Notification threshold set to ${days} days.`);
+    alert(`Notification setting saved: Operators will be notified ${days} days before their shift starts.`);
+}
+
+function renderNotificationLog() {
+    const tbody = document.querySelector('#notificationLogTable tbody');
+    tbody.innerHTML = '';
+    
+    // Load fresh log data
+    notificationLog = JSON.parse(localStorage.getItem(NOTIFICATION_LOG_KEY) || '[]');
+    
+    // Sort log by date sent descending
+    notificationLog.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+    notificationLog.forEach(entry => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${formatTimestamp(entry.timestamp)}</td>
+            <td>${entry.operatorName}</td>
+            <td>${formatDate(entry.shiftStart)}</td>
+            <td>${entry.type}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function openNotificationLogView() {
+    if (!isAdmin) return;
+    renderNotificationLog();
+    document.getElementById('notificationLogModal').style.display = 'block';
+}
+
+function closeNotificationLogView() {
+    document.getElementById('notificationLogModal').style.display = 'none';
+}
+
+function clearNotificationLog() {
+    if (!isAdmin) return;
+    if (confirm("WARNING: This will permanently clear the entire Notification Log.")) {
+        notificationLog = [];
+        localStorage.removeItem(NOTIFICATION_LOG_KEY);
+        logAuditAction('NOTIF_LOG_RESET', 'The notification log was cleared by admin.');
+        renderNotificationLog();
+        alert("Notification Log cleared.");
+    }
+}
+
+function checkAndSendNotifications(manualTrigger = false) {
+    const notifyDays = notificationSettings.notifyDays || 7;
+    let notificationsSent = 0;
+    const now = getCleanDate(new Date());
+    
+    // Only process for active shifts that start in the future
+    operators.forEach(op => {
+        if (op.status !== 'Active') return;
+        
+        const shiftStart = getCleanDate(op.start);
+        
+        const daysUntilStart = daysBetween(now, shiftStart);
+        
+        // Check if shift is upcoming and within the notification window
+        if (daysUntilStart >= 1 && daysUntilStart <= notifyDays) {
+            
+            // Generate a unique ID for this notification instance (shift start date + operator name)
+            const notificationID = `${op.start}-${op.name.toUpperCase()}`;
+            
+            // Check if this notification has already been sent/logged
+            const alreadySent = notificationLog.some(log => log.id === notificationID);
+
+            if (!alreadySent) {
+                // SIMULATE SENDING THE NOTIFICATION
+                
+                const logEntry = {
+                    id: notificationID,
+                    timestamp: new Date().toISOString(),
+                    operatorName: op.name,
+                    shiftStart: op.start,
+                    type: `Shift Reminder (${notifyDays} Days)`
+                };
+                
+                notificationLog.unshift(logEntry);
+                localStorage.setItem(NOTIFICATION_LOG_KEY, JSON.stringify(notificationLog));
+                
+                // Also log to the main Audit Log
+                logAuditAction('NOTIF_SENT', `Reminder sent (simulated) to ${op.name} for shift starting ${formatDate(op.start)} (in ${daysUntilStart} days).`);
+                
+                // Simulated Client Notification (for visibility)
+                if (manualTrigger && isAdmin) {
+                     console.log(`[SIMULATED SEND] To: ${op.name} (Mobile: ${op.mobile}, Email: ${op.email}) - Shift starts in ${daysUntilStart} days.`);
+                }
+                
+                notificationsSent++;
+            }
+        }
+    });
+
+    if (manualTrigger) {
+        if (notificationsSent > 0) {
+            alert(`Manual notification check complete. ${notificationsSent} new reminders simulated (see Notification Log).`);
+        } else {
+            alert('Manual notification check complete. No new reminders needed based on current settings.');
+        }
+    }
+    
+    if (notificationsSent > 0 && !manualTrigger) {
+         console.log(`[System Check] ${notificationsSent} automatic reminders simulated.`);
+    }
+}
+
+// --- Schedule Generation and Initialization (Unchanged core logic) ---
+
 function generateFullSchedule(officialStartDate) {
     if (initialOperators.length === 0) {
           operators = [];
@@ -584,10 +961,10 @@ function generateFullSchedule(officialStartDate) {
 
     const uniqueOperators = initialOperators.map(op => ({    
         name: op.name,    
-        mobile: op.mobile    
+        mobile: op.mobile,
+        email: op.email // ADDED
     }));
 
-    // Target End Date: One year from the scheduleInputDate
     const targetEnd = new Date(scheduleInputDate);
     targetEnd.setFullYear(targetEnd.getFullYear() + 1);
     targetEnd.setDate(targetEnd.getDate() - 1);    
@@ -596,12 +973,10 @@ function generateFullSchedule(officialStartDate) {
     operators = [];
     
     let opIndex = 0;
-    // The FIRST shift START DATE is the day AFTER the officialStartDate (e.g., 2025-10-09)
     let nextShiftStart = new Date(scheduleInputDate);
     nextShiftStart.setDate(nextShiftStart.getDate() + 1);
     nextShiftStart.setHours(0, 0, 0, 0);
     
-    // Generate shifts for approximately one year (max 500 shifts for safety)
     while (nextShiftStart.getTime() <= targetEnd.getTime() && operators.length < 500) {    
         const opDetails = uniqueOperators[opIndex];
         
@@ -614,55 +989,55 @@ function generateFullSchedule(officialStartDate) {
                   name: opDetails.name,
                   checkedBy: opDetails.name,    
                   mobile: opDetails.mobile,
+                  email: opDetails.email, // ADDED EMAIL
                   start: shiftStart.toISOString().split('T')[0],
-                  end: shiftEnd.toISOString().split('T')[0]
+                  end: shiftEnd.toISOString().split('T')[0],
+                  status: 'Active' 
               };
               operators.push(newShift);
         } else {
             break;    
         }
 
-        // Prepare for the next shift: Start the day after the current shift ends.
         nextShiftStart = new Date(shiftEnd);
         nextShiftStart.setDate(nextShiftStart.getDate() + 1);
         nextShiftStart.setHours(0, 0, 0, 0);
         
-        // --- CORE ROTATION LOGIC ---
-        // This ensures that when the last operator (opIndex = N-1) finishes,    
-        // opIndex becomes (N-1 + 1) % N = 0 (the first operator).
         opIndex = (opIndex + 1) % uniqueOperators.length;
     }
     
     localStorage.setItem('operators', JSON.stringify(operators));
+    logAuditAction('SCHEDULE_GEN', `Full schedule regenerated starting from ${formatDate(officialStartDate)}.`);
+    
+    // Trigger notification check after a regeneration
+    checkAndSendNotifications(); 
+
+    renderTable();
+    renderNextShifts();
 }
 
 function generateScheduleByDate(dateString) {
     if (!dateString) return;
-    
     generateFullSchedule(dateString);
-    
-    renderTable();
-    renderNextShifts();    
+    alert(`Schedule start date changed. Full schedule regenerated starting ${formatDate(dateString)}.`);
 }
 
 function generateScheduleButton() {
-    if (!isAdmin) return alert('Full Admin privileges required to generate the schedule.');
+    if (!isAdmin) return alert('Full Admin privileges required to generate schedule.');
     const startDate = document.getElementById('startDate').value;
     if (!startDate) return alert('Please set the Schedule Start Date at the top.');
-    
     generateFullSchedule(startDate);
     renderTable();
-    renderNextShifts();    
-    alert("One-year schedule successfully generated!");
+    renderNextShifts();
+    alert("One-year schedule successfully generated.");
 }
 
-/* Populate Filter Dropdown */
+/* Populate Filter Dropdown (Unchanged) */
 function populateFilter() {
     const filter = document.getElementById('operatorFilter');
-    const uniqueNames = [...new Set(initialOperators.map(op => op.name).filter(n => n))];    
+    const uniqueNames = [...new Set(initialOperators.map(op => op.name).filter(n => n))];
     const currentSelection = filter.value;
     filter.innerHTML = '<option value="">-- All Operators --</option>';
-
     uniqueNames.forEach(name => {
         const option = document.createElement('option');
         option.value = name;
@@ -674,12 +1049,11 @@ function populateFilter() {
     });
 }
 
-// --- Authentication and UI Control ---
-
+// --- Authentication and UI Control (Updated) ---
 function authenticate() {
     const username = document.getElementById('loginUsername').value.trim();
     const password = document.getElementById('adminPassword').value.trim();
-    
+
     // Clear previous state
     isAdmin = false;
     isRestrictedAdmin = false;
@@ -687,24 +1061,24 @@ function authenticate() {
     loggedInUser = null;
 
     const normalizedUsername = username.toUpperCase();
-    const lowerUsername = username.toLowerCase(); // For 'view' check
-    
+    const lowerUsername = username.toLowerCase();
+
     // 1. Check Full Admin
     if (username === FULL_ADMIN_USER && password === FULL_ADMIN_PWD) {
         isAdmin = true;
         loggedInUser = username;
-    }    
+    }
     // 2. Check Restricted Admin (View)
-    else if (lowerUsername === RESTRICTED_ADMIN_USER && password === RESTRICTED_ADMIN_PWD) { // <-- MODIFIED LINE
+    else if (lowerUsername === RESTRICTED_ADMIN_USER && password === RESTRICTED_ADMIN_PWD) {
         isRestrictedAdmin = true;
-        loggedInUser = RESTRICTED_ADMIN_USER; // Use the canonical name
+        loggedInUser = RESTRICTED_ADMIN_USER;
     }
     // 3. Check Regular Operator
     else if (operatorPasswords[normalizedUsername] && operatorPasswords[normalizedUsername] === password) {
         isOperator = true;
         loggedInUser = normalizedUsername;
     }
-    
+
     if (loggedInUser) {
         // Successful Login
         document.getElementById('authSection').style.display = 'none';
@@ -714,196 +1088,346 @@ function authenticate() {
         document.getElementById('filterLabel').style.display = 'inline-block';
         document.getElementById('operatorFilter').style.display = 'inline-block';
         document.getElementById('changePwdBtn').style.display = 'inline-block';
-
-        // Show password reset button only for operators
         document.getElementById('resetMyPwdBtn').style.display = isOperator ? 'inline-block' : 'none';
-        
+
         // Admin Controls
         document.getElementById('adminControls').style.display = isAdmin ? 'block' : 'none';
+        document.getElementById('operatorManagementView').style.display = isAdmin ? 'block' : 'none';
         document.getElementById('adminActionsBtn').style.display = isAdmin ? 'inline-block' : 'none';
+        document.getElementById('auditLogView').style.display = 'none'; // Ensure log is hidden on login
 
         if (isOperator) {
             document.getElementById('operatorFilter').value = loggedInUser;
         } else {
-             document.getElementById('operatorFilter').value = '';
+            document.getElementById('operatorFilter').value = '';
         }
 
         renderTable();
-        alert(`Welcome, ${loggedInUser}!`);
+        if (isAdmin) renderOperatorManagementTable();
+        checkAndRenderNotification(true); // Pass flag to check for initial admin alert
+        logAuditAction('LOGIN', `User ${loggedInUser} logged in.`);
     } else {
-        alert('Authentication failed. Check your username and password.');
-        document.getElementById('adminPassword').value = '';
+        alert("Invalid username or password.");
+        logAuditAction('LOGIN_FAIL', `Failed login attempt for username: ${username}.`);
     }
 }
 
 function logout() {
+    logAuditAction('LOGOUT', `User ${loggedInUser} logged out.`);
     isAdmin = false;
     isRestrictedAdmin = false;
     isOperator = false;
     loggedInUser = null;
-
     document.getElementById('authSection').style.display = 'block';
     document.getElementById('scheduleView').style.display = 'none';
+    document.getElementById('operatorManagementView').style.display = 'none';
     document.getElementById('logoutBtn').style.display = 'none';
     document.getElementById('downloadPdfBtn').style.display = 'none';
     document.getElementById('filterLabel').style.display = 'none';
     document.getElementById('operatorFilter').style.display = 'none';
     document.getElementById('changePwdBtn').style.display = 'none';
-    document.getElementById('resetMyPwdBtn').style.display = 'none';    
+    document.getElementById('resetMyPwdBtn').style.display = 'none';
     document.getElementById('adminControls').style.display = 'none';
     document.getElementById('adminActionsBtn').style.display = 'inline-block';
-    
     document.getElementById('loginUsername').value = '';
     document.getElementById('adminPassword').value = '';
-    
-    document.querySelector('#scheduleTable tbody').innerHTML = '<tr><td colspan="6" style="text-align:center;">Please login to view the schedule.</td></tr>';
+    document.querySelector('#scheduleTable tbody').innerHTML = '<tr><td colspan="7" style="text-align:center;">Please login to view the schedule.</td></tr>';
+    document.getElementById('notificationBanner').style.display = 'none';
+    document.getElementById('adminMonitoringStatus').style.display = 'none'; // Hide monitoring status
     renderNextShifts();
     alert('Logged out successfully.');
 }
 
 function init() {
-    // 1. Initialize data (passwords, initial operators list)
     let passwordUpdated = false;
     initialOperators.forEach(op => {
-        if (!operatorPasswords[op.name]) {
-            operatorPasswords[op.name] = DEFAULT_OPERATOR_PWD;    
+        if (!operatorPasswords[op.name.toUpperCase()]) {
+            operatorPasswords[op.name.toUpperCase()] = DEFAULT_OPERATOR_PWD;
             passwordUpdated = true;
         }
     });
     if (passwordUpdated) {
         localStorage.setItem('operatorPasswords', JSON.stringify(operatorPasswords));
     }
+    
+    let initialDataCheck = false; 
+    // Ensure all master operators have an email field for the new feature (for backward compatibility)
+    initialOperators = initialOperators.map(op => {
+        if (!op.email) {
+            // Generate placeholder email if missing
+            op.email = `${op.name.toLowerCase().replace(/\s/g, '.')}@oromiabank.com`;
+            initialDataCheck = true;
+        }
+        return op;
+    });
     localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
+
+    let statusAdded = false;
+    let emailAddedToShift = false;
+    // Check operators for the new email field and status (for backward compatibility)
+    operators.forEach(op => {
+        if (!op.status) {
+            op.status = 'Active';
+            statusAdded = true;
+        }
+        // If email is missing in the shift record, try to get it from the master list
+        if (!op.email) {
+            const masterOp = initialOperators.find(iOp => iOp.name === op.name);
+            op.email = masterOp ? masterOp.email : 'N/A';
+            emailAddedToShift = true;
+        }
+        // Also update the email if it was changed in the master list
+        const masterOp = initialOperators.find(iOp => iOp.name === op.name);
+        if (masterOp && op.email !== masterOp.email) {
+            op.email = masterOp.email;
+            emailAddedToShift = true;
+        }
+    });
+    if (statusAdded || emailAddedToShift) {
+        localStorage.setItem('operators', JSON.stringify(operators));
+    }
+
+    // Load initial settings and apply to UI
+    notificationLog = JSON.parse(localStorage.getItem(NOTIFICATION_LOG_KEY) || '[]');
+    notificationSettings = JSON.parse(localStorage.getItem(NOTIFICATION_SETTINGS_KEY) || '{"notifyDays": 7}');
+    document.getElementById('notifyDays').value = notificationSettings.notifyDays;
+
+    if (operators.length === 0) {
+        document.getElementById('startDate').value = DEFAULT_SCHEDULE_START_DATE;
+        generateFullSchedule(DEFAULT_SCHEDULE_START_DATE);
+    } else {
+        // Try to determine the start date from the first shift, or fall back to default
+        const firstShiftDate = operators.length > 0 ? operators[0].start : DEFAULT_SCHEDULE_START_DATE;
+        document.getElementById('startDate').value = firstShiftDate;
+    }
     
-    // 2. Set default start date in the input field
-    document.getElementById('startDate').value = DEFAULT_SCHEDULE_START_DATE;
-    
-    // 3. Generate initial schedule (shifts start from 2025-10-09)
-    generateFullSchedule(DEFAULT_SCHEDULE_START_DATE);
-    
-    // 4. Render initial view (which will be the login message)
-    renderTable();    
+    populateFilter();
     renderNextShifts();
-    
-    // 5. Hide controls until login
-    document.getElementById('scheduleView').style.display = 'none';
-    document.getElementById('adminControls').style.display = 'none';
-    document.getElementById('downloadPdfBtn').style.display = 'none';
-    document.getElementById('filterLabel').style.display = 'none';
-    document.getElementById('operatorFilter').style.display = 'none';
-    document.getElementById('changePwdBtn').style.display = 'none';
-    document.getElementById('resetMyPwdBtn').style.display = 'none';    
-    document.getElementById('adminActionsBtn').style.display = 'inline-block';
+    // Do NOT call renderTable here, wait for login
 }
 
-// --- Main Render Function ---
+window.onload = init;
 
+function scrollToAdminActions() {
+    document.getElementById('adminControls').scrollIntoView({ behavior: 'smooth' });
+}
+
+// --- Schedule Render and Highlight ---
+
+function checkAndRenderNotification(isInitialAdminLogin = false) {
+    const banner = document.getElementById('notificationBanner');
+    const adminStatus = document.getElementById('adminMonitoringStatus');
+
+    const activeShiftIndex = operators.findIndex(op => {
+        const opStart = getCleanDate(op.start);
+        const opEnd = getCleanDate(op.end);
+        return (today.getTime() >= opStart.getTime() && today.getTime() <= opEnd.getTime() && op.status === 'Active');
+    });
+
+    if (activeShiftIndex === -1) {
+        banner.style.display = 'none';
+        // Update Admin Status
+        if (isAdmin) {
+            adminStatus.className = 'status-ok';
+            adminStatus.textContent = 'All shifts are current or finished. No immediate action required.';
+            adminStatus.style.display = 'block';
+        } else {
+            adminStatus.style.display = 'none';
+        }
+        return;
+    }
+
+    const activeShift = operators[activeShiftIndex];
+    const activeShiftEnd = getCleanDate(activeShift.end);
+    const daysLeft = daysBetween(today, activeShiftEnd);
+
+    let notificationIsActive = false;
+
+    if (daysLeft >= 0 && daysLeft <= 2) {
+        notificationIsActive = true;
+        const nextShiftIndex = activeShiftIndex + 1;
+        if (nextShiftIndex < operators.length) {
+            const nextOperator = operators[nextShiftIndex];
+            // Look up the most current contact details from the master list
+            const nextOperatorMasterDetails = initialOperators.find(op => op.name === nextOperator.name) || nextOperator;
+
+            const bannerContent = `
+                🚨 <strong>SHIFT CHANGE ALERT!</strong> Current operator (<strong>${activeShift.name}</strong>) shift ends in <strong>${daysLeft} day(s)</strong> (${formatDate(activeShiftEnd)}).
+                <div class="banner-detail">
+                    <strong>Next Operator:</strong> <strong>${nextOperatorMasterDetails.name}</strong> | <strong>Starts:</strong> ${formatDate(nextOperator.start)}
+                </div>
+                <div class="banner-detail">
+                    <strong>Contact:</strong> <a href="tel:${nextOperatorMasterDetails.mobile}">📞 ${nextOperatorMasterDetails.mobile}</a> | <a href="mailto:${nextOperatorMasterDetails.email}">📧 ${nextOperatorMasterDetails.email || 'N/A'}</a>
+                </div>
+            `;
+            banner.innerHTML = bannerContent;
+            banner.style.display = 'block';
+
+            // --- NEW ADMIN MONITORING ACTION ---
+            if (isAdmin) {
+                adminStatus.className = 'status-urgent';
+                adminStatus.innerHTML = `⚠️ <strong>URGENT:</strong> Shift ending in ${daysLeft} days. Next operator is <strong>${nextOperatorMasterDetails.name}</strong> (${nextOperatorMasterDetails.mobile}).`;
+                adminStatus.style.display = 'block';
+                if (isInitialAdminLogin) {
+                    alert(`ADMIN ALERT: Shift change is imminent! Current operator (${activeShift.name}) ends in ${daysLeft} days. Next is ${nextOperatorMasterDetails.name}.`);
+                }
+            }
+        }
+    }
+
+    if (!notificationIsActive) {
+        banner.style.display = 'none';
+        if (isAdmin) {
+            adminStatus.className = 'status-ok';
+            adminStatus.textContent = `Active shift for ${activeShift.name} ends in ${daysLeft} days. No immediate alert required.`;
+            adminStatus.style.display = 'block';
+        } else {
+            adminStatus.style.display = 'none';
+        }
+    }
+    
+    // Always run the automated notification check when rendering the UI (admin or operator)
+    // This handles the regular reminders based on the user-set days (e.g., 7 days out)
+    checkAndSendNotifications();
+}
+
+
+function markShiftFinished(globalIndex) {
+    if (!isOperator) return alert('This action is only available to the logged-in operator.');
+    const shift = operators[globalIndex];
+    if (shift.status === 'Finished') return alert('This shift is already marked as Finished.');
+    
+    // Check if the current date is within the shift period (allows marking finished before the very end)
+    const shiftStart = getCleanDate(shift.start);
+    const shiftEnd = getCleanDate(shift.end);
+
+    if (today.getTime() < shiftStart.getTime()) {
+        return alert('Cannot mark shift as finished: The shift has not started yet.');
+    }
+    
+    if (confirm(`Are you sure you want to mark your shift (${formatDate(shift.start)} - ${formatDate(shift.end)}) as FINISHED?`)) {
+        operators[globalIndex].status = 'Finished';
+        localStorage.setItem('operators', JSON.stringify(operators));
+        logAuditAction('SHIFT_STATUS', `Operator ${shift.name} marked shift (Start: ${shift.start}) as FINISHED.`);
+        renderTable();
+        alert('Shift successfully marked as Finished. Thank you!');
+    }
+}
+
+function resetShiftStatus(globalIndex) {
+    if (!isAdmin) return alert('Full Admin privileges required for this action.');
+    const shift = operators[globalIndex];
+    if (shift.status !== 'Finished') {
+        return alert('This shift is already Active or an issue occurred.');
+    }
+    if (confirm(`Are you sure you want the shift for ${shift.name} starting ${formatDate(shift.start)} back to ACTIVE?`)) {
+        operators[globalIndex].status = 'Active';
+        localStorage.setItem('operators', JSON.stringify(operators));
+        logAuditAction('SHIFT_STATUS_RESET', `Admin reset shift status for ${shift.name} (Start: ${shift.start}) from Finished to ACTIVE.`);
+        renderTable();
+        alert('Shift status successfully reset to Active.');
+    }
+}
+
+// --- Main Render Function (Unchanged) ---
 function renderTable() {
     const tbody = document.querySelector('#scheduleTable tbody');
     tbody.innerHTML = '';
-    
+
     if (!loggedInUser) {
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Please login to view the schedule.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Please login to view the schedule.</td></tr>';
         return;
     }
-    
+
     let baseOperators = operators;
     const selectedOperator = document.getElementById('operatorFilter').value;
 
     if (isOperator) {
-        baseOperators = operators.filter(op => op.name === loggedInUser);
+        baseOperators = operators.filter(op => op.name.toUpperCase() === loggedInUser);
     } else if (selectedOperator) {
-        baseOperators = operators.filter(op => op.name === selectedOperator);    
+        baseOperators = operators.filter(op => op.name === selectedOperator);
     }
-    
+
     let filteredOperators = baseOperators;
+
     const isTodayFilterActive = !isOperator && !selectedOperator;
-    
     let activeShiftIndexInFilteredList = -1;
     let nextShiftIndexInFilteredList = -1;
-    
-    if (isTodayFilterActive) {    
+
+    if (isTodayFilterActive) {
         const activeShiftGlobalIndex = operators.findIndex(op => {
             const opStart = getCleanDate(op.start);
             const opEnd = getCleanDate(op.end);
-            return (today.getTime() >= opStart.getTime() && today.getTime() <= opEnd.getTime());
+            return (today.getTime() >= opStart.getTime() && today.getTime() <= opEnd.getTime() && op.status === 'Active');
         });
         
         if (activeShiftGlobalIndex !== -1) {
             filteredOperators = operators.slice(activeShiftGlobalIndex, activeShiftGlobalIndex + 5);
-            activeShiftIndexInFilteredList = 0;    
+            activeShiftIndexInFilteredList = 0;
             nextShiftIndexInFilteredList = 1;
         } else {
-            const upcomingShiftGlobalIndex = operators.findIndex(op => getCleanDate(op.start).getTime() > today.getTime());
+            const upcomingShiftGlobalIndex = operators.findIndex(op => getCleanDate(op.start).getTime() > today.getTime() && op.status === 'Active');
             if (upcomingShiftGlobalIndex !== -1) {
                 filteredOperators = operators.slice(upcomingShiftGlobalIndex, upcomingShiftGlobalIndex + 5);
-                nextShiftIndexInFilteredList = 0;    
+                activeShiftIndexInFilteredList = -1; 
+                nextShiftIndexInFilteredList = 0; // The first upcoming one is the 'next'
+            } else {
+                // If no active or upcoming shifts, show the last 5 finished ones
+                filteredOperators = operators.filter(op => op.status === 'Finished').slice(-5);
             }
         }
-    } else {
-        filteredOperators = baseOperators;
-        
-        activeShiftIndexInFilteredList = filteredOperators.findIndex(op => {
-            const opStart = getCleanDate(op.start);
-            const opEnd = getCleanDate(op.end);
-            return (today.getTime() >= opStart.getTime() && today.getTime() <= opEnd.getTime());
-        });
-        
-        if (activeShiftIndexInFilteredList !== -1) {
-              nextShiftIndexInFilteredList = activeShiftIndexInFilteredList + 1;
-              if (nextShiftIndexInFilteredList >= filteredOperators.length) nextShiftIndexInFilteredList = -1;
-        } else {
-              nextShiftIndexInFilteredList = filteredOperators.findIndex(op => getCleanDate(op.start).getTime() > today.getTime());
-        }
     }
-    
-    const actionsHeader = document.getElementById('actionsHeader');
-    actionsHeader.style.display = isAdmin ? 'table-cell' : 'none';
+
+    // Set the actions column header based on user role
+    document.getElementById('actionsHeader').textContent = isAdmin ? 'Admin Actions' : isOperator ? 'Operator Action' : 'Actions';
 
     filteredOperators.forEach((op, index) => {
         const tr = document.createElement('tr');
         tr.onclick = () => showDetailModal(op);
 
         let highlightClass = '';
-        if (index === activeShiftIndexInFilteredList) {
+        if (op.status === 'Finished') {
+            highlightClass = 'highlight-finished';
+        } else if (index === activeShiftIndexInFilteredList) {
             highlightClass = 'highlight-today';
         } else if (index === nextShiftIndexInFilteredList) {
             highlightClass = 'highlight-next';
         }
-
         tr.className = highlightClass;
-        
-        let serialNumber = index + 1;
-        // Logic to get the S/N from the initial list, only for unfiltered views
-        if (!isOperator && !selectedOperator && !isTodayFilterActive) {
-            const initialOperatorIndex = initialOperators.findIndex(initialOp => initialOp.name === op.name);
-            serialNumber = initialOperatorIndex !== -1 ? initialOperatorIndex + 1 : '-';    
-        }
 
-        const globalIndex = operators.findIndex(o => o.start === op.start && o.name === op.name);    
-        const actionsCell = isAdmin ?    
-            `<td>
-                   <button class="rename-btn" onclick="event.stopPropagation(); openRenameModal(${globalIndex})">Rename</button>
-                   <button class="reset-btn" onclick="event.stopPropagation(); resetOperatorPassword(${globalIndex})">Reset</button>
-                   <button class="delete-btn" onclick="event.stopPropagation(); deleteOperatorShift(${globalIndex})">Delete</button>
-                   <button class="swap-btn" onclick="event.stopPropagation(); openSwapModal(${globalIndex})">Swap</button>
-                 </td>` :    
-            `<td style="display:none;">—</td>`;
-                
+        const globalIndex = operators.findIndex(o => o.start === op.start && o.name === op.name);
+        let serialNumber = globalIndex !== -1 ? globalIndex + 1 : index + 1;
+
+        let actionHtml = '';
+        if (isAdmin) {
+            actionHtml = `
+                <button class="swap-btn" onclick="event.stopPropagation(); openSwapModal(${globalIndex})">Swap</button>
+                <button class="rename-btn" onclick="event.stopPropagation(); openRenameModal(${globalIndex})">Rename</button>
+                <button class="delete-btn" onclick="event.stopPropagation(); deleteOperatorShift(${globalIndex})">Delete</button>
+                ${op.status === 'Finished' ? `<button class="reset-status-btn" onclick="event.stopPropagation(); resetShiftStatus(${globalIndex})">Reset Status</button>` : ''}
+            `;
+        } else if (isOperator && index === activeShiftIndexInFilteredList && op.name.toUpperCase() === loggedInUser && op.status === 'Active') {
+            actionHtml = `<button class="finish-btn" onclick="event.stopPropagation(); markShiftFinished(${globalIndex})">Mark Finished</button>`;
+        } else {
+            actionHtml = `&nbsp;`;
+        }
+        
         tr.innerHTML = `
             <td>${serialNumber}</td>
             <td>${op.name}</td>
             <td>${op.checkedBy}</td>
             <td>${op.mobile}</td>
             <td>${formatDate(op.start)} - ${formatDate(op.end)}</td>
-            ${actionsCell}
+            <td>${op.status}</td>
+            <td>${actionHtml}</td>
         `;
         tbody.appendChild(tr);
     });
-    
+
     localStorage.setItem('operators', JSON.stringify(operators));
     populateFilter();
-    renderNextShifts();    
+    renderNextShifts();
+    checkAndRenderNotification();
 }
 
 function renderNextShifts() {
@@ -918,51 +1442,94 @@ function renderNextShifts() {
     let startIndex = operators.findIndex(op => {
         const opStart = getCleanDate(op.start);
         const opEnd = getCleanDate(op.end);
-        return (today.getTime() >= opStart.getTime() && today.getTime() <= opEnd.getTime());
+        return (today.getTime() >= opStart.getTime() && today.getTime() <= opEnd.getTime() && op.status === 'Active');
     });
-    
+
     if (startIndex === -1) {
-        startIndex = operators.findIndex(op => getCleanDate(op.start).getTime() > today.getTime());
+        startIndex = operators.findIndex(op => getCleanDate(op.start).getTime() > today.getTime() && op.status === 'Active');
         if (startIndex === -1) startIndex = 0;
     } else {
         startIndex += 1;
     }
-
-    const shiftsToShow = operators.slice(startIndex, startIndex + 5);
+    
+    const shiftsToShow = operators.slice(startIndex, startIndex + 5).filter(op => op.status === 'Active');
 
     if (shiftsToShow.length === 0) {
-        container.innerHTML = '<p style="padding: 0 15px; color:#999;">No upcoming shifts found in the current schedule.</p>';
+        container.innerHTML = '<p style="padding: 0 15px; color:#999;">No active upcoming shifts found.</p>';
         return;
     }
 
-    shiftsToShow.forEach(op => {
+    shiftsToShow.forEach((op, index) => {
+        const shiftStart = getCleanDate(op.start);
+        const shiftEnd = getCleanDate(op.end);
+        const workingDays = countWorkingDays(shiftStart, shiftEnd);
+
         const card = document.createElement('div');
         card.className = 'shift-card';
+        if (index === 0) {
+            card.style.borderLeftColor = '#FF5733'; // Highlight the very next shift
+        }
+        
+        // Find most current contact from master list (in case of rename/swap)
+        const masterOp = initialOperators.find(iOp => iOp.name === op.name);
+        const mobile = masterOp ? masterOp.mobile : op.mobile;
+        const email = masterOp ? masterOp.email : op.email;
+
+
         card.innerHTML = `
             <div class="shift-card-header">${op.name}</div>
-            <p>Shift Start: <span class="date-range">${formatDate(op.start)}</span></p>
-            <p>Shift End: <span class="date-range">${formatDate(op.end)}</span></p>
+            <p>Starts: <span class="date-range">${formatDate(op.start)}</span></p>
+            <p>Ends: <span class="date-range">${formatDate(op.end)}</span></p>
+            <p>Working Days: ${workingDays}</p>
+            <p>Mobile: ${mobile}</p>
+            <p>Email: ${email}</p>
         `;
         container.appendChild(card);
     });
 }
 
+// --- Operator Management ---
 
-// --- Admin Actions (Add/Rename/Reset/Delete/ResetAll) ---
+function renderOperatorManagementTable() {
+    if (!isAdmin) return;
+    const tbody = document.querySelector('#operatorManagementTable tbody');
+    tbody.innerHTML = '';
+    
+    initialOperators.forEach((op, index) => {
+        const tr = document.createElement('tr');
+        const opNameUpper = op.name.toUpperCase();
+        
+        let actionButtons = `
+            <button class="reset-btn" onclick="event.stopPropagation(); resetOperatorPasswordMaster('${opNameUpper}')">Reset Pwd</button>
+            <button class="rename-btn" onclick="event.stopPropagation(); openEditOperatorModal(${index})">Edit</button>
+            <button class="delete-btn" onclick="event.stopPropagation(); deleteMasterOperator(${index})">Delete</button>
+        `;
+
+        tr.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${op.name}</td>
+            <td>${op.mobile}</td>
+            <td>${op.email}</td>
+            <td>${actionButtons}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
 
 function addOperator() {
-    if (!isAdmin) return alert('Full Admin privileges required for editing.');
-    const name = document.getElementById('operatorName').value.trim().toUpperCase();    
+    if (!isAdmin) return;
+    const name = document.getElementById('operatorName').value.trim().toUpperCase();
     const mobile = document.getElementById('mobileNumber').value.trim();
+    const email = document.getElementById('emailAddress').value.trim(); // NEW
     const startDate = document.getElementById('startDate').value;
 
-    if (!name || !mobile) return alert('Please fill in both Operator Name and Mobile Number.');
+    if (!name || !mobile || !email) return alert('Please fill in Operator Name, Mobile Number, and Email Address.'); // UPDATED ALERT
     if (!startDate) return alert('Please set the Schedule Start Date at the top.');
 
     const exists = initialOperators.some(op => op.name.toLowerCase() === name.toLowerCase());
     if (exists) return alert('This operator name already exists.');
 
-    initialOperators.push({ name, mobile });
+    initialOperators.push({ name, mobile, email }); // ADD EMAIL
     localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
     
     if (!operatorPasswords[name]) {
@@ -972,91 +1539,216 @@ function addOperator() {
     
     document.getElementById('operatorName').value = '';
     document.getElementById('mobileNumber').value = '';
-    
+    document.getElementById('emailAddress').value = ''; // CLEAR NEW FIELD
+
+    logAuditAction('MASTER_OP_ADD', `New operator ${name} added to master list with mobile ${mobile} and email ${email}.`); // UPDATED LOG
     generateFullSchedule(startDate);
     renderTable();
+    renderOperatorManagementTable();
     alert(`Operator ${name} added and schedule regenerated.`);
 }
 
+function deleteMasterOperator(index) {
+    if (!isAdmin) return;
+    const opToDelete = initialOperators[index];
+    if (initialOperators.length <= 1) {
+        return alert('Cannot delete: You must have at least one operator in the master list.');
+    }
+
+    if (confirm(`Are you sure you want to DELETE the master operator ${opToDelete.name}? This will remove them from the list and regenerate the entire schedule.`)) {
+        initialOperators.splice(index, 1);
+        delete operatorPasswords[opToDelete.name.toUpperCase()];
+        localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
+        localStorage.setItem('operatorPasswords', JSON.stringify(operatorPasswords));
+        
+        const startDate = document.getElementById('startDate').value;
+
+        logAuditAction('MASTER_OP_DEL', `Master operator ${opToDelete.name} deleted. Schedule regenerated.`);
+        generateFullSchedule(startDate);
+        renderTable();
+        renderOperatorManagementTable();
+        alert(`Operator ${opToDelete.name} deleted and schedule regenerated.`);
+    }
+}
+
+function openEditOperatorModal(index) {
+    if (!isAdmin) return;
+    editOperatorIndex = index;
+    const operator = initialOperators[index];
+    document.getElementById('editOperatorName').value = operator.name;
+    document.getElementById('editMobileNumber').value = operator.mobile;
+    document.getElementById('editEmailAddress').value = operator.email; // NEW
+    document.getElementById('editOperatorModal').style.display = 'block';
+}
+
+function closeEditOperatorModal() {
+    document.getElementById('editOperatorModal').style.display = 'none';
+    editOperatorIndex = null;
+}
+
+function confirmEditOperator() {
+    if (editOperatorIndex === null || !isAdmin) return;
+    
+    const oldOperator = initialOperators[editOperatorIndex];
+    const newName = document.getElementById('editOperatorName').value.trim().toUpperCase();
+    const newMobile = document.getElementById('editMobileNumber').value.trim();
+    const newEmail = document.getElementById('editEmailAddress').value.trim();
+    
+    if (!newName || !newMobile || !newEmail) {
+        alert("All fields are required.");
+        return;
+    }
+    
+    // Check for duplicate name (excluding the current operator being edited)
+    const exists = initialOperators.some((op, i) => i !== editOperatorIndex && op.name.toLowerCase() === newName.toLowerCase());
+    if (exists) {
+        alert('This operator name already exists.');
+        return;
+    }
+
+    // Update master list
+    initialOperators[editOperatorIndex].name = newName;
+    initialOperators[editOperatorIndex].mobile = newMobile;
+    initialOperators[editOperatorIndex].email = newEmail;
+    
+    localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
+    
+    // Update password key if name changed
+    if (oldOperator.name.toUpperCase() !== newName) {
+        operatorPasswords[newName] = operatorPasswords[oldOperator.name.toUpperCase()] || DEFAULT_OPERATOR_PWD;
+        delete operatorPasswords[oldOperator.name.toUpperCase()];
+        localStorage.setItem('operatorPasswords', JSON.stringify(operatorPasswords));
+    }
+    
+    const startDate = document.getElementById('startDate').value;
+    logAuditAction('MASTER_OP_EDIT', `Master operator ${oldOperator.name} edited (New Name: ${newName}, New Mobile: ${newMobile}, New Email: ${newEmail}). Schedule regenerated.`); // UPDATED LOG
+    generateFullSchedule(startDate);
+    renderTable();
+    renderOperatorManagementTable();
+    closeEditOperatorModal();
+    alert(`Operator details updated. Schedule regenerated to reflect changes.`);
+}
+
+function resetOperatorPasswordMaster(operatorName) {
+    if (!isAdmin) return alert('Full Admin privileges required for editing.');
+    if (confirm(`Are you sure you want to RESET the password for ${operatorName} to the default password (${DEFAULT_OPERATOR_PWD})?`)) {
+        operatorPasswords[operatorName] = DEFAULT_OPERATOR_PWD;
+        localStorage.setItem('operatorPasswords', JSON.stringify(operatorPasswords));
+        logAuditAction('PWD_RESET', `Admin reset password for operator ${operatorName} to default.`);
+        alert(`Password for ${operatorName} reset to default.`);
+    }
+}
+
+
+// --- Other Admin/Utility Functions (Updated with Logging) ---
+
 function deleteOperatorShift(globalIndex) {
     if (!isAdmin) return alert('Full Admin privileges required for editing.');
-    
     const shiftToDelete = operators[globalIndex];
     if (!shiftToDelete) return;
 
     if (confirm(`Are you sure you want to DELETE the shift starting ${formatDate(shiftToDelete.start)} for ${shiftToDelete.name}?`)) {
-        operators.splice(globalIndex, 1); // Delete only the specific shift
+        operators.splice(globalIndex, 1);
         localStorage.setItem('operators', JSON.stringify(operators));
+        logAuditAction('SHIFT_DELETE', `Shift deleted for ${shiftToDelete.name} (Start: ${shiftToDelete.start}).`);
         renderTable();
         alert('Shift deleted.');
     }
 }
 
-function resetOperatorPassword(globalIndex) {
-     if (!isAdmin) return alert('Full Admin privileges required for editing.');
-     const operatorName = operators[globalIndex].name;
-     if (confirm(`Are you sure you want to RESET the password for ${operatorName} to the default password (${DEFAULT_OPERATOR_PWD})?`)) {
-         operatorPasswords[operatorName] = DEFAULT_OPERATOR_PWD;
-         localStorage.setItem('operatorPasswords', JSON.stringify(operatorPasswords));
-         alert(`Password for ${operatorName} reset to default.`);
-     }
-}
-
 function resetAll() {
     if (!isAdmin) return alert('Full Admin privileges required for data reset.');
     if (confirm("WARNING: This will clear ALL schedule data, operator lists, and non-admin passwords. Are you sure you want to proceed?")) {
+        logAuditAction('DATA_WIPE', 'Full data wipe initiated. All schedules, operators, and non-admin passwords cleared.');
         localStorage.removeItem('operators');
         localStorage.removeItem(INITIAL_OPERATORS_DATA_KEY);
         localStorage.removeItem('operatorPasswords');
-        
-        // Reload the initial hardcoded list and passwords
-        initialOperators = [
-             { name: "ABRAHAM CHALA", mobile: "0913564114" },
-             { name: "BERISO SHIBIRU", mobile: "0902911411" },
-             { name: "HAMBISA ADAMU", mobile: "0913456466" } ,
-             { name: "DAME TERFASSA", mobile: "0911117524" },
-             { name: "TSION GIRMA", mobile: "0946700418" }
-        ];
-        operators = [];
-        operatorPasswords = {};
+        localStorage.removeItem(NOTIFICATION_LOG_KEY); // NEW
+        localStorage.removeItem(NOTIFICATION_SETTINGS_KEY); // NEW
 
-        init(); // Reinitialize everything
+        initialOperators = [ // Reset to initial state with emails
+            { name: "ABRAHAM CHALA", mobile: "0913564114", email: "abrishc101@gmail.com" },
+            { name: "BERISO SHIBIRU", mobile: "0902911411", email: "bariidanse2012@gmail.com" },
+            { name: "HAMBISA ADAMU", mobile: "0913456466", email: "adamuhambisa033@gmail.com" } ,
+            { name: "DAME TERFASSA", mobile: "0911117524", email: "maldame@gmail.com" },
+            { name: "TSION GIRMA", mobile: "0946700418", email: "tsion22girma@gmail.com" }
+        ];
+        localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
+
+        // Re-run init to restore default passwords and regenerate schedule
+        init();
         logout();
-        alert("All data has been reset to initial state.");
+        alert("All data has been cleared and default settings restored.");
     }
 }
 
-// --- Shift Swap Functions ---
+function openRenameModal(globalIndex) {
+    if (!isAdmin) return alert('Full Admin privileges required for renaming.');
+    renameTargetGlobalIndex = globalIndex;
+    const shift = operators[globalIndex];
+    document.getElementById('newName').value = shift.name;
+    document.getElementById('renameModal').style.display = 'block';
+}
+
+function closeRenameModal() {
+    document.getElementById('renameModal').style.display = 'none';
+    renameTargetGlobalIndex = null;
+}
+
+function confirmRename() {
+    if (renameTargetGlobalIndex === null || !isAdmin) return;
+    const oldShift = operators[renameTargetGlobalIndex];
+    const oldName = oldShift.name;
+    const newName = document.getElementById('newName').value.trim().toUpperCase();
+    
+    if (!newName) {
+        alert('New name cannot be empty.');
+        return;
+    }
+    
+    // Look up current master operator details to ensure contact info is current
+    const operatorDetails = initialOperators.find(op => op.name === newName);
+    
+    const newMobile = operatorDetails ? operatorDetails.mobile : oldShift.mobile;
+    const newEmail = operatorDetails ? operatorDetails.email : oldShift.email; // UPDATED
+
+    oldShift.name = newName;
+    oldShift.checkedBy = newName;
+    oldShift.mobile = newMobile;
+    oldShift.email = newEmail; // ASSIGN NEW EMAIL
+    oldShift.status = 'Active';
+
+    localStorage.setItem('operators', JSON.stringify(operators));
+    logAuditAction('SHIFT_RENAME', `Shift (Start: ${oldShift.start}) renamed from ${oldName} to ${newName}.`);
+    renderTable();
+    closeRenameModal();
+    alert(`Shift successfully renamed to ${newName}.`);
+}
 
 function openSwapModal(globalIndex) {
-    if (!isAdmin) return alert('Admin privileges required.');
+    if (!isAdmin) return alert('Full Admin privileges required for swapping.');
     swapTargetGlobalIndex = globalIndex;
-    const shift = operators[globalIndex];
-
-    if (!shift) return;
-
-    document.getElementById('swapShiftStart').textContent = formatDate(shift.start);
-    document.getElementById('swapCurrentOperator').textContent = shift.name;
-
+    const oldShift = operators[globalIndex];
+    
     const select = document.getElementById('newOperatorSelect');
     select.innerHTML = '';
     
-    // Populate select with all initial operators, excluding the current one
-    initialOperators.forEach(op => {
-        if (op.name !== shift.name) {
-            const option = document.createElement('option');
-            option.value = op.name;
-            option.textContent = op.name;
-            select.appendChild(option);
-        }
+    // Populate select with all master operators, excluding the current one
+    initialOperators.filter(op => op.name.toUpperCase() !== oldShift.name.toUpperCase()).forEach(op => {
+        const option = document.createElement('option');
+        option.value = op.name;
+        option.textContent = op.name;
+        select.appendChild(option);
     });
-
+    
     if (select.options.length === 0) {
-        alert('Cannot swap: Only one operator in the list.');
+        alert('No other operators available for swapping.');
         swapTargetGlobalIndex = null;
         return;
     }
 
+    document.getElementById('swapShiftStart').textContent = formatDate(oldShift.start);
+    document.getElementById('swapCurrentOperator').textContent = oldShift.name;
     document.getElementById('swapModal').style.display = 'block';
 }
 
@@ -1067,8 +1759,8 @@ function closeSwapModal() {
 
 function confirmSwap() {
     if (swapTargetGlobalIndex === null || !isAdmin) return;
-
     const oldShift = operators[swapTargetGlobalIndex];
+    const oldName = oldShift.name;
     const newOperatorName = document.getElementById('newOperatorSelect').value;
     const newOperatorDetails = initialOperators.find(op => op.name === newOperatorName);
 
@@ -1076,20 +1768,21 @@ function confirmSwap() {
         alert('Please select a valid operator.');
         return;
     }
-
-    // Perform the swap on the specific shift
+    
     oldShift.name = newOperatorName;
     oldShift.checkedBy = newOperatorName;
     oldShift.mobile = newOperatorDetails.mobile;
-    
+    oldShift.email = newOperatorDetails.email; // ADDED EMAIL
+    oldShift.status = 'Active';
+
     localStorage.setItem('operators', JSON.stringify(operators));
+    logAuditAction('SHIFT_SWAP', `Shift (Start: ${oldShift.start}) swapped from ${oldName} to ${newOperatorName}.`);
     renderTable();
     closeSwapModal();
     alert(`Shift starting ${formatDate(oldShift.start)} successfully reassigned to ${newOperatorName}.`);
 }
 
-
-// --- Operator Password Management ---
+// --- Operator Password Management (Unchanged) ---
 
 function openChangePasswordModal() {
     document.getElementById('newOpPassword').value = '';
@@ -1103,7 +1796,6 @@ function closeChangePasswordModal() {
 
 function confirmPasswordChange() {
     if (!loggedInUser) return;
-
     const newPwd = document.getElementById('newOpPassword').value;
     const confirmPwd = document.getElementById('confirmOpPassword').value;
 
@@ -1115,17 +1807,15 @@ function confirmPasswordChange() {
         alert("Password must be at least 5 characters long.");
         return;
     }
-
-    // Check if the user is a special admin account
     if (loggedInUser === FULL_ADMIN_USER || loggedInUser === RESTRICTED_ADMIN_USER) {
         alert("Admin passwords cannot be changed through this interface.");
         closeChangePasswordModal();
         return;
     }
 
-    // Change password for regular operator
     operatorPasswords[loggedInUser] = newPwd;
     localStorage.setItem('operatorPasswords', JSON.stringify(operatorPasswords));
+    logAuditAction('PWD_CHANGE', `Operator ${loggedInUser} successfully changed their own password.`);
     alert("Password successfully changed.");
     closeChangePasswordModal();
 }
@@ -1135,55 +1825,13 @@ function resetMyPassword() {
     if (confirm(`Are you sure you want to reset your password back to the default (${DEFAULT_OPERATOR_PWD})?`)) {
         operatorPasswords[loggedInUser] = DEFAULT_OPERATOR_PWD;
         localStorage.setItem('operatorPasswords', JSON.stringify(operatorPasswords));
-        alert(`Your password has been reset to the default: ${DEFAULT_OPERATOR_PWD}`);
+        logAuditAction('PWD_RESET_SELF', `Operator ${loggedInUser} reset their own password to default.`);
+        alert(`Your password has been reset to the default: ${DEFAULT_OPERATOR_PWD}. Please log in again.`);
         logout();
     }
 }
 
-
-// --- Rename Modal Functions (for Shifts) ---
-
-function openRenameModal(globalIndex) {
-    if (!isAdmin) return alert('Admin privileges required.');
-    renameTargetGlobalIndex = globalIndex;
-    const currentName = operators[globalIndex].name;
-    document.getElementById('newName').value = currentName;
-    document.getElementById('renameModal').style.display = 'block';
-}
-
-function closeRenameModal() {
-    document.getElementById('renameModal').style.display = 'none';
-    renameTargetGlobalIndex = null;
-}
-
-function confirmRename() {
-    if (renameTargetGlobalIndex === null || !isAdmin) return;
-
-    const newName = document.getElementById('newName').value.trim().toUpperCase();
-    if (!newName) {
-        alert('New name cannot be empty.');
-        return;
-    }
-
-    const oldShift = operators[renameTargetGlobalIndex];
-    
-    // Find the mobile number from the initial list (if it exists)
-    const operatorDetails = initialOperators.find(op => op.name === newName);
-    const newMobile = operatorDetails ? operatorDetails.mobile : oldShift.mobile;
-
-    // Update the specific shift entry
-    oldShift.name = newName;
-    oldShift.checkedBy = newName;
-    oldShift.mobile = newMobile; // Update mobile if the new name is a known operator
-
-    localStorage.setItem('operators', JSON.stringify(operators));
-    renderTable();
-    closeRenameModal();
-    alert(`Shift successfully renamed to ${newName}.`);
-}
-
-// --- Utility Functions ---
-
+// --- Utility Functions (UPDATED) ---
 function calculateShiftRange() {
     const startDateString = document.getElementById('calcStartDate').value;
     if (!startDateString) {
@@ -1191,11 +1839,11 @@ function calculateShiftRange() {
         document.getElementById('calcWorkingDays').textContent = '--';
         return;
     }
-
+    
     const startDate = getCleanDate(startDateString);
     const endDate = calculateEndDate(startDate);
     const totalWorkingDays = countWorkingDays(startDate, endDate);
-    
+
     document.getElementById('calcEndDate').textContent = formatDate(endDate);
     document.getElementById('calcWorkingDays').textContent = totalWorkingDays;
 }
@@ -1203,9 +1851,16 @@ function calculateShiftRange() {
 function showDetailModal(op) {
     document.getElementById('detailOperatorName').textContent = op.name;
     document.getElementById('detailMobile').textContent = op.mobile;
+    document.getElementById('detailEmail').textContent = op.email || 'N/A'; // ADDED DETAIL
     document.getElementById('detailStart').textContent = formatDate(op.start);
     document.getElementById('detailEnd').textContent = formatDate(op.end);
-    document.getElementById('detailWorkingDays').textContent = countWorkingDays(op.start, op.end);
+    document.getElementById('detailStatus').textContent = op.status;
+    
+    const shiftStart = getCleanDate(op.start);
+    const shiftEnd = getCleanDate(op.end);
+    const workingDays = countWorkingDays(shiftStart, shiftEnd);
+    document.getElementById('detailWorkingDays').textContent = workingDays;
+
     document.getElementById('detailModal').style.display = 'block';
 }
 
@@ -1213,70 +1868,50 @@ function closeDetailModal() {
     document.getElementById('detailModal').style.display = 'none';
 }
 
-function scrollToAdd() {
-    const target = document.getElementById('adminControls');
-    if (target && isAdmin) {
-        target.scrollIntoView({ behavior: 'smooth' });
-    } else {
-        alert("Please log in as 'admin' to view Admin Actions.");
-    }
-}
-
-// --- PDF Generation ---
 function downloadPdf() {
-    // Check if the jsPDF library is loaded
-    if (typeof jspdf === 'undefined' || typeof jspdf.jsPDF === 'undefined') {
-        alert('PDF library not loaded. Please ensure you are connected to the internet.');
-        return;
+    if (!operators.length) {
+        return alert("No schedule data to download.");
     }
     
-    const doc = new jspdf.jsPDF();
-    const table = document.getElementById('scheduleTable');
-    
-    // Custom logic to get table data, ignoring the Actions column
-    const headers = [];
-    const headerCells = table.querySelectorAll('thead th');
-    headerCells.forEach((th, index) => {
-        // Skip the 'Actions' header (index 5)
-        if (th.id !== 'actionsHeader') { 
-            headers.push(th.textContent.trim());
-        }
-    });
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
 
-    const data = [];
-    const rows = table.querySelectorAll('tbody tr');
-    rows.forEach(row => {
-        const rowData = [];
-        const cells = row.querySelectorAll('td');
-        cells.forEach((cell, index) => {
-             // Skip the 'Actions' column (index 5)
-            if (index < 5) { 
-                rowData.push(cell.textContent.trim());
-            }
-        });
-        if (rowData.length > 0) { // Only add if row has data (not the "Please login" message)
-            data.push(rowData);
-        }
+    doc.setFontSize(18);
+    doc.text("Backup Operators Schedule", 148, 15, null, null, "center");
+
+    let headers = ["S/N", "Taken by", "Checked by", "Mobile", "Date Range", "Status"];
+    let data = [];
+    let baseOperators = operators;
+    const filterValue = document.getElementById('operatorFilter').value;
+    
+    if (isOperator) {
+        baseOperators = operators.filter(op => op.name.toUpperCase() === loggedInUser);
+    } else if (filterValue) {
+        baseOperators = operators.filter(op => op.name === filterValue);
+    }
+
+    baseOperators.forEach((op, index) => {
+        data.push([
+            index + 1,
+            op.name,
+            op.checkedBy,
+            op.mobile,
+            `${formatDate(op.start)} - ${formatDate(op.end)}`,
+            op.status
+        ]);
     });
     
-    // Add title and metadata
-    doc.setFontSize(18);
-    doc.text("Backup Operators Schedule", 105, 20, null, null, "center");
-    
-    // Get filter information
-    const filterValue = document.getElementById('operatorFilter').value;
-    let subtitle = "Full Schedule View";
+    let subtitle;
     if (filterValue) {
          subtitle = `Schedule for: ${filterValue}`;
     } else if (isOperator) {
          subtitle = `Schedule for: ${loggedInUser}`;
     } else {
-         // Default view showing current/upcoming
          subtitle = "Upcoming Shifts (Filtered)";
     }
     
     doc.setFontSize(12);
-    doc.text(subtitle, 105, 28, null, null, "center");
+    doc.text(subtitle, 148, 28, null, null, "center");
 
 
     doc.autoTable({
@@ -1284,39 +1919,33 @@ function downloadPdf() {
         body: data,
         startY: 35,
         styles: {
-            fontSize: 10,
+            fontSize: 9,
             halign: 'center'
         },
         headStyles: {
-            fillColor: [148, 200, 61], // #94C83D
+            fillColor: [148, 200, 61], 
             textColor: 255
         },
         alternateRowStyles: {
-            fillColor: [240, 240, 240] // #F0F0F0
+            fillColor: [240, 240, 240] 
         },
         columnStyles: {
-            0: { halign: 'center', cellWidth: 15 },
-            1: { halign: 'left' },
-            2: { halign: 'left' },
-            3: { halign: 'center', cellWidth: 30 },
-            4: { halign: 'center', cellWidth: 50 }
+            0: { halign: 'center', cellWidth: 10 }, 
+            1: { halign: 'left', cellWidth: 50 }, 
+            2: { halign: 'left', cellWidth: 50 }, 
+            3: { halign: 'center', cellWidth: 30 }, 
+            4: { halign: 'center', cellWidth: 40 }, 
+            5: { halign: 'center', cellWidth: 20 } 
         }
     });
     
-    // Footer
-    const finalY = doc.autoTable.previous.finalY;
-    doc.setFontSize(9);
-    doc.setTextColor(150);
-    doc.text(`Generated on ${formatDate(new Date())} | ${document.querySelector('.footer').textContent.trim()}`, 105, finalY + 10, null, null, "center");
-
-    doc.save('Backup_Schedule.pdf');
-    alert('Do you wish to download this document?.');
+    const finalY = doc.lastAutoTable.finalY + 10;
+    doc.setFontSize(8);
+    doc.text("© 2025 Backup Operators Schedule | Developed by HAMBISA ADAMU.", 148, finalY, null, null, "center");
+    
+    doc.save("Backup_Operators_Schedule.pdf");
+    logAuditAction('DOWNLOAD', `PDF schedule downloaded by ${loggedInUser}.`);
 }
-
-
-// --- Initialize the Application ---
-window.onload = init;
 </script>
-
 </body>
 </html>

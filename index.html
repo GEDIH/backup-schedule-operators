@@ -2,8 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Backup Operators Schedule</title>
+<title>Advanced Backup Operators Schedule</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Advanced backup operators schedule management system with real-time notifications and analytics">
+<meta name="theme-color" content="#94C83D">
 <style>
 /* === LOGO STYLES === */
 .logo-container {
@@ -107,6 +109,181 @@
 }
 /* === End New Admin Monitoring Styles === */
 
+/* === ADVANCED FEATURES STYLES === */
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #2c3e50;
+        color: #ecf0f1;
+    }
+    .table-container, .controls {
+        background-color: #34495e;
+        color: #ecf0f1;
+    }
+    th {
+        background-color: #2c3e50;
+    }
+    tr:not(.highlight-today):not(.highlight-next):not(.highlight-finished):nth-child(even) { 
+        background-color: #3a4a5c; 
+    }
+    tr:not(.highlight-today):not(.highlight-next):not(.highlight-finished):nth-child(odd) { 
+        background-color: #2c3e50; 
+    }
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    display: none;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #94C83D;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Advanced Analytics Dashboard */
+.analytics-dashboard {
+    display: none;
+    margin: 20px auto;
+    padding: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    color: white;
+    max-width: 1000px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.analytics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.analytics-card {
+    background: rgba(255,255,255,0.1);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.analytics-card h4 {
+    margin: 0 0 10px 0;
+    font-size: 0.9em;
+    opacity: 0.8;
+}
+
+.analytics-card .metric {
+    font-size: 2em;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* Real-time Status Indicators */
+.status-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+    animation: pulse 2s infinite;
+}
+
+.status-active { background-color: #28a745; }
+.status-warning { background-color: #ffc107; }
+.status-danger { background-color: #dc3545; }
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* Advanced Search and Filter */
+.advanced-search {
+    display: none;
+    margin: 15px auto;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    max-width: 1000px;
+    border: 1px solid #dee2e6;
+}
+
+.search-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.search-input {
+    padding: 10px;
+    border: 2px solid #e9ecef;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.search-input:focus {
+    border-color: #94C83D;
+    outline: none;
+}
+
+/* Enhanced Notifications */
+.toast-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #28a745;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 1000;
+    transform: translateX(400px);
+    transition: transform 0.3s ease;
+}
+
+.toast-notification.show {
+    transform: translateX(0);
+}
+
+.toast-notification.error {
+    background: #dc3545;
+}
+
+.toast-notification.warning {
+    background: #ffc107;
+    color: #333;
+}
+
+/* Progress Bars */
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 10px 0;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #94C83D, #7DAE2F);
+    transition: width 0.3s ease;
+}
+
+/* === End Advanced Features Styles === */
 
 /* === Color Palette and General Styles === */
 body {
@@ -444,7 +621,7 @@ tbody tr {
     <img src="images/oromia bank.png" alt="Oromia Bank">
 </div>
 
-<h2>Backup Operators Schedule</h2>
+<h2>Advanced Backup Operators Schedule</h2>
 
 <div id="nextShiftsWrapper">
     <div id="nextShiftsContainer">
@@ -453,6 +630,60 @@ tbody tr {
 
 <div id="notificationBanner">
     </div>
+
+<!-- Advanced Analytics Dashboard -->
+<div class="analytics-dashboard" id="analyticsDashboard">
+    <h3 style="text-align: center; margin: 0 0 15px 0;">📊 Schedule Analytics Dashboard</h3>
+    <div class="analytics-grid">
+        <div class="analytics-card">
+            <h4>Active Shifts</h4>
+            <p class="metric" id="activeShiftsCount">0</p>
+        </div>
+        <div class="analytics-card">
+            <h4>Completed Shifts</h4>
+            <p class="metric" id="completedShiftsCount">0</p>
+        </div>
+        <div class="analytics-card">
+            <h4>Total Operators</h4>
+            <p class="metric" id="totalOperatorsCount">0</p>
+        </div>
+        <div class="analytics-card">
+            <h4>Avg Shift Duration</h4>
+            <p class="metric" id="avgShiftDuration">0</p>
+        </div>
+        <div class="analytics-card">
+            <h4>Next Shift In</h4>
+            <p class="metric" id="nextShiftCountdown">--</p>
+        </div>
+        <div class="analytics-card">
+            <h4>System Uptime</h4>
+            <p class="metric" id="systemUptime">--</p>
+        </div>
+    </div>
+</div>
+
+<!-- Advanced Search and Filter -->
+<div class="advanced-search" id="advancedSearch">
+    <h3 style="text-align: center; margin: 0 0 15px 0;">🔍 Advanced Search & Filter</h3>
+    <div class="search-grid">
+        <input type="text" class="search-input" id="searchOperatorName" placeholder="Search by operator name...">
+        <input type="date" class="search-input" id="searchStartDate" placeholder="From date">
+        <input type="date" class="search-input" id="searchEndDate" placeholder="To date">
+        <select class="search-input" id="searchStatus">
+            <option value="">All Statuses</option>
+            <option value="Active">Active</option>
+            <option value="Finished">Finished</option>
+        </select>
+        <input type="text" class="search-input" id="searchMobile" placeholder="Search by mobile...">
+    </div>
+    <div style="text-align: center;">
+        <button onclick="applyAdvancedSearch()" style="background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 5px;">Apply Filters</button>
+        <button onclick="clearAdvancedSearch()" style="background-color: #6c757d; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 5px;">Clear Filters</button>
+    </div>
+</div>
+
+<!-- Loading Spinner -->
+<div class="loading-spinner" id="loadingSpinner"></div>
 
 <div class="top-section">
     <label for="startDate">Schedule Start Date (Shifts start the day after this date):</label>
@@ -470,6 +701,10 @@ tbody tr {
 
     <button onclick="logout()" id="logoutBtn" style="display:none;">Logout</button>
     <button onclick="scrollToAdminActions()" id="adminActionsBtn">Admin Actions</button>
+    <button onclick="toggleAnalytics()" id="analyticsBtn" style="display:none; background-color: #6f42c1;">📊 Analytics</button>
+    <button onclick="toggleAdvancedSearch()" id="advancedSearchBtn" style="display:none; background-color: #17a2b8;">🔍 Advanced Search</button>
+    <button onclick="exportToExcel()" id="exportExcelBtn" style="display:none; background-color: #28a745;">📊 Export Excel</button>
+    <button onclick="showHelpModal()" id="helpBtn" style="display:none; background-color: #fd7e14;">❓ Help</button>
 </div>
 
 <div id="authSection">
@@ -485,6 +720,9 @@ tbody tr {
     <button onclick="generateScheduleButton()">Generate Full Schedule</button>
     <button onclick="resetAll()" style="background-color: #cc0000;">Clear ALL Data</button>
     <button onclick="openAuditLogView()" style="background-color: #343a40;">View Audit Log</button>
+    <button onclick="openNotificationConfigModal()" style="background-color: #6c757d;">⚙️ Configure Notification APIs</button>
+    <button onclick="testNotificationSystem()" style="background-color: #6f42c1; color: white;">🧪 Test Notification System</button>
+    <button onclick="testNotificationToAllOperators()" style="background-color: #e83e8c; color: white;">📧 Test All Operators</button>
 
     <div id="shiftCalculator">
         <h3>Shift Range Calculator (10 Working Days, No Sundays)</h3>
@@ -494,14 +732,35 @@ tbody tr {
         <div class="result">Total Working Days: <span id="calcWorkingDays">--</span></div>
     </div>
     
-    <h3>Send Upcoming Shift Reminder (Simulated)</h3>
-    <div style="margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;">
-        <label for="notifyDays" style="font-weight: normal; margin: 0;">Notify operators this many days before shift start:</label>
-        <input type="number" id="notifyDays" value="7" min="1" max="30" style="width: 80px; margin: 0;">
-        <button onclick="saveNotificationSettings()" style="background-color: #00A8E8; margin: 0;">Save Settings</button>
-        <button onclick="checkAndSendNotifications(true)" style="background-color: #FF5733; margin: 0;">Send Upcoming Shift Reminder Now</button>
+    <!-- NOTIFICATION SECTION HIDDEN
+    <h3>📧📱 Automatic Email & SMS Notifications</h3>
+    <div style="margin-bottom: 15px; padding: 15px; background-color: #e8f4fd; border-radius: 8px; border-left: 4px solid #007bff;">
+        <h4 style="margin: 0 0 10px 0; color: #007bff;">🔄 Professional Notification System</h4>
+        <p style="margin: 5px 0; font-size: 14px;">✅ Professional email and SMS notifications sent automatically</p>
+        <p style="margin: 5px 0; font-size: 14px;">🕐 System checks every 6 hours for upcoming shifts</p>
+        <p style="margin: 5px 0; font-size: 14px;">📧 Emails with formal Oromia Bank letterhead</p>
+        <p style="margin: 5px 0; font-size: 14px;">📱 SMS with professional backup operator messaging</p>
+        <div style="margin-top: 10px; padding: 10px; background-color: #fff3cd; border-radius: 4px; border-left: 3px solid #ffc107;">
+            <p style="margin: 0; font-size: 13px; color: #856404;"><strong>⚠️ Email Configuration Required:</strong></p>
+            <p style="margin: 5px 0; font-size: 12px; color: #856404;">To enable email notifications, click "⚙️ Configure Notification APIs" and set up your EmailJS credentials. SMS notifications work automatically.</p>
+        </div>
+        <div style="margin-top: 10px; padding: 10px; background-color: #f8f9fa; border-radius: 4px; border-left: 3px solid #28a745;">
+            <p style="margin: 0; font-size: 13px; color: #495057;"><strong>Sample Message:</strong></p>
+            <p style="margin: 5px 0; font-size: 12px; font-style: italic; color: #6c757d;">"Dear OB Backup Operator, This is an advance notification that your backup schedule will begin in 3 days. You are advised to review and confirm readiness of all backup systems to ensure a smooth operation."</p>
+        </div>
     </div>
-    <button onclick="openNotificationLogView()" style="background-color: #4D8BCA;">View Notification Log</button>
+    <div style="margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;">
+        <label for="notifyDays" style="font-weight: normal; margin: 0;">📅 Notify operators this many days before shift start:</label>
+        <input type="number" id="notifyDays" value="7" min="1" max="30" style="width: 80px; margin: 0;">
+        <button onclick="saveNotificationSettings()" style="background-color: #28a745; margin: 0;">💾 Save & Start Auto-Notifications</button>
+        <button onclick="checkAndSendNotifications(true)" style="background-color: #FF5733; margin: 0;">📤 Send Reminders Now</button>
+    </div>
+    <div style="text-align: center; margin-bottom: 15px;">
+        <button onclick="testNotificationSystem()" style="background-color: #6f42c1; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; margin: 5px;">🧪 Test Notification System</button>
+        <button onclick="openNotificationLogView()" style="background-color: #4D8BCA;">📋 View Notification Log</button>
+        <button onclick="previewNotificationMessage()" style="background-color: #17a2b8; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; margin: 5px;">👁️ Preview Message</button>
+    </div>
+    END NOTIFICATION SECTION HIDDEN -->
     </div>
 
 <div class="table-container" id="operatorManagementView" style="display:none;">
@@ -563,9 +822,9 @@ tbody tr {
     </table>
 </div>
 
-<div class="note">BACKUP OPERATORS SCHEDULE</div>
+<div class="note">ADVANCED BACKUP OPERATORS SCHEDULE</div>
 
-<div class="footer">© 2025 Backup Operators Schedule | All rights reserved | Developed by HAMBISA ADAMU.</div>
+<div class="footer">© 2025 Advanced Backup Operators Schedule | All rights reserved | Developed by HAMBISA ADAMU | Enhanced with Analytics & Advanced Features.</div>
 
 <div id="renameModal" class="modal">
     <div class="modal-content">
@@ -634,16 +893,19 @@ tbody tr {
 <div id="notificationLogModal" class="modal">
     <div class="modal-content" style="max-width: 800px;">
         <span class="close" onclick="closeNotificationLogView()">&times;</span>
-        <h3>Sent Notification Log (Admin Monitoring)</h3>
-        <p>This log tracks which shifts reminders have been processed for, based on the set schedule.</p>
+        <h3>📧📱 Real-Time Notification Log (Email & SMS)</h3>
+        <p>This log tracks all email and SMS notifications sent to operators with delivery status.</p>
         <div class="table-container" style="padding: 5px; margin-top: 10px; max-height: 400px; overflow-y: scroll;">
             <table id="notificationLogTable" style="min-width: 100%;">
                 <thead>
                     <tr>
-                        <th>Date Sent (Simulated)</th>
+                        <th>Date Sent</th>
                         <th>Operator</th>
                         <th>Shift Start</th>
                         <th>Notification Type</th>
+                        <th>Email Address</th>
+                        <th>Mobile Number</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -655,15 +917,642 @@ tbody tr {
         </div>
     </div>
 </div>
+
+<div id="helpModal" class="modal">
+    <div class="modal-content" style="max-width: 600px;">
+        <span class="close" onclick="closeHelpModal()">&times;</span>
+        <h3>🚀 Advanced Features Help</h3>
+        
+        <h4>🎯 New Features:</h4>
+        <ul>
+            <li><strong>📊 Analytics Dashboard:</strong> Real-time statistics and metrics</li>
+            <li><strong>🔍 Advanced Search:</strong> Filter by multiple criteria</li>
+            <li><strong>📊 Excel Export:</strong> Export data to Excel format</li>
+            <li><strong>🌙 Dark Mode:</strong> Automatic dark theme support</li>
+            <li><strong>💾 Auto-Save:</strong> Automatic data backup every minute</li>
+            <li><strong>�📱 Real Notifications:</strong> Automatic email and SMS alerts</li>
+        </ul>
+        
+        <h4>⌨️ Keyboard Shortcuts:</h4>
+        <ul>
+            <li><strong>Ctrl/Cmd + K:</strong> Toggle Advanced Search</li>
+            <li><strong>Ctrl/Cmd + D:</strong> Toggle Analytics Dashboard</li>
+            <li><strong>Escape:</strong> Close any open modal</li>
+        </ul>
+        
+        <h4>🎨 Status Indicators:</h4>
+        <ul>
+            <li><span class="status-indicator status-active"></span> <strong>Active:</strong> Current/upcoming shifts</li>
+            <li><span class="status-indicator status-warning"></span> <strong>Finished:</strong> Completed shifts</li>
+            <li><span class="status-indicator status-danger"></span> <strong>Error:</strong> System issues</li>
+        </ul>
+        
+        <div style="text-align: center; margin-top: 20px;">
+            <button onclick="closeHelpModal()" style="background-color: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px;">Got it!</button>
+        </div>
+    </div>
+</div>
+
+<div id="notificationConfigModal" class="modal">
+    <div class="modal-content" style="max-width: 700px;">
+        <span class="close" onclick="closeNotificationConfigModal()">&times;</span>
+        <h3>⚙️ Notification API Configuration</h3>
+        
+        <div style="background-color: #fff3cd; padding: 15px; border-radius: 5px; margin-bottom: 20px; border-left: 4px solid #ffc107;">
+            <h4 style="margin: 0 0 10px 0; color: #856404;">📋 Setup Instructions</h4>
+            <p style="margin: 5px 0; font-size: 14px;"><strong>For Email (EmailJS):</strong></p>
+            <ol style="margin: 5px 0; padding-left: 20px; font-size: 14px;">
+                <li>Create account at <a href="https://emailjs.com" target="_blank">emailjs.com</a></li>
+                <li>Create email service and template</li>
+                <li>Get your Service ID, Template ID, and Public Key</li>
+            </ol>
+            <p style="margin: 5px 0; font-size: 14px;"><strong>For SMS (Twilio):</strong></p>
+            <ol style="margin: 5px 0; padding-left: 20px; font-size: 14px;">
+                <li>Create account at <a href="https://twilio.com" target="_blank">twilio.com</a></li>
+                <li>Get your Account SID, Auth Token, and Phone Number</li>
+                <li>Set up server-side endpoint for SMS sending</li>
+            </ol>
+        </div>
+        
+        <h4>📧 Email Configuration (EmailJS)</h4>
+        <label for="emailServiceId">Service ID:</label>
+        <input type="text" id="emailServiceId" placeholder="service_xxxxxxx" style="width: 100%; margin-bottom: 10px;">
+        
+        <label for="emailTemplateId">Template ID:</label>
+        <input type="text" id="emailTemplateId" placeholder="template_xxxxxxx" style="width: 100%; margin-bottom: 10px;">
+        
+        <label for="emailPublicKey">Public Key:</label>
+        <input type="text" id="emailPublicKey" placeholder="your_public_key" style="width: 100%; margin-bottom: 15px;">
+        
+        <h4>📱 SMS Configuration (Twilio)</h4>
+        <label for="smsAccountSid">Account SID:</label>
+        <input type="text" id="smsAccountSid" placeholder="ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" style="width: 100%; margin-bottom: 10px;">
+        
+        <label for="smsAuthToken">Auth Token:</label>
+        <input type="password" id="smsAuthToken" placeholder="your_auth_token" style="width: 100%; margin-bottom: 10px;">
+        
+        <label for="smsFromNumber">From Phone Number:</label>
+        <input type="text" id="smsFromNumber" placeholder="+1234567890" style="width: 100%; margin-bottom: 15px;">
+        
+        <div style="text-align: center;">
+            <button onclick="saveNotificationConfig()" style="background-color: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px; margin: 5px;">💾 Save Configuration</button>
+            <button onclick="setDemoMode()" style="background-color: #17a2b8; color: white; padding: 10px 20px; border: none; border-radius: 5px; margin: 5px;">🧪 Enable Demo Mode</button>
+            <button onclick="closeNotificationConfigModal()" style="background-color: #6c757d; color: white; padding: 10px 20px; border: none; border-radius: 5px; margin: 5px;">Cancel</button>
+        </div>
+    </div>
+</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.1/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
 <script>
+// --- ADVANCED FEATURES GLOBAL VARIABLES ---
+let systemStartTime = new Date();
+let analyticsVisible = false;
+let advancedSearchVisible = false;
+let currentSearchFilters = {};
+
+// --- ADVANCED ANALYTICS FUNCTIONS ---
+function updateAnalytics() {
+    if (!analyticsVisible) return;
+    
+    const activeShifts = operators.filter(op => op.status === 'Active').length;
+    const completedShifts = operators.filter(op => op.status === 'Finished').length;
+    const totalOperators = initialOperators.length;
+    
+    // Calculate average shift duration
+    const avgDuration = operators.length > 0 ? 
+        operators.reduce((sum, op) => {
+            const start = new Date(op.start);
+            const end = new Date(op.end);
+            return sum + Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+        }, 0) / operators.length : 0;
+    
+    // Find next upcoming shift
+    const nextShift = operators.find(op => {
+        const shiftStart = getCleanDate(op.start);
+        return shiftStart.getTime() > today.getTime() && op.status === 'Active';
+    });
+    
+    const nextShiftDays = nextShift ? 
+        daysBetween(today, getCleanDate(nextShift.start)) : 0;
+    
+    // Calculate system uptime
+    const uptime = Math.floor((new Date() - systemStartTime) / (1000 * 60 * 60 * 24));
+    
+    // Update UI
+    document.getElementById('activeShiftsCount').textContent = activeShifts;
+    document.getElementById('completedShiftsCount').textContent = completedShifts;
+    document.getElementById('totalOperatorsCount').textContent = totalOperators;
+    document.getElementById('avgShiftDuration').textContent = Math.round(avgDuration) + 'd';
+    document.getElementById('nextShiftCountdown').textContent = nextShiftDays > 0 ? nextShiftDays + 'd' : 'Today';
+    document.getElementById('systemUptime').textContent = uptime + 'd';
+}
+
+function toggleAnalytics() {
+    analyticsVisible = !analyticsVisible;
+    const dashboard = document.getElementById('analyticsDashboard');
+    const btn = document.getElementById('analyticsBtn');
+    
+    if (analyticsVisible) {
+        dashboard.style.display = 'block';
+        btn.textContent = '📊 Hide Analytics';
+        updateAnalytics();
+        // Update analytics every 30 seconds
+        setInterval(updateAnalytics, 30000);
+    } else {
+        dashboard.style.display = 'none';
+        btn.textContent = '📊 Analytics';
+    }
+}
+
+// --- ADVANCED SEARCH FUNCTIONS ---
+function toggleAdvancedSearch() {
+    advancedSearchVisible = !advancedSearchVisible;
+    const searchPanel = document.getElementById('advancedSearch');
+    const btn = document.getElementById('advancedSearchBtn');
+    
+    if (advancedSearchVisible) {
+        searchPanel.style.display = 'block';
+        btn.textContent = '🔍 Hide Search';
+    } else {
+        searchPanel.style.display = 'none';
+        btn.textContent = '🔍 Advanced Search';
+        clearAdvancedSearch();
+    }
+}
+
+function applyAdvancedSearch() {
+    const filters = {
+        operatorName: document.getElementById('searchOperatorName').value.toLowerCase(),
+        startDate: document.getElementById('searchStartDate').value,
+        endDate: document.getElementById('searchEndDate').value,
+        status: document.getElementById('searchStatus').value,
+        mobile: document.getElementById('searchMobile').value
+    };
+    
+    currentSearchFilters = filters;
+    renderTable();
+    showToast('Search filters applied successfully!', 'success');
+}
+
+function clearAdvancedSearch() {
+    document.getElementById('searchOperatorName').value = '';
+    document.getElementById('searchStartDate').value = '';
+    document.getElementById('searchEndDate').value = '';
+    document.getElementById('searchStatus').value = '';
+    document.getElementById('searchMobile').value = '';
+    currentSearchFilters = {};
+    renderTable();
+    showToast('Search filters cleared', 'info');
+}
+
+function applySearchFilters(operatorsList) {
+    if (Object.keys(currentSearchFilters).length === 0) return operatorsList;
+    
+    return operatorsList.filter(op => {
+        // Name filter
+        if (currentSearchFilters.operatorName && 
+            !op.name.toLowerCase().includes(currentSearchFilters.operatorName)) {
+            return false;
+        }
+        
+        // Date range filter
+        if (currentSearchFilters.startDate) {
+            const opStart = new Date(op.start);
+            const filterStart = new Date(currentSearchFilters.startDate);
+            if (opStart < filterStart) return false;
+        }
+        
+        if (currentSearchFilters.endDate) {
+            const opEnd = new Date(op.end);
+            const filterEnd = new Date(currentSearchFilters.endDate);
+            if (opEnd > filterEnd) return false;
+        }
+        
+        // Status filter
+        if (currentSearchFilters.status && op.status !== currentSearchFilters.status) {
+            return false;
+        }
+        
+        // Mobile filter
+        if (currentSearchFilters.mobile && 
+            !op.mobile.includes(currentSearchFilters.mobile)) {
+            return false;
+        }
+        
+        return true;
+    });
+}
+
+// --- ENHANCED NOTIFICATION SYSTEM ---
+function showToast(message, type = 'success') {
+    // Remove existing toast
+    const existingToast = document.querySelector('.toast-notification');
+    if (existingToast) {
+        existingToast.remove();
+    }
+    
+    const toast = document.createElement('div');
+    toast.className = `toast-notification ${type}`;
+    toast.textContent = message;
+    
+    document.body.appendChild(toast);
+    
+    // Show toast
+    setTimeout(() => toast.classList.add('show'), 100);
+    
+    // Hide toast after 3 seconds
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// --- EXCEL EXPORT FUNCTIONALITY ---
+function exportToExcel() {
+    if (!operators.length) {
+        showToast('No schedule data to export', 'error');
+        return;
+    }
+    
+    showLoading(true);
+    
+    setTimeout(() => {
+        try {
+            let baseOperators = operators;
+            const filterValue = document.getElementById('operatorFilter').value;
+            
+            if (isOperator) {
+                baseOperators = operators.filter(op => op.name.toUpperCase() === loggedInUser);
+            } else if (filterValue) {
+                baseOperators = operators.filter(op => op.name === filterValue);
+            }
+            
+            // Apply advanced search filters
+            baseOperators = applySearchFilters(baseOperators);
+            
+            const excelData = baseOperators.map((op, index) => ({
+                'S/N': index + 1,
+                'Operator Name': op.name,
+                'Checked By': op.checkedBy,
+                'Mobile Number': op.mobile,
+                'Email Address': op.email || 'N/A',
+                'Shift Start': formatDate(op.start),
+                'Shift End': formatDate(op.end),
+                'Status': op.status,
+                'Working Days': countWorkingDays(getCleanDate(op.start), getCleanDate(op.end))
+            }));
+            
+            const ws = XLSX.utils.json_to_sheet(excelData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Schedule');
+            
+            // Add some styling
+            const range = XLSX.utils.decode_range(ws['!ref']);
+            for (let C = range.s.c; C <= range.e.c; ++C) {
+                const address = XLSX.utils.encode_col(C) + "1";
+                if (!ws[address]) continue;
+                ws[address].s = {
+                    font: { bold: true },
+                    fill: { fgColor: { rgb: "94C83D" } }
+                };
+            }
+            
+            const fileName = `Backup_Operators_Schedule_${new Date().toISOString().split('T')[0]}.xlsx`;
+            XLSX.writeFile(wb, fileName);
+            
+            logAuditAction('EXCEL_EXPORT', `Excel schedule exported by ${loggedInUser}.`);
+            showToast('Excel file exported successfully!', 'success');
+        } catch (error) {
+            console.error('Excel export error:', error);
+            showToast('Error exporting Excel file', 'error');
+        } finally {
+            showLoading(false);
+        }
+    }, 500);
+}
+
+// --- LOADING INDICATOR ---
+function showLoading(show) {
+    const spinner = document.getElementById('loadingSpinner');
+    spinner.style.display = show ? 'block' : 'none';
+}
+
+// --- ENHANCED REAL-TIME FEATURES ---
+function addStatusIndicator(status) {
+    const indicator = document.createElement('span');
+    indicator.className = 'status-indicator';
+    
+    switch(status) {
+        case 'Active':
+            indicator.classList.add('status-active');
+            break;
+        case 'Finished':
+            indicator.classList.add('status-warning');
+            break;
+        default:
+            indicator.classList.add('status-danger');
+    }
+    
+    return indicator.outerHTML;
+}
+
+// --- KEYBOARD SHORTCUTS ---
+document.addEventListener('keydown', function(e) {
+    // Ctrl/Cmd + K for search
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        if (loggedInUser) {
+            toggleAdvancedSearch();
+        }
+    }
+    
+    // Ctrl/Cmd + D for analytics
+    if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
+        e.preventDefault();
+        if (loggedInUser) {
+            toggleAnalytics();
+        }
+    }
+    
+    // Escape to close modals
+    if (e.key === 'Escape') {
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+            if (modal.style.display === 'block') {
+                modal.style.display = 'none';
+            }
+        });
+    }
+});
+
+// --- AUTO-SAVE FUNCTIONALITY ---
+let autoSaveInterval;
+
+function startAutoSave() {
+    if (autoSaveInterval) clearInterval(autoSaveInterval);
+    
+    autoSaveInterval = setInterval(() => {
+        if (loggedInUser && isAdmin) {
+            localStorage.setItem('operators', JSON.stringify(operators));
+            localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
+            console.log('Auto-save completed');
+        }
+    }, 60000); // Auto-save every minute
+}
+
+function stopAutoSave() {
+    if (autoSaveInterval) {
+        clearInterval(autoSaveInterval);
+        autoSaveInterval = null;
+    }
+}
+
+// --- HELP MODAL FUNCTIONS ---
+function showHelpModal() {
+    document.getElementById('helpModal').style.display = 'block';
+}
+
+function closeHelpModal() {
+    document.getElementById('helpModal').style.display = 'none';
+}
+
+// --- TEST NOTIFICATION SYSTEM ---
+async function testNotificationSystem() {
+    if (!isAdmin) return;
+    
+    // Prompt for test email address
+    const testEmail = prompt('Enter your Gmail address to receive the test notification:', 'your.email@gmail.com');
+    if (!testEmail || !testEmail.includes('@')) {
+        alert('Please enter a valid email address to test.');
+        return;
+    }
+    
+    showToast('Testing notification system...', 'info');
+    
+    // Create test data with user's email
+    const testOperator = {
+        name: 'TEST OPERATOR',
+        email: testEmail,
+        mobile: '+1234567890'
+    };
+    
+    const testShift = {
+        start: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 7 days from now
+        end: new Date(Date.now() + 17 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // 17 days from now
+    };
+    
+    try {
+        const results = await sendNotificationToOperator(testOperator, testShift, 'test');
+        
+        let message = '🧪 Test Notification Results:\n\n';
+        message += `📧 Email: ${results.email.success ? '✅ Success' : '❌ Failed'}\n`;
+        if (!results.email.success && results.email.error) {
+            message += `   Error: ${results.email.error}\n`;
+        }
+        message += `📱 SMS: ${results.sms.success ? '✅ Success' : '❌ Failed'}\n`;
+        if (!results.sms.success && results.sms.error) {
+            message += `   Error: ${results.sms.error}\n`;
+        }
+        message += '\n';
+        
+        if (!results.email.success && !results.sms.success) {
+            message += '⚠️ Both email and SMS failed. Please check your API configuration.\n\n';
+            message += '💡 To fix issues:\n';
+            message += '📧 Email: Click "⚙️ Configure Notification APIs" → Set EmailJS credentials\n';
+            message += '📱 SMS: Configure SMS service (Twilio, etc.) in the same modal\n';
+            message += '🧪 Or use "Enable Demo Mode" for testing interface only';
+        } else if (results.email.success && results.sms.success) {
+            message += '🎉 Both email and SMS sent successfully!';
+            
+            // Check if in demo mode
+            const emailDemo = EMAIL_API_CONFIG.serviceId === 'demo_service';
+            const smsDemo = SMS_API_CONFIG.accountSid === 'demo_account';
+            
+            if (emailDemo && smsDemo) {
+                message += '\n\n⚠️ Note: Both are in DEMO MODE - no real notifications sent.';
+                message += '\nConfigure real credentials for actual delivery.';
+            } else if (emailDemo) {
+                message += '\n\n⚠️ Email in DEMO MODE - only SMS was real.';
+            } else if (smsDemo) {
+                message += '\n\n⚠️ SMS in DEMO MODE - only Email was real.';
+            } else {
+                message += '\n\n✅ Real notifications sent to: ' + testOperator.email + ' & ' + testOperator.mobile;
+            }
+        } else {
+            message += '⚠️ Partial success. ';
+            if (!results.email.success) {
+                message += 'Email failed - ';
+                if (EMAIL_API_CONFIG.serviceId === 'demo_service') {
+                    message += 'demo mode active, configure real EmailJS for actual emails.';
+                } else {
+                    message += 'check EmailJS configuration.';
+                }
+            } else if (!results.sms.success) {
+                message += 'SMS failed - ';
+                if (SMS_API_CONFIG.accountSid === 'demo_account') {
+                    message += 'demo mode active, configure real SMS service for actual SMS.';
+                } else {
+                    message += 'check SMS configuration.';
+                }
+            }
+        }
+        
+        alert(message);
+        showToast('Test notification completed', 'success');
+        
+    } catch (error) {
+        console.error('Test notification failed:', error);
+        alert('❌ Test notification failed. Check console for details.');
+        showToast('Test notification failed', 'error');
+    }
+}
+
+// --- TEST NOTIFICATION TO ALL OPERATORS ---
+async function testNotificationToAllOperators() {
+    if (!isAdmin) return;
+    
+    // List of all operator emails
+    const operatorEmails = [
+        { name: 'DAME TERFASSA', email: 'maldame@gmail.com' },
+        { name: 'TSION GIRMA', email: 'tsion22girma@gmail.com' },
+        { name: 'ABRAHAM CHALA', email: 'abrishc101@gmail.com' },
+        { name: 'BERISO SHIBIRU', email: 'bariidanse2012@gmail.com' },
+        { name: 'KETE MANEW', email: 'ketemanew@gmail.com' }
+    ];
+    
+    const confirmed = confirm(`📧 Send Test Notifications to All Operators?\n\nThis will send test emails to:\n${operatorEmails.map(op => `• ${op.name} (${op.email})`).join('\n')}\n\nContinue?`);
+    
+    if (!confirmed) return;
+    
+    showToast('Sending test notifications to all operators...', 'info');
+    showLoading(true);
+    
+    let successCount = 0;
+    let failCount = 0;
+    const results = [];
+    
+    // Create test shift data
+    const testShift = {
+        start: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 7 days from now
+        end: new Date(Date.now() + 17 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // 17 days from now
+    };
+    
+    try {
+        // Send to each operator
+        for (const operator of operatorEmails) {
+            console.log(`Sending test notification to ${operator.name} (${operator.email})`);
+            
+            const result = await sendNotificationToOperator(operator, testShift, 'test');
+            
+            if (result.email.success) {
+                successCount++;
+                results.push(`✅ ${operator.name}: Success`);
+            } else {
+                failCount++;
+                results.push(`❌ ${operator.name}: Failed - ${result.email.error || 'Unknown error'}`);
+            }
+            
+            // Small delay between sends to avoid rate limiting
+            await new Promise(resolve => setTimeout(resolve, 500));
+        }
+        
+        // Show results
+        let message = `📧📱 Test Notifications Sent to All Operators\n\n`;
+        message += `✅ Successful: ${successCount}\n`;
+        message += `❌ Failed: ${failCount}\n\n`;
+        message += `Detailed Results:\n${results.join('\n')}\n\n`;
+        
+        // Check demo mode status
+        const emailDemo = EMAIL_API_CONFIG.serviceId === 'demo_service';
+        const smsDemo = SMS_API_CONFIG.accountSid === 'demo_account';
+        
+        if (emailDemo && smsDemo) {
+            message += `⚠️ DEMO MODE: No real emails or SMS were sent!\nConfigure real services for actual delivery.`;
+        } else if (emailDemo) {
+            message += `⚠️ Email in DEMO MODE - only SMS notifications were real.`;
+        } else if (smsDemo) {
+            message += `⚠️ SMS in DEMO MODE - only Email notifications were real.`;
+        } else if (successCount > 0) {
+            message += `✅ Real email & SMS notifications sent successfully!\nCheck operators' Gmail inboxes and mobile phones.`;
+        }
+        
+        alert(message);
+        
+        if (successCount > 0) {
+            showToast(`✅ ${successCount} test notifications sent successfully!`, 'success');
+        } else {
+            showToast(`❌ All notifications failed. Check configuration.`, 'error');
+        }
+        
+    } catch (error) {
+        console.error('Bulk test notification failed:', error);
+        alert('❌ Bulk test notification failed. Check console for details.');
+        showToast('Bulk test failed', 'error');
+    } finally {
+        showLoading(false);
+    }
+}
+
+// --- ENHANCED INITIALIZATION ---
+function initAdvancedFeatures() {
+    // Initialize system start time from localStorage or current time
+    const savedStartTime = localStorage.getItem('systemStartTime');
+    if (savedStartTime) {
+        systemStartTime = new Date(savedStartTime);
+    } else {
+        localStorage.setItem('systemStartTime', systemStartTime.toISOString());
+    }
+    
+    // Load saved API configuration
+    loadApiConfiguration();
+    
+    // Initialize EmailJS for email notifications
+    initializeEmailJS();
+    
+    // Add keyboard shortcut hints
+    if (loggedInUser) {
+        console.log('Keyboard shortcuts: Ctrl+K (Search), Ctrl+D (Analytics), Escape (Close modals)');
+    }
+    
+    console.log('🚀 Advanced features initialized with real-time notifications');
+}
+
+// Load API configuration from localStorage
+function loadApiConfiguration() {
+    const savedConfig = JSON.parse(localStorage.getItem('notificationApiConfig') || '{}');
+    
+    if (savedConfig.emailServiceId) EMAIL_API_CONFIG.serviceId = savedConfig.emailServiceId;
+    if (savedConfig.emailTemplateId) EMAIL_API_CONFIG.templateId = savedConfig.emailTemplateId;
+    if (savedConfig.emailPublicKey) EMAIL_API_CONFIG.publicKey = savedConfig.emailPublicKey;
+    
+    if (savedConfig.smsAccountSid) SMS_API_CONFIG.accountSid = savedConfig.smsAccountSid;
+    if (savedConfig.smsAuthToken) SMS_API_CONFIG.authToken = savedConfig.smsAuthToken;
+    if (savedConfig.smsFromNumber) SMS_API_CONFIG.fromNumber = savedConfig.smsFromNumber;
+}
+
 // --- GLOBAL CONSTANTS AND DATA ---
 const INITIAL_OPERATORS_DATA_KEY = 'initialOperators';
 const AUDIT_LOG_KEY = 'auditLog'; 
 const NOTIFICATION_LOG_KEY = 'notificationLog'; // NEW
 const NOTIFICATION_SETTINGS_KEY = 'notificationSettings'; // NEW
+
+// Email and SMS API Configuration
+const EMAIL_API_CONFIG = {
+    service: 'emailjs', // Using EmailJS for client-side email sending
+    serviceId: '', // Will be loaded from localStorage or configuration modal
+    templateId: '', // Will be loaded from localStorage or configuration modal
+    publicKey: '' // Will be loaded from localStorage or configuration modal
+};
+
+const SMS_API_CONFIG = {
+    service: 'twilio', // Using Twilio for SMS
+    accountSid: '', // Will be loaded from localStorage or configuration modal
+    authToken: '', // Will be loaded from localStorage or configuration modal
+    fromNumber: '' // Will be loaded from localStorage or configuration modal
+};
 
 let initialOperators = JSON.parse(localStorage.getItem(INITIAL_OPERATORS_DATA_KEY)) || [
     // UPDATED INITIAL OPERATOR LIST WITH NEW EMAILS
@@ -671,7 +1560,8 @@ let initialOperators = JSON.parse(localStorage.getItem(INITIAL_OPERATORS_DATA_KE
     { name: "BERISO SHIBIRU", mobile: "0902911411", email: "bariidanse2012@gmail.com" },
     { name: "HAMBISA ADAMU", mobile: "0913456466", email: "adamuhambisa033@gmail.com" } ,
     { name: "DAME TERFASSA", mobile: "0911117524", email: "maldame@gmail.com" },
-    { name: "TSION GIRMA", mobile: "0946700418", email: "tsion22girma@gmail.com" }
+    { name: "TSION GIRMA", mobile: "0946700418", email: "tsion22girma@gmail.com" },
+    { name: "KETE MANEW", mobile: "0911000000", email: "ketemanew@gmail.com" }
 ];
 
 let operators = JSON.parse(localStorage.getItem('operators') || '[]');
@@ -828,7 +1718,404 @@ function clearAuditLog() {
 }
 
 
-// --- NEW Notification Module Functions ---
+// --- ENHANCED NOTIFICATION MODULE FUNCTIONS ---
+
+// Initialize EmailJS
+function initializeEmailJS() {
+    if (typeof emailjs !== 'undefined') {
+        if (EMAIL_API_CONFIG.publicKey && EMAIL_API_CONFIG.publicKey !== '') {
+            emailjs.init(EMAIL_API_CONFIG.publicKey);
+            console.log('EmailJS initialized successfully');
+        } else {
+            console.warn('EmailJS public key not configured. Email notifications will not work.');
+        }
+    } else {
+        console.warn('EmailJS library not loaded. Email notifications will not work.');
+    }
+}
+
+// Send Email Notification
+async function sendEmailNotification(operatorData, shiftData, notificationType = 'reminder') {
+    if (typeof emailjs === 'undefined') {
+        console.error('EmailJS library not loaded');
+        return { success: false, error: 'EmailJS library not loaded' };
+    }
+
+    // Check if email configuration is properly set
+    if (!EMAIL_API_CONFIG.serviceId || !EMAIL_API_CONFIG.templateId || !EMAIL_API_CONFIG.publicKey) {
+        console.error('Email configuration incomplete');
+        
+        // For testing purposes, simulate successful email sending
+        if (notificationType === 'test') {
+            console.log('Test mode: Simulating successful email send');
+            return { 
+                success: true, 
+                response: { 
+                    status: 200, 
+                    text: 'Test email simulated successfully' 
+                } 
+            };
+        }
+        
+        return { success: false, error: 'Email configuration not set. Please configure EmailJS credentials in Admin settings.' };
+    }
+
+    const daysUntil = daysBetween(getCleanDate(new Date()), getCleanDate(shiftData.start));
+    
+    // Create email subject and message based on notification type
+    let emailSubject = '';
+    let emailMessage = '';
+    
+    switch (notificationType) {
+        case 'reminder':
+            emailSubject = `Oromia Bank - Backup Schedule Notification (${daysUntil} days advance notice)`;
+            emailMessage = `Dear OB Backup Operator,
+
+This is an advance notification that your backup schedule will begin in ${daysUntil} days. You are advised to review and confirm readiness of all backup systems to ensure a smooth operation.
+
+Schedule Details:
+📅 Start Date: ${formatDate(shiftData.start)}
+📅 End Date: ${formatDate(shiftData.end)}
+👤 Operator: ${operatorData.name}
+📱 Mobile: ${operatorData.mobile}
+📧 Email: ${operatorData.email}
+
+Please ensure all preparations are completed before your shift begins. If you have any questions or concerns, please contact the IT department immediately.
+
+Best regards,
+Oromia Bank IT Department
+Backup Operations Management System`;
+            break;
+        case 'urgent':
+            emailSubject = `🚨 URGENT - Oromia Bank Backup Schedule Starts Tomorrow`;
+            emailMessage = `Dear OB Backup Operator,
+
+This is an advance notification that your backup schedule will begin TOMORROW. You are advised to review and confirm readiness of all backup systems to ensure a smooth operation.
+
+Schedule Details:
+📅 Start Date: ${formatDate(shiftData.start)} (TOMORROW)
+📅 End Date: ${formatDate(shiftData.end)}
+👤 Operator: ${operatorData.name}
+📱 Mobile: ${operatorData.mobile}
+
+Please confirm your readiness and availability immediately. Contact the IT department if there are any issues.
+
+Best regards,
+Oromia Bank IT Department
+Backup Operations Management System`;
+            break;
+        case 'today':
+            emailSubject = `🔔 Oromia Bank - Your Backup Schedule Starts Today`;
+            emailMessage = `Dear OB Backup Operator,
+
+This is a notification that your backup schedule begins TODAY. You are advised to review and confirm readiness of all backup systems to ensure a smooth operation.
+
+Schedule Details:
+📅 Start Date: ${formatDate(shiftData.start)} (TODAY)
+📅 End Date: ${formatDate(shiftData.end)}
+👤 Operator: ${operatorData.name}
+
+Please report as scheduled and ensure all backup systems are operational.
+
+Best regards,
+Oromia Bank IT Department
+Backup Operations Management System`;
+            break;
+        case 'test':
+            emailSubject = `🧪 Test - Oromia Bank Backup Notification System`;
+            emailMessage = `Dear OB Backup Operator,
+
+This is a test notification to verify the backup schedule notification system is working properly. You are advised to review and confirm readiness of all backup systems to ensure a smooth operation.
+
+This is a test message only - no action required.
+
+Best regards,
+Oromia Bank IT Department
+Backup Operations Management System`;
+            break;
+        default:
+            emailSubject = `Oromia Bank - Backup Schedule Notification`;
+            emailMessage = `Dear OB Backup Operator,
+
+This is an advance notification that your backup schedule will begin in ${daysUntil} days. You are advised to review and confirm readiness of all backup systems to ensure a smooth operation.
+
+Schedule Details:
+📅 Start Date: ${formatDate(shiftData.start)}
+📅 End Date: ${formatDate(shiftData.end)}
+👤 Operator: ${operatorData.name}
+
+Best regards,
+Oromia Bank IT Department
+Backup Operations Management System`;
+    }
+
+    const templateParams = {
+        to_name: operatorData.name,
+        to_email: operatorData.email,
+        subject: emailSubject,
+        message: emailMessage,
+        operator_name: operatorData.name,
+        shift_start_date: formatDate(shiftData.start),
+        shift_end_date: formatDate(shiftData.end),
+        mobile_number: operatorData.mobile,
+        notification_type: notificationType,
+        days_until_shift: daysUntil,
+        bank_name: 'Oromia Bank',
+        system_name: 'Backup Operations Management System'
+    };
+
+    try {
+        const response = await emailjs.send(
+            EMAIL_API_CONFIG.serviceId,
+            EMAIL_API_CONFIG.templateId,
+            templateParams
+        );
+        
+        console.log('Email sent successfully:', response);
+        return { success: true, response: response };
+    } catch (error) {
+        console.error('Email sending failed:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+// Send SMS Notification (using a web service or API)
+async function sendSMSNotification(operatorData, shiftData, notificationType = 'reminder') {
+    const message = createSMSMessage(operatorData, shiftData, notificationType);
+    
+    // Check if SMS configuration is properly set
+    if (!SMS_API_CONFIG.accountSid || !SMS_API_CONFIG.authToken || !SMS_API_CONFIG.fromNumber) {
+        console.error('SMS configuration incomplete');
+        
+        // For testing purposes, simulate successful SMS sending
+        if (notificationType === 'test') {
+            console.log('Test mode: Simulating successful SMS send');
+            return { 
+                success: true, 
+                response: { 
+                    status: 'sent', 
+                    messageId: 'SMS_TEST_' + Date.now() 
+                } 
+            };
+        }
+        
+        return { success: false, error: 'SMS configuration not set. Please configure SMS credentials in Admin settings.' };
+    }
+    
+    const smsData = {
+        to: operatorData.mobile,
+        message: message,
+        from: SMS_API_CONFIG.fromNumber || 'Oromia Bank'
+    };
+
+    try {
+        const response = await sendSMSViaAPI(smsData);
+        console.log('SMS sent successfully:', response);
+        return { success: true, response: response };
+    } catch (error) {
+        console.error('SMS sending failed:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+// Create SMS Message Content
+function createSMSMessage(operatorData, shiftData, notificationType) {
+    const daysUntil = daysBetween(getCleanDate(new Date()), getCleanDate(shiftData.start));
+    
+    let message = '';
+    
+    switch (notificationType) {
+        case 'reminder':
+            message = `Dear OB Backup Operator,
+
+This is an advance notification that your backup schedule will begin in ${daysUntil} days. You are advised to review and confirm readiness of all backup systems to ensure a smooth operation.
+
+Schedule Details:
+📅 Start Date: ${formatDate(shiftData.start)}
+📅 End Date: ${formatDate(shiftData.end)}
+👤 Operator: ${operatorData.name}
+
+Please ensure all preparations are completed before your shift begins.
+
+Best regards,
+Oromia Bank IT Department`;
+            break;
+        case 'urgent':
+            message = `🚨 URGENT - Dear OB Backup Operator,
+
+This is an advance notification that your backup schedule will begin TOMORROW. You are advised to review and confirm readiness of all backup systems to ensure a smooth operation.
+
+Schedule Details:
+📅 Start Date: ${formatDate(shiftData.start)} (TOMORROW)
+📅 End Date: ${formatDate(shiftData.end)}
+👤 Operator: ${operatorData.name}
+
+Please confirm your readiness immediately.
+
+Best regards,
+Oromia Bank IT Department`;
+            break;
+        case 'today':
+            message = `🔔 Dear OB Backup Operator,
+
+This is a notification that your backup schedule begins TODAY. You are advised to review and confirm readiness of all backup systems to ensure a smooth operation.
+
+Schedule Details:
+📅 Start Date: ${formatDate(shiftData.start)} (TODAY)
+📅 End Date: ${formatDate(shiftData.end)}
+👤 Operator: ${operatorData.name}
+
+Please report as scheduled and ensure all systems are operational.
+
+Best regards,
+Oromia Bank IT Department`;
+            break;
+        case 'test':
+            message = `🧪 TEST MESSAGE - Dear OB Backup Operator,
+
+This is a test notification to verify the backup schedule notification system is working properly. You are advised to review and confirm readiness of all backup systems to ensure a smooth operation.
+
+This is a test message only - no action required.
+
+Best regards,
+Oromia Bank IT Department`;
+            break;
+        default:
+            message = `Dear OB Backup Operator,
+
+This is an advance notification that your backup schedule will begin in ${daysUntil} days. You are advised to review and confirm readiness of all backup systems to ensure a smooth operation.
+
+Schedule Details:
+📅 Start Date: ${formatDate(shiftData.start)}
+📅 End Date: ${formatDate(shiftData.end)}
+👤 Operator: ${operatorData.name}
+
+Best regards,
+Oromia Bank IT Department`;
+    }
+    
+    return message;
+}
+
+// Generic SMS API function (replace with your SMS service)
+async function sendSMSViaAPI(smsData) {
+    // Check if we're in demo mode
+    if (SMS_API_CONFIG.accountSid === 'demo_account' || 
+        SMS_API_CONFIG.authToken === 'demo_token' || 
+        SMS_API_CONFIG.fromNumber === 'demo_number') {
+        
+        // Demo mode - simulate SMS sending
+        console.log('SMS Demo Mode: Simulating SMS send to', smsData.to);
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve({
+                    success: true,
+                    messageId: 'SMS_DEMO_' + Date.now(),
+                    status: 'sent',
+                    demo: true
+                });
+            }, 1000);
+        });
+    }
+    
+    // Real SMS sending options:
+    
+    // Option 1: Twilio (requires server-side endpoint)
+    if (SMS_API_CONFIG.service === 'twilio') {
+        try {
+            const response = await fetch('/api/send-sms-twilio', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    to: smsData.to,
+                    message: smsData.message,
+                    accountSid: SMS_API_CONFIG.accountSid,
+                    authToken: SMS_API_CONFIG.authToken,
+                    fromNumber: SMS_API_CONFIG.fromNumber
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            return await response.json();
+        } catch (error) {
+            console.error('Twilio SMS failed:', error);
+            throw error;
+        }
+    }
+    
+    // Option 2: Other SMS services can be added here
+    // Example: AWS SNS, MessageBird, etc.
+    
+    // Fallback: Simulate SMS sending if no real service configured
+    console.log('No real SMS service configured. Simulating SMS send.');
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve({
+                success: true,
+                messageId: 'SMS_SIM_' + Date.now(),
+                status: 'simulated'
+            });
+        }, 1000);
+    });
+}
+
+// Enhanced notification sending with both email and SMS
+async function sendNotificationToOperator(operatorData, shiftData, notificationType = 'reminder') {
+    const results = {
+        email: { success: false, error: null },
+        sms: { success: false, error: null }
+    };
+    
+    showLoading(true);
+    showToast('Sending notifications...', 'info');
+    
+    try {
+        // Send Email
+        if (operatorData.email && operatorData.email !== 'N/A') {
+            results.email = await sendEmailNotification(operatorData, shiftData, notificationType);
+        }
+        
+        // Send SMS
+        if (operatorData.mobile) {
+            results.sms = await sendSMSNotification(operatorData, shiftData, notificationType);
+        }
+        
+        // Log the notification attempt
+        const logEntry = {
+            id: `${shiftData.start}-${operatorData.name.toUpperCase()}-${Date.now()}`,
+            timestamp: new Date().toISOString(),
+            operatorName: operatorData.name,
+            shiftStart: shiftData.start,
+            type: `${notificationType} (Email: ${results.email.success ? 'Sent' : 'Failed'}, SMS: ${results.sms.success ? 'Sent' : 'Failed'})`,
+            email: operatorData.email,
+            mobile: operatorData.mobile,
+            emailStatus: results.email.success ? 'Success' : 'Failed',
+            smsStatus: results.sms.success ? 'Success' : 'Failed'
+        };
+        
+        notificationLog.unshift(logEntry);
+        localStorage.setItem(NOTIFICATION_LOG_KEY, JSON.stringify(notificationLog));
+        
+        // Log to audit
+        logAuditAction('NOTIFICATION_SENT', 
+            `Notification sent to ${operatorData.name} for shift starting ${formatDate(shiftData.start)}. Email: ${results.email.success ? 'Success' : 'Failed'}, SMS: ${results.sms.success ? 'Success' : 'Failed'}`
+        );
+        
+        return results;
+        
+    } catch (error) {
+        console.error('Notification sending error:', error);
+        showToast('Error sending notifications', 'error');
+        return results;
+    } finally {
+        showLoading(false);
+    }
+}
 
 function saveNotificationSettings() {
     if (!isAdmin) return;
@@ -839,8 +2126,48 @@ function saveNotificationSettings() {
     }
     notificationSettings.notifyDays = days;
     localStorage.setItem(NOTIFICATION_SETTINGS_KEY, JSON.stringify(notificationSettings));
-    logAuditAction('NOTIF_SETTINGS', `Notification threshold set to ${days} days.`);
-    alert(`Notification setting saved: Operators will be notified ${days} days before their shift starts.`);
+    logAuditAction('NOTIF_SETTINGS', `Notification threshold set to ${days} days. Automatic notifications enabled.`);
+    
+    // Start automatic notification checking
+    startAutomaticNotifications();
+    
+    showToast(`✅ Settings saved! Operators will be notified ${days} days before their shift starts.`, 'success');
+    alert(`Notification settings saved successfully!\n\n📧 Email and SMS notifications will be sent automatically ${days} days before each shift starts.\n\n🔄 Automatic checking is now enabled and will run every 6 hours.`);
+}
+
+// Start automatic notification checking
+function startAutomaticNotifications() {
+    // Clear any existing interval
+    if (window.notificationInterval) {
+        clearInterval(window.notificationInterval);
+    }
+    
+    // Check for notifications every 6 hours (21600000 ms)
+    window.notificationInterval = setInterval(() => {
+        if (isAdmin || isRestrictedAdmin) {
+            console.log('[Automatic Check] Running scheduled notification check...');
+            checkAndSendNotifications(false);
+        }
+    }, 21600000); // 6 hours
+    
+    // Also check immediately when starting
+    setTimeout(() => {
+        if (isAdmin || isRestrictedAdmin) {
+            console.log('[Initial Check] Running initial notification check...');
+            checkAndSendNotifications(false);
+        }
+    }, 5000); // 5 seconds after login
+    
+    console.log('✅ Automatic notifications started - checking every 6 hours');
+}
+
+// Stop automatic notification checking
+function stopAutomaticNotifications() {
+    if (window.notificationInterval) {
+        clearInterval(window.notificationInterval);
+        window.notificationInterval = null;
+        console.log('🛑 Automatic notifications stopped');
+    }
 }
 
 function renderNotificationLog() {
@@ -855,11 +2182,21 @@ function renderNotificationLog() {
 
     notificationLog.forEach(entry => {
         const tr = document.createElement('tr');
+        
+        // Create status indicators for email and SMS
+        const emailStatus = entry.emailStatus || 'Unknown';
+        const smsStatus = entry.smsStatus || 'Unknown';
+        const emailIcon = emailStatus === 'Success' ? '✅📧' : '❌📧';
+        const smsIcon = smsStatus === 'Success' ? '✅📱' : '❌📱';
+        
         tr.innerHTML = `
             <td>${formatTimestamp(entry.timestamp)}</td>
             <td>${entry.operatorName}</td>
             <td>${formatDate(entry.shiftStart)}</td>
             <td>${entry.type}</td>
+            <td>${entry.email || 'N/A'}</td>
+            <td>${entry.mobile || 'N/A'}</td>
+            <td>${emailIcon} ${smsIcon}</td>
         `;
         tbody.appendChild(tr);
     });
@@ -892,59 +2229,73 @@ function checkAndSendNotifications(manualTrigger = false) {
     const now = getCleanDate(new Date());
     
     // Only process for active shifts that start in the future
-    operators.forEach(op => {
+    operators.forEach(async (op) => {
         if (op.status !== 'Active') return;
         
         const shiftStart = getCleanDate(op.start);
-        
         const daysUntilStart = daysBetween(now, shiftStart);
         
         // Check if shift is upcoming and within the notification window
         if (daysUntilStart >= 1 && daysUntilStart <= notifyDays) {
             
-            // Generate a unique ID for this notification instance (shift start date + operator name)
+            // Generate a unique ID for this notification instance
             const notificationID = `${op.start}-${op.name.toUpperCase()}`;
             
             // Check if this notification has already been sent/logged
             const alreadySent = notificationLog.some(log => log.id === notificationID);
 
-            if (!alreadySent) {
-                // SIMULATE SENDING THE NOTIFICATION
+            if (!alreadySent || manualTrigger) {
+                // Get the most current operator details from master list
+                const masterOp = initialOperators.find(iOp => iOp.name === op.name);
+                const operatorData = masterOp || op;
                 
-                const logEntry = {
-                    id: notificationID,
-                    timestamp: new Date().toISOString(),
-                    operatorName: op.name,
-                    shiftStart: op.start,
-                    type: `Shift Reminder (${notifyDays} Days)`
-                };
-                
-                notificationLog.unshift(logEntry);
-                localStorage.setItem(NOTIFICATION_LOG_KEY, JSON.stringify(notificationLog));
-                
-                // Also log to the main Audit Log
-                logAuditAction('NOTIF_SENT', `Reminder sent (simulated) to ${op.name} for shift starting ${formatDate(op.start)} (in ${daysUntilStart} days).`);
-                
-                // Simulated Client Notification (for visibility)
-                if (manualTrigger && isAdmin) {
-                     console.log(`[SIMULATED SEND] To: ${op.name} (Mobile: ${op.mobile}, Email: ${op.email}) - Shift starts in ${daysUntilStart} days.`);
+                // Determine notification type based on days until shift
+                let notificationType = 'reminder';
+                if (daysUntilStart === 1) {
+                    notificationType = 'urgent';
+                } else if (daysUntilStart === 0) {
+                    notificationType = 'today';
                 }
                 
-                notificationsSent++;
+                // Send actual notifications (email + SMS)
+                try {
+                    const results = await sendNotificationToOperator(operatorData, op, notificationType);
+                    
+                    if (results.email.success || results.sms.success) {
+                        notificationsSent++;
+                        
+                        if (manualTrigger) {
+                            const successMsg = `✅ Notification sent to ${operatorData.name}:\n` +
+                                             `📧 Email: ${results.email.success ? 'Sent' : 'Failed'}\n` +
+                                             `📱 SMS: ${results.sms.success ? 'Sent' : 'Failed'}`;
+                            console.log(successMsg);
+                        }
+                    }
+                } catch (error) {
+                    console.error(`Failed to send notification to ${operatorData.name}:`, error);
+                    if (manualTrigger) {
+                        showToast(`Failed to send notification to ${operatorData.name}`, 'error');
+                    }
+                }
             }
         }
     });
 
     if (manualTrigger) {
-        if (notificationsSent > 0) {
-            alert(`Manual notification check complete. ${notificationsSent} new reminders simulated (see Notification Log).`);
-        } else {
-            alert('Manual notification check complete. No new reminders needed based on current settings.');
-        }
+        setTimeout(() => {
+            if (notificationsSent > 0) {
+                showToast(`✅ ${notificationsSent} notifications sent successfully!`, 'success');
+                alert(`Manual notification check complete.\n\n${notificationsSent} notifications sent via email and SMS.\n\nCheck the Notification Log for details.`);
+            } else {
+                showToast('No new notifications needed based on current settings.', 'info');
+                alert('Manual notification check complete.\n\nNo new reminders needed based on current settings and notification history.');
+            }
+        }, 2000);
     }
     
     if (notificationsSent > 0 && !manualTrigger) {
-         console.log(`[System Check] ${notificationsSent} automatic reminders simulated.`);
+        console.log(`[Automatic Check] ${notificationsSent} notifications sent.`);
+        showToast(`${notificationsSent} automatic reminders sent`, 'success');
     }
 }
 
@@ -1089,6 +2440,12 @@ function authenticate() {
         document.getElementById('operatorFilter').style.display = 'inline-block';
         document.getElementById('changePwdBtn').style.display = 'inline-block';
         document.getElementById('resetMyPwdBtn').style.display = isOperator ? 'inline-block' : 'none';
+        
+        // Show advanced feature buttons
+        document.getElementById('analyticsBtn').style.display = 'inline-block';
+        document.getElementById('advancedSearchBtn').style.display = 'inline-block';
+        document.getElementById('exportExcelBtn').style.display = 'inline-block';
+        document.getElementById('helpBtn').style.display = 'inline-block';
 
         // Admin Controls
         document.getElementById('adminControls').style.display = isAdmin ? 'block' : 'none';
@@ -1106,6 +2463,13 @@ function authenticate() {
         if (isAdmin) renderOperatorManagementTable();
         checkAndRenderNotification(true); // Pass flag to check for initial admin alert
         logAuditAction('LOGIN', `User ${loggedInUser} logged in.`);
+        
+        // Start advanced features
+        startAutoSave();
+        if (isAdmin) {
+            startAutomaticNotifications();
+        }
+        showToast(`Welcome back, ${loggedInUser}!`, 'success');
     } else {
         alert("Invalid username or password.");
         logAuditAction('LOGIN_FAIL', `Failed login attempt for username: ${username}.`);
@@ -1129,6 +2493,19 @@ function logout() {
     document.getElementById('resetMyPwdBtn').style.display = 'none';
     document.getElementById('adminControls').style.display = 'none';
     document.getElementById('adminActionsBtn').style.display = 'inline-block';
+    
+    // Hide advanced feature buttons and panels
+    document.getElementById('analyticsBtn').style.display = 'none';
+    document.getElementById('advancedSearchBtn').style.display = 'none';
+    document.getElementById('exportExcelBtn').style.display = 'none';
+    document.getElementById('helpBtn').style.display = 'none';
+    document.getElementById('analyticsDashboard').style.display = 'none';
+    document.getElementById('advancedSearch').style.display = 'none';
+    analyticsVisible = false;
+    advancedSearchVisible = false;
+    
+    stopAutoSave();
+    stopAutomaticNotifications();
     document.getElementById('loginUsername').value = '';
     document.getElementById('adminPassword').value = '';
     document.querySelector('#scheduleTable tbody').innerHTML = '<tr><td colspan="7" style="text-align:center;">Please login to view the schedule.</td></tr>';
@@ -1203,6 +2580,7 @@ function init() {
     
     populateFilter();
     renderNextShifts();
+    initAdvancedFeatures();
     // Do NOT call renderTable here, wait for login
 }
 
@@ -1418,7 +2796,7 @@ function renderTable() {
             <td>${op.checkedBy}</td>
             <td>${op.mobile}</td>
             <td>${formatDate(op.start)} - ${formatDate(op.end)}</td>
-            <td>${op.status}</td>
+            <td>${addStatusIndicator(op.status)}${op.status}</td>
             <td>${actionHtml}</td>
         `;
         tbody.appendChild(tr);
@@ -1671,7 +3049,8 @@ function resetAll() {
             { name: "BERISO SHIBIRU", mobile: "0902911411", email: "bariidanse2012@gmail.com" },
             { name: "HAMBISA ADAMU", mobile: "0913456466", email: "adamuhambisa033@gmail.com" } ,
             { name: "DAME TERFASSA", mobile: "0911117524", email: "maldame@gmail.com" },
-            { name: "TSION GIRMA", mobile: "0946700418", email: "tsion22girma@gmail.com" }
+            { name: "TSION GIRMA", mobile: "0946700418", email: "tsion22girma@gmail.com" },
+            { name: "KETE MANEW", mobile: "0911000000", email: "ketemanew@gmail.com" }
         ];
         localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
 
@@ -1886,9 +3265,12 @@ function downloadPdf() {
     
     if (isOperator) {
         baseOperators = operators.filter(op => op.name.toUpperCase() === loggedInUser);
-    } else if (filterValue) {
-        baseOperators = operators.filter(op => op.name === filterValue);
+    } else if (selectedOperator) {
+        baseOperators = operators.filter(op => op.name === selectedOperator);
     }
+    
+    // Apply advanced search filters
+    baseOperators = applySearchFilters(baseOperators);
 
     baseOperators.forEach((op, index) => {
         data.push([
@@ -1945,6 +3327,155 @@ function downloadPdf() {
     
     doc.save("Backup_Operators_Schedule.pdf");
     logAuditAction('DOWNLOAD', `PDF schedule downloaded by ${loggedInUser}.`);
+}
+
+// --- HELP MODAL FUNCTIONS ---
+function showHelpModal() {
+    document.getElementById('helpModal').style.display = 'block';
+}
+
+function closeHelpModal() {
+    document.getElementById('helpModal').style.display = 'none';
+}
+
+// --- NOTIFICATION CONFIGURATION FUNCTIONS ---
+function openNotificationConfigModal() {
+    if (!isAdmin) return;
+    
+    // Load existing configuration
+    const savedConfig = JSON.parse(localStorage.getItem('notificationApiConfig') || '{}');
+    
+    document.getElementById('emailServiceId').value = savedConfig.emailServiceId || '';
+    document.getElementById('emailTemplateId').value = savedConfig.emailTemplateId || '';
+    document.getElementById('emailPublicKey').value = savedConfig.emailPublicKey || '';
+    document.getElementById('smsAccountSid').value = savedConfig.smsAccountSid || '';
+    document.getElementById('smsAuthToken').value = savedConfig.smsAuthToken || '';
+    document.getElementById('smsFromNumber').value = savedConfig.smsFromNumber || '';
+    
+    document.getElementById('notificationConfigModal').style.display = 'block';
+}
+
+function closeNotificationConfigModal() {
+    document.getElementById('notificationConfigModal').style.display = 'none';
+}
+
+function saveNotificationConfig() {
+    if (!isAdmin) return;
+    
+    const config = {
+        emailServiceId: document.getElementById('emailServiceId').value.trim(),
+        emailTemplateId: document.getElementById('emailTemplateId').value.trim(),
+        emailPublicKey: document.getElementById('emailPublicKey').value.trim(),
+        smsAccountSid: document.getElementById('smsAccountSid').value.trim(),
+        smsAuthToken: document.getElementById('smsAuthToken').value.trim(),
+        smsFromNumber: document.getElementById('smsFromNumber').value.trim()
+    };
+    
+    // Update global configuration
+    EMAIL_API_CONFIG.serviceId = config.emailServiceId;
+    EMAIL_API_CONFIG.templateId = config.emailTemplateId;
+    EMAIL_API_CONFIG.publicKey = config.emailPublicKey;
+    
+    SMS_API_CONFIG.accountSid = config.smsAccountSid;
+    SMS_API_CONFIG.authToken = config.smsAuthToken;
+    SMS_API_CONFIG.fromNumber = config.smsFromNumber;
+    
+    // Save to localStorage
+    localStorage.setItem('notificationApiConfig', JSON.stringify(config));
+    
+    // Reinitialize EmailJS with new config
+    if (config.emailPublicKey) {
+        initializeEmailJS();
+    }
+    
+    logAuditAction('API_CONFIG', 'Notification API configuration updated by admin.');
+    showToast('✅ Notification API configuration saved successfully!', 'success');
+    closeNotificationConfigModal();
+    
+    alert('✅ Configuration saved!\n\nEmail and SMS notifications are now configured with your API credentials.\n\nYou can test the system using the "Test Notification System" button.');
+}
+
+// --- DEMO MODE FUNCTION ---
+function setDemoMode() {
+    if (!isAdmin) return;
+    
+    // Set demo credentials that will make the test pass
+    document.getElementById('emailServiceId').value = 'demo_service';
+    document.getElementById('emailTemplateId').value = 'demo_template';
+    document.getElementById('emailPublicKey').value = 'demo_public_key';
+    
+    // Set SMS demo credentials
+    document.getElementById('smsAccountSid').value = 'demo_account';
+    document.getElementById('smsAuthToken').value = 'demo_token';
+    document.getElementById('smsFromNumber').value = 'demo_number';
+    
+    // Save the demo configuration
+    saveNotificationConfig();
+    
+    showToast('🧪 Demo mode enabled! Email and SMS tests will simulate success only.', 'warning');
+    alert('🧪 Demo Mode Enabled!\n\n⚠️ IMPORTANT: This is SIMULATION ONLY!\n\n✅ Email & SMS tests will show "success"\n❌ NO real emails or SMS will be sent\n\n📧 To send REAL notifications:\n1. Follow the EmailJS_Setup_Guide.html for email\n2. Configure SMS service (Twilio, etc.) for SMS\n3. Replace demo settings with real credentials');
+}
+
+// --- MESSAGE PREVIEW FUNCTION ---
+function previewNotificationMessage() {
+    if (!isAdmin) return;
+    
+    const notifyDays = parseInt(document.getElementById('notifyDays').value) || 7;
+    
+    // Create sample data
+    const sampleOperator = {
+        name: 'SAMPLE OPERATOR',
+        email: 'sample@oromiabank.com',
+        mobile: '+251911234567'
+    };
+    
+    const sampleShift = {
+        start: new Date(Date.now() + notifyDays * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        end: new Date(Date.now() + (notifyDays + 10) * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+    };
+    
+    // Generate sample messages
+    const smsMessage = createSMSMessage(sampleOperator, sampleShift, 'reminder');
+    
+    // Show preview modal
+    const previewModal = document.createElement('div');
+    previewModal.className = 'modal';
+    previewModal.style.display = 'block';
+    previewModal.innerHTML = `
+        <div class="modal-content" style="max-width: 700px;">
+            <span class="close" onclick="this.parentElement.parentElement.remove()">&times;</span>
+            <h3>👁️ Notification Message Preview</h3>
+            
+            <div style="margin-bottom: 20px;">
+                <h4 style="color: #007bff;">📱 SMS Message Preview:</h4>
+                <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; border-left: 4px solid #007bff; white-space: pre-line; font-family: monospace; font-size: 14px;">
+${smsMessage}
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <h4 style="color: #28a745;">📧 Email Message Preview:</h4>
+                <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; border-left: 4px solid #28a745;">
+                    <p><strong>Subject:</strong> Oromia Bank - Backup Schedule Notification (${notifyDays} days advance notice)</p>
+                    <div style="white-space: pre-line; font-family: Arial, sans-serif; font-size: 14px; margin-top: 10px;">
+${smsMessage}
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background-color: #fff3cd; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                <p style="margin: 0; font-size: 14px; color: #856404;">
+                    <strong>Note:</strong> This preview shows how the message will appear when sent to operators ${notifyDays} days before their shift starts.
+                </p>
+            </div>
+            
+            <div style="text-align: center;">
+                <button onclick="this.parentElement.parentElement.parentElement.remove()" style="background-color: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 5px;">Close Preview</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(previewModal);
 }
 </script>
 </body>

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>Oromia Bank Backup Operators Schedule</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Oromia Bank backup operators schedule management system with real-time notifications and analytics">
+<meta name="description" content="Advanced backup operators schedule management system with real-time notifications and analytics">
 <meta name="theme-color" content="#94C83D">
 <style>
 /* === LOGO STYLES === */
@@ -723,6 +723,21 @@ tbody tr {
     <button onclick="openNotificationConfigModal()" style="background-color: #6c757d;">⚙️ Configure Notification APIs</button>
     <button onclick="testNotificationSystem()" style="background-color: #6f42c1; color: white;">🧪 Test Notification System</button>
     <button onclick="testNotificationToAllOperators()" style="background-color: #e83e8c; color: white;">📧 Test All Operators</button>
+    
+    <h3>📤 Send Notifications</h3>
+    <div style="margin-bottom: 15px; padding: 15px; background-color: #e8f4fd; border-radius: 8px; border-left: 4px solid #007bff;">
+        <div style="margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;">
+            <label for="notifyDays" style="font-weight: normal; margin: 0;">📅 Notify operators this many days before shift start:</label>
+            <input type="number" id="notifyDays" value="3" min="1" max="30" style="width: 80px; margin: 0;">
+            <button onclick="saveNotificationSettings()" style="background-color: #28a745; margin: 0;">💾 Save & Start Auto-Notifications</button>
+            <button onclick="checkAndSendNotifications(true)" style="background-color: #FF5733; margin: 0;">📤 Send Reminders Now</button>
+        </div>
+        <div style="text-align: center;">
+            <button onclick="openNotificationLogView()" style="background-color: #4D8BCA;">📋 View Notification Log</button>
+            <button onclick="previewNotificationMessage()" style="background-color: #17a2b8; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; margin: 5px;">👁️ Preview Message</button>
+            <button onclick="debugNotificationSystem()" style="background-color: #fd7e14; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; margin: 5px;">🔍 Debug Notifications</button>
+        </div>
+    </div>
 
     <div id="shiftCalculator">
         <h3>Shift Range Calculator (10 Working Days, No Sundays)</h3>
@@ -822,9 +837,9 @@ tbody tr {
     </table>
 </div>
 
-<div class="note">Oromia Bank Backup Operators Schedule</div>
+<div class="note">ADVANCED BACKUP OPERATORS SCHEDULE</div>
 
-<div class="footer">© 2025 Oromia Bank Backup Operators Schedule | All rights reserved | Developed by HAMBISA ADAMU. </div>
+<div class="footer">© 2025 Oromia Bank Backup Operators Schedule | All rights reserved | Developed by HAMBISA ADAMU.</div>
 
 <div id="renameModal" class="modal">
     <div class="modal-content">
@@ -1567,7 +1582,7 @@ let initialOperators = JSON.parse(localStorage.getItem(INITIAL_OPERATORS_DATA_KE
 let operators = JSON.parse(localStorage.getItem('operators') || '[]');
 let operatorPasswords = JSON.parse(localStorage.getItem('operatorPasswords') || '{}');
 let notificationLog = JSON.parse(localStorage.getItem(NOTIFICATION_LOG_KEY) || '[]'); // NEW
-let notificationSettings = JSON.parse(localStorage.getItem(NOTIFICATION_SETTINGS_KEY) || '{"notifyDays": 7}'); // NEW
+let notificationSettings = JSON.parse(localStorage.getItem(NOTIFICATION_SETTINGS_KEY) || '{"notifyDays": 3}'); // NEW
 
 let isAdmin = false;    
 let isRestrictedAdmin = false;
@@ -2132,7 +2147,7 @@ function saveNotificationSettings() {
     startAutomaticNotifications();
     
     showToast(`✅ Settings saved! Operators will be notified ${days} days before their shift starts.`, 'success');
-    alert(`Notification settings saved successfully!\n\n📧 Email and SMS notifications will be sent automatically ${days} days before each shift starts.\n\n🔄 Automatic checking is now enabled and will run every 6 hours.`);
+    alert(`Notification settings saved successfully!\n\n📧 Email and SMS notifications will be sent automatically ${days} days before each shift starts.\n\n🔄 Automatic checking is now enabled and will run every hour.`);
 }
 
 // Start automatic notification checking
@@ -2142,13 +2157,13 @@ function startAutomaticNotifications() {
         clearInterval(window.notificationInterval);
     }
     
-    // Check for notifications every 6 hours (21600000 ms)
+    // Check for notifications every hour (3600000 ms) for more reliable delivery
     window.notificationInterval = setInterval(() => {
         if (isAdmin || isRestrictedAdmin) {
             console.log('[Automatic Check] Running scheduled notification check...');
             checkAndSendNotifications(false);
         }
-    }, 21600000); // 6 hours
+    }, 3600000); // 1 hour
     
     // Also check immediately when starting
     setTimeout(() => {
@@ -2158,7 +2173,7 @@ function startAutomaticNotifications() {
         }
     }, 5000); // 5 seconds after login
     
-    console.log('✅ Automatic notifications started - checking every 6 hours');
+    console.log('✅ Automatic notifications started - checking every hour for 3-day advance notifications');
 }
 
 // Stop automatic notification checking
@@ -2224,16 +2239,25 @@ function clearNotificationLog() {
 }
 
 function checkAndSendNotifications(manualTrigger = false) {
-    const notifyDays = notificationSettings.notifyDays || 7;
+    const notifyDays = notificationSettings.notifyDays || 3;
     let notificationsSent = 0;
     const now = getCleanDate(new Date());
     
+    console.log(`[Notification Check] Starting check. Notify days: ${notifyDays}, Manual: ${manualTrigger}`);
+    console.log(`[Notification Check] Current date: ${now.toISOString().split('T')[0]}`);
+    console.log(`[Notification Check] Total operators: ${operators.length}`);
+    
     // Only process for active shifts that start in the future
-    operators.forEach(async (op) => {
-        if (op.status !== 'Active') return;
+    operators.forEach(async (op, index) => {
+        if (op.status !== 'Active') {
+            console.log(`[Notification Check] Skipping ${op.name} - Status: ${op.status}`);
+            return;
+        }
         
         const shiftStart = getCleanDate(op.start);
         const daysUntilStart = daysBetween(now, shiftStart);
+        
+        console.log(`[Notification Check] ${op.name}: Shift starts ${op.start}, Days until: ${daysUntilStart}`);
         
         // Check if shift is upcoming and within the notification window
         if (daysUntilStart >= 1 && daysUntilStart <= notifyDays) {
@@ -2243,11 +2267,15 @@ function checkAndSendNotifications(manualTrigger = false) {
             
             // Check if this notification has already been sent/logged
             const alreadySent = notificationLog.some(log => log.id === notificationID);
+            
+            console.log(`[Notification Check] ${op.name}: In notification window (${daysUntilStart} days), Already sent: ${alreadySent}`);
 
             if (!alreadySent || manualTrigger) {
                 // Get the most current operator details from master list
                 const masterOp = initialOperators.find(iOp => iOp.name === op.name);
                 const operatorData = masterOp || op;
+                
+                console.log(`[Notification Check] Sending notification to ${operatorData.name} (${operatorData.email})`);
                 
                 // Determine notification type based on days until shift
                 let notificationType = 'reminder';
@@ -2278,6 +2306,8 @@ function checkAndSendNotifications(manualTrigger = false) {
                     }
                 }
             }
+        } else {
+            console.log(`[Notification Check] ${op.name}: Outside notification window (${daysUntilStart} days)`);
         }
     });
 
@@ -2468,6 +2498,15 @@ function authenticate() {
         startAutoSave();
         if (isAdmin) {
             startAutomaticNotifications();
+            
+            // Auto-configure 3-day notifications if not already set
+            if (notificationSettings.notifyDays !== 3) {
+                notificationSettings.notifyDays = 3;
+                localStorage.setItem(NOTIFICATION_SETTINGS_KEY, JSON.stringify(notificationSettings));
+                document.getElementById('notifyDays').value = 3;
+                console.log('✅ Auto-configured notifications for 3 days before shift start');
+                showToast('✅ Auto-configured: 3-day advance notifications enabled', 'success');
+            }
         }
         showToast(`Welcome back, ${loggedInUser}!`, 'success');
     } else {
@@ -2566,7 +2605,7 @@ function init() {
 
     // Load initial settings and apply to UI
     notificationLog = JSON.parse(localStorage.getItem(NOTIFICATION_LOG_KEY) || '[]');
-    notificationSettings = JSON.parse(localStorage.getItem(NOTIFICATION_SETTINGS_KEY) || '{"notifyDays": 7}');
+    notificationSettings = JSON.parse(localStorage.getItem(NOTIFICATION_SETTINGS_KEY) || '{"notifyDays": 3}');
     document.getElementById('notifyDays').value = notificationSettings.notifyDays;
 
     if (operators.length === 0) {
@@ -3414,6 +3453,55 @@ function setDemoMode() {
     
     showToast('🧪 Demo mode enabled! Email and SMS tests will simulate success only.', 'warning');
     alert('🧪 Demo Mode Enabled!\n\n⚠️ IMPORTANT: This is SIMULATION ONLY!\n\n✅ Email & SMS tests will show "success"\n❌ NO real emails or SMS will be sent\n\n📧 To send REAL notifications:\n1. Follow the EmailJS_Setup_Guide.html for email\n2. Configure SMS service (Twilio, etc.) for SMS\n3. Replace demo settings with real credentials');
+}
+
+// --- DEBUG NOTIFICATION SYSTEM ---
+function debugNotificationSystem() {
+    if (!isAdmin) return;
+    
+    const notifyDays = notificationSettings.notifyDays || 3;
+    const now = getCleanDate(new Date());
+    
+    let debugInfo = `🔍 Notification System Debug Report\n\n`;
+    debugInfo += `📅 Current Date: ${now.toISOString().split('T')[0]}\n`;
+    debugInfo += `⚙️ Notification Days Setting: ${notifyDays}\n`;
+    debugInfo += `📊 Total Operators: ${operators.length}\n`;
+    debugInfo += `📧 Email Config: ${EMAIL_API_CONFIG.serviceId || 'Not set'}\n`;
+    debugInfo += `📱 SMS Config: ${SMS_API_CONFIG.accountSid || 'Not set'}\n\n`;
+    
+    debugInfo += `📋 Operator Analysis:\n`;
+    
+    let upcomingCount = 0;
+    let inWindowCount = 0;
+    let alreadySentCount = 0;
+    
+    operators.forEach((op, index) => {
+        const shiftStart = getCleanDate(op.start);
+        const daysUntilStart = daysBetween(now, shiftStart);
+        const notificationID = `${op.start}-${op.name.toUpperCase()}`;
+        const alreadySent = notificationLog.some(log => log.id === notificationID);
+        
+        debugInfo += `\n${index + 1}. ${op.name}:\n`;
+        debugInfo += `   Status: ${op.status}\n`;
+        debugInfo += `   Shift Start: ${op.start}\n`;
+        debugInfo += `   Days Until: ${daysUntilStart}\n`;
+        debugInfo += `   In Window (1-${notifyDays} days): ${daysUntilStart >= 1 && daysUntilStart <= notifyDays ? 'YES' : 'NO'}\n`;
+        debugInfo += `   Already Sent: ${alreadySent ? 'YES' : 'NO'}\n`;
+        debugInfo += `   Will Send: ${op.status === 'Active' && daysUntilStart >= 1 && daysUntilStart <= notifyDays && !alreadySent ? 'YES' : 'NO'}\n`;
+        
+        if (op.status === 'Active' && daysUntilStart >= 1) upcomingCount++;
+        if (op.status === 'Active' && daysUntilStart >= 1 && daysUntilStart <= notifyDays) inWindowCount++;
+        if (alreadySent) alreadySentCount++;
+    });
+    
+    debugInfo += `\n📊 Summary:\n`;
+    debugInfo += `• Upcoming Active Shifts: ${upcomingCount}\n`;
+    debugInfo += `• In Notification Window: ${inWindowCount}\n`;
+    debugInfo += `• Already Sent Notifications: ${alreadySentCount}\n`;
+    debugInfo += `• Ready to Send: ${inWindowCount - alreadySentCount}\n`;
+    
+    console.log(debugInfo);
+    alert(debugInfo);
 }
 
 // --- MESSAGE PREVIEW FUNCTION ---

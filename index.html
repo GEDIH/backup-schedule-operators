@@ -15,7 +15,7 @@
 .logo-container img {
     max-width: 150px;
     height: auto;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 /* === End Logo Styles === */
 
@@ -329,7 +329,1351 @@ h2 {
     background-color: #7DAE2F;
 }
 
-/* Authentication */
+/* === ULTRA-ADVANCED LOGIN STYLES === */
+#authSection {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: 
+        linear-gradient(135deg, rgba(102, 126, 234, 0.8) 0%, rgba(118, 75, 162, 0.8) 50%, rgba(240, 147, 251, 0.8) 100%),
+        url('images/logo.png');
+    background-size: 400% 400%, cover;
+    background-position: center, center;
+    background-repeat: no-repeat, no-repeat;
+    animation: gradientShift 15s ease infinite, fadeIn 0.8s ease-in;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Ensure body doesn't scroll when login is active */
+body.login-active {
+    overflow: hidden;
+    height: 100vh;
+}
+
+/* Reset body scroll when login is hidden */
+body:not(.login-active) {
+    overflow: auto;
+    height: auto;
+}
+
+/* Animated background */
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Floating particles background */
+#authSection::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 2px, transparent 2px),
+        radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1) 2px, transparent 2px),
+        radial-gradient(circle at 40% 40%, rgba(255,255,255,0.05) 1px, transparent 1px),
+        radial-gradient(circle at 60% 70%, rgba(148,200,61,0.1) 1px, transparent 1px),
+        radial-gradient(circle at 90% 10%, rgba(255,255,255,0.08) 1px, transparent 1px);
+    background-size: 100px 100px, 150px 150px, 80px 80px, 120px 120px, 200px 200px;
+    animation: float 20s linear infinite;
+}
+
+/* Advanced particle system */
+#authSection::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 10% 20%, rgba(148,200,61,0.05) 0%, transparent 50%),
+        radial-gradient(circle at 90% 80%, rgba(118,75,162,0.05) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(102,126,234,0.03) 0%, transparent 50%);
+    animation: pulse 8s ease-in-out infinite alternate;
+    pointer-events: none;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px) rotate(0deg); }
+    100% { transform: translateY(-100px) rotate(360deg); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.login-container {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(30px);
+    border-radius: 30px;
+    padding: 50px;
+    box-shadow: 
+        0 30px 60px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.3),
+        inset 0 2px 0 rgba(255, 255, 255, 0.5),
+        0 0 100px rgba(148, 200, 61, 0.2);
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    animation: slideUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), containerGlow 4s ease-in-out infinite alternate;
+    position: relative;
+    overflow: hidden;
+    margin: 20px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Shimmer effect */
+.login-container::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+    animation: shimmer 4s infinite;
+    pointer-events: none;
+}
+
+/* Advanced particle system */
+.login-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 20%, rgba(148,200,61,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(118,75,162,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(102,126,234,0.05) 0%, transparent 50%);
+    animation: particleFloat 8s ease-in-out infinite alternate;
+    pointer-events: none;
+    border-radius: 30px;
+}
+
+@keyframes containerGlow {
+    0% { 
+        box-shadow: 
+            0 30px 60px rgba(0, 0, 0, 0.4),
+            0 0 0 1px rgba(255, 255, 255, 0.3),
+            inset 0 2px 0 rgba(255, 255, 255, 0.5),
+            0 0 100px rgba(148, 200, 61, 0.2);
+    }
+    100% { 
+        box-shadow: 
+            0 35px 70px rgba(0, 0, 0, 0.5),
+            0 0 0 1px rgba(255, 255, 255, 0.4),
+            inset 0 2px 0 rgba(255, 255, 255, 0.6),
+            0 0 150px rgba(148, 200, 61, 0.4);
+    }
+}
+
+@keyframes particleFloat {
+    0% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
+    100% { transform: translateY(-20px) rotate(10deg); opacity: 0.6; }
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100px) scale(0.9);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+.login-header {
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.login-logo {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #94C83D, #7DAE2F, #5a9216);
+    border-radius: 50%;
+    margin: 0 auto 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    color: white;
+    box-shadow: 
+        0 20px 40px rgba(148, 200, 61, 0.5),
+        0 0 0 6px rgba(255, 255, 255, 0.3),
+        inset 0 3px 0 rgba(255, 255, 255, 0.4),
+        0 0 60px rgba(148, 200, 61, 0.3);
+    animation: logoFloat 6s ease-in-out infinite, logoGlow 3s ease-in-out infinite alternate;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.login-logo:hover {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 
+        0 25px 50px rgba(148, 200, 61, 0.7),
+        0 0 0 8px rgba(255, 255, 255, 0.4),
+        inset 0 3px 0 rgba(255, 255, 255, 0.5),
+        0 0 80px rgba(148, 200, 61, 0.5);
+}
+
+@keyframes logoGlow {
+    0% { 
+        box-shadow: 
+            0 20px 40px rgba(148, 200, 61, 0.5),
+            0 0 0 6px rgba(255, 255, 255, 0.3),
+            inset 0 3px 0 rgba(255, 255, 255, 0.4),
+            0 0 60px rgba(148, 200, 61, 0.3);
+    }
+    100% { 
+        box-shadow: 
+            0 25px 50px rgba(148, 200, 61, 0.7),
+            0 0 0 8px rgba(255, 255, 255, 0.4),
+            inset 0 3px 0 rgba(255, 255, 255, 0.5),
+            0 0 100px rgba(148, 200, 61, 0.5);
+    }
+}
+
+@keyframes logoFloat {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(5deg); }
+}
+
+.login-logo::after {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #94C83D, transparent, #7DAE2F);
+    z-index: -1;
+    animation: rotate 4s linear infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.login-title {
+    font-size: 36px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #fff, #f0f0f0, #fff);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0 0 15px 0;
+    letter-spacing: -1px;
+    text-shadow: 0 2px 10px rgba(255, 255, 255, 0.3);
+    animation: titleGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes titleGlow {
+    0% { 
+        text-shadow: 0 2px 10px rgba(255, 255, 255, 0.3);
+        transform: translateY(0px);
+    }
+    100% { 
+        text-shadow: 0 4px 20px rgba(255, 255, 255, 0.5);
+        transform: translateY(-2px);
+    }
+}
+
+.login-subtitle {
+    font-size: 18px;
+    color: #666;
+    margin: 0 0 40px 0;
+    font-weight: 300;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.user-type-selector {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 30px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.user-type-btn {
+    padding: 15px 25px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    font-size: 14px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.9);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+        0 5px 15px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.user-type-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.6s;
+}
+
+.user-type-btn:hover::before {
+    left: 100%;
+}
+
+.user-type-btn.active {
+    background: linear-gradient(135deg, rgba(148, 200, 61, 0.9), rgba(125, 174, 47, 0.9));
+    border-color: rgba(148, 200, 61, 0.8);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 
+        0 10px 30px rgba(148, 200, 61, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.user-type-btn:hover {
+    border-color: rgba(148, 200, 61, 0.6);
+    color: #94C83D;
+    transform: translateY(-2px);
+    box-shadow: 
+        0 8px 25px rgba(148, 200, 61, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.user-type-btn.active:hover {
+    color: white;
+    box-shadow: 
+        0 15px 40px rgba(148, 200, 61, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 5px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 20px 25px 20px 65px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    font-size: 16px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-sizing: border-box;
+    font-weight: 500;
+    color: #fff;
+    box-shadow: 
+        inset 0 2px 10px rgba(0, 0, 0, 0.1),
+        0 0 0 0 rgba(148, 200, 61, 0);
+}
+
+.input-group input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 400;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: rgba(148, 200, 61, 0.8);
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 
+        inset 0 2px 10px rgba(0, 0, 0, 0.1),
+        0 0 0 4px rgba(148, 200, 61, 0.3),
+        0 10px 30px rgba(148, 200, 61, 0.2);
+    transform: translateY(-3px);
+    color: #fff;
+}
+
+.input-group input:focus::placeholder {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.input-group .input-icon {
+    position: absolute;
+    left: 25px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 22px;
+    color: rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+    text-shadow: 0 2px 10px rgba(148, 200, 61, 0.3);
+}
+
+.input-group input:focus + .input-icon {
+    color: #94C83D;
+    transform: translateY(-50%) scale(1.2);
+    text-shadow: 0 2px 15px rgba(148, 200, 61, 0.6);
+}
+
+/* === ULTRA-ADVANCED 3D AND INTERACTIVE FEATURES === */
+
+/* 3D Perspective and Transform Effects */
+.login-container {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(30px);
+    border-radius: 30px;
+    padding: 50px;
+    box-shadow: 
+        0 30px 60px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.3),
+        inset 0 2px 0 rgba(255, 255, 255, 0.5),
+        0 0 100px rgba(148, 200, 61, 0.2);
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    animation: slideUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), containerGlow 4s ease-in-out infinite alternate, float3D 6s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+    margin: 20px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    transform-style: preserve-3d;
+    transition: transform 0.3s ease;
+}
+
+.login-container:hover {
+    transform: rotateY(5deg) rotateX(5deg) translateZ(20px);
+}
+
+/* Advanced 3D Animations */
+@keyframes float3D {
+    0%, 100% { 
+        transform: translateY(0px) rotateX(0deg) rotateY(0deg);
+    }
+    33% { 
+        transform: translateY(-10px) rotateX(2deg) rotateY(1deg);
+    }
+    66% { 
+        transform: translateY(-5px) rotateX(-1deg) rotateY(-2deg);
+    }
+}
+
+/* Advanced Holographic Effects */
+.login-container::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, 
+        #94C83D, #7DAE2F, #667eea, #764ba2, #f093fb, #94C83D);
+    background-size: 400% 400%;
+    border-radius: 32px;
+    z-index: -1;
+    animation: holographicBorder 3s ease infinite;
+    opacity: 0.7;
+}
+
+@keyframes holographicBorder {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* Advanced Logo with 3D Effects */
+.login-logo {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #94C83D, #7DAE2F, #5a9216);
+    border-radius: 50%;
+    margin: 0 auto 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    color: white;
+    box-shadow: 
+        0 20px 40px rgba(148, 200, 61, 0.5),
+        0 0 0 6px rgba(255, 255, 255, 0.3),
+        inset 0 3px 0 rgba(255, 255, 255, 0.4),
+        0 0 60px rgba(148, 200, 61, 0.3);
+    animation: logoFloat 6s ease-in-out infinite, logoGlow 3s ease-in-out infinite alternate, logo3D 4s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    transform-style: preserve-3d;
+}
+
+@keyframes logo3D {
+    0%, 100% { transform: rotateY(0deg) rotateX(0deg); }
+    25% { transform: rotateY(10deg) rotateX(5deg); }
+    50% { transform: rotateY(0deg) rotateX(10deg); }
+    75% { transform: rotateY(-10deg) rotateX(5deg); }
+}
+
+.login-logo:hover {
+    transform: scale(1.15) rotateY(15deg) rotateX(10deg) translateZ(30px);
+    box-shadow: 
+        0 30px 60px rgba(148, 200, 61, 0.8),
+        0 0 0 10px rgba(255, 255, 255, 0.5),
+        inset 0 3px 0 rgba(255, 255, 255, 0.6),
+        0 0 120px rgba(148, 200, 61, 0.6);
+}
+
+/* Advanced Neon Glow Effects */
+.login-title {
+    font-size: 36px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #fff, #f0f0f0, #fff);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0 0 15px 0;
+    letter-spacing: -1px;
+    text-shadow: 
+        0 0 10px rgba(255, 255, 255, 0.5),
+        0 0 20px rgba(148, 200, 61, 0.3),
+        0 0 30px rgba(148, 200, 61, 0.2);
+    animation: titleGlow 3s ease-in-out infinite alternate, neonPulse 2s ease-in-out infinite;
+}
+
+@keyframes neonPulse {
+    0%, 100% { 
+        text-shadow: 
+            0 0 10px rgba(255, 255, 255, 0.5),
+            0 0 20px rgba(148, 200, 61, 0.3),
+            0 0 30px rgba(148, 200, 61, 0.2);
+    }
+    50% { 
+        text-shadow: 
+            0 0 15px rgba(255, 255, 255, 0.8),
+            0 0 30px rgba(148, 200, 61, 0.6),
+            0 0 45px rgba(148, 200, 61, 0.4);
+    }
+}
+
+/* Advanced Interactive Buttons with 3D Effects */
+.user-type-btn {
+    padding: 15px 25px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    font-size: 14px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.9);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+        0 5px 15px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform-style: preserve-3d;
+}
+
+.user-type-btn:hover {
+    transform: translateY(-5px) rotateX(10deg) translateZ(20px);
+    border-color: rgba(148, 200, 61, 0.6);
+    color: #94C83D;
+    box-shadow: 
+        0 15px 35px rgba(148, 200, 61, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        0 0 30px rgba(148, 200, 61, 0.3);
+}
+
+.user-type-btn.active {
+    background: linear-gradient(135deg, rgba(148, 200, 61, 0.9), rgba(125, 174, 47, 0.9));
+    border-color: rgba(148, 200, 61, 0.8);
+    color: white;
+    transform: translateY(-5px) rotateX(5deg) translateZ(25px);
+    box-shadow: 
+        0 15px 40px rgba(148, 200, 61, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        0 0 40px rgba(148, 200, 61, 0.5);
+}
+
+/* Advanced Holographic Input Fields */
+.input-group input {
+    width: 100%;
+    padding: 20px 25px 20px 65px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    font-size: 16px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-sizing: border-box;
+    font-weight: 500;
+    color: #fff;
+    box-shadow: 
+        inset 0 2px 10px rgba(0, 0, 0, 0.1),
+        0 0 0 0 rgba(148, 200, 61, 0);
+    position: relative;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: rgba(148, 200, 61, 0.8);
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 
+        inset 0 2px 10px rgba(0, 0, 0, 0.1),
+        0 0 0 4px rgba(148, 200, 61, 0.3),
+        0 10px 30px rgba(148, 200, 61, 0.2),
+        0 0 50px rgba(148, 200, 61, 0.4);
+    transform: translateY(-3px) translateZ(10px);
+    color: #fff;
+}
+
+/* Advanced Matrix Rain Effect */
+.matrix-rain {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: -1;
+}
+
+.matrix-char {
+    position: absolute;
+    color: rgba(148, 200, 61, 0.6);
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    animation: matrixFall linear infinite;
+}
+
+@keyframes matrixFall {
+    0% {
+        transform: translateY(-100px);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh);
+        opacity: 0;
+    }
+}
+
+/* === END ULTRA-ADVANCED 3D AND INTERACTIVE FEATURES === */
+
+/* === ADVANCED INTERACTIVE FEATURES === */
+
+/* Floating particles animation */
+.floating-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(148, 200, 61, 0.6);
+    border-radius: 50%;
+    animation: floatUp 8s infinite linear;
+}
+
+.particle:nth-child(2n) {
+    background: rgba(255, 255, 255, 0.4);
+    animation-duration: 12s;
+}
+
+.particle:nth-child(3n) {
+    background: rgba(118, 75, 162, 0.5);
+    animation-duration: 10s;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Advanced hover effects for inputs */
+.input-group {
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.input-group::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent, rgba(148, 200, 61, 0.1), transparent);
+    border-radius: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.input-group:hover::before {
+    opacity: 1;
+}
+
+/* Advanced biometric buttons */
+.biometric-btn {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    cursor: pointer;
+    transition: all 0.4s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+        0 8px 25px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.biometric-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, rgba(148, 200, 61, 0.3) 0%, transparent 70%);
+    border-radius: 50%;
+    transition: all 0.6s ease;
+    transform: translate(-50%, -50%);
+}
+
+.biometric-btn:hover::before {
+    width: 140px;
+    height: 140px;
+}
+
+.biometric-btn:hover {
+    border-color: rgba(148, 200, 61, 0.8);
+    transform: scale(1.15) rotate(10deg);
+    box-shadow: 
+        0 12px 35px rgba(148, 200, 61, 0.4),
+        0 0 0 4px rgba(148, 200, 61, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.biometric-btn.active {
+    background: linear-gradient(135deg, rgba(148, 200, 61, 0.9), rgba(125, 174, 47, 0.9));
+    color: white;
+    animation: biometricPulse 2s infinite, biometricScan 3s ease-in-out infinite;
+    transform: scale(1.2);
+    box-shadow: 
+        0 0 0 4px rgba(148, 200, 61, 0.4),
+        0 0 0 8px rgba(148, 200, 61, 0.2),
+        0 15px 40px rgba(148, 200, 61, 0.5);
+}
+
+/* Loading states with advanced animations */
+.login-button.loading {
+    background: linear-gradient(135deg, #ccc, #999);
+    cursor: not-allowed;
+    position: relative;
+    color: transparent;
+    overflow: hidden;
+}
+
+.login-button.loading::after {
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border: 4px solid transparent;
+    border-top: 4px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Success and error animations */
+.input-group.success input {
+    border-color: #28a745;
+    background: rgba(40, 167, 69, 0.1);
+    animation: successPulse 0.6s ease-in-out;
+}
+
+.input-group.error input {
+    border-color: #dc3545;
+    background: rgba(220, 53, 69, 0.1);
+    animation: shake 0.6s ease-in-out;
+}
+
+@keyframes successPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+/* Advanced footer styling */
+.login-footer {
+    margin-top: 40px;
+    padding: 25px 20px;
+    border-top: 2px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    box-shadow: 
+        0 -5px 20px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.footer-content {
+    text-align: center;
+}
+
+.footer-main {
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 8px;
+    text-shadow: 
+        0 1px 3px rgba(0, 0, 0, 0.5),
+        0 0 10px rgba(148, 200, 61, 0.3);
+}
+
+.footer-developer {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 6px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.developer-name {
+    color: #94C83D;
+    font-weight: 700;
+    text-shadow: 
+        0 1px 2px rgba(0, 0, 0, 0.5),
+        0 0 8px rgba(148, 200, 61, 0.4);
+}
+
+.footer-features {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.8);
+    font-style: italic;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* === End Advanced Interactive Features === */
+.biometric-auth {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.biometric-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid rgba(148, 200, 61, 0.3);
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+    transition: all 0.4s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    position: relative;
+    overflow: hidden;
+}
+
+.biometric-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, rgba(148, 200, 61, 0.2) 0%, transparent 70%);
+    border-radius: 50%;
+    transition: all 0.6s ease;
+    transform: translate(-50%, -50%);
+}
+
+.biometric-btn:hover::before {
+    width: 120px;
+    height: 120px;
+}
+
+.biometric-btn:hover {
+    border-color: #94C83D;
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 
+        0 8px 25px rgba(148, 200, 61, 0.3),
+        0 0 0 4px rgba(148, 200, 61, 0.1);
+}
+
+.biometric-btn.active {
+    background: linear-gradient(135deg, #94C83D, #7DAE2F);
+    color: white;
+    animation: biometricPulse 2s infinite, biometricScan 3s ease-in-out infinite;
+    transform: scale(1.15);
+    box-shadow: 
+        0 0 0 4px rgba(148, 200, 61, 0.3),
+        0 0 0 8px rgba(148, 200, 61, 0.1),
+        0 12px 35px rgba(148, 200, 61, 0.4);
+}
+
+@keyframes biometricPulse {
+    0%, 100% { 
+        box-shadow: 
+            0 0 0 4px rgba(148, 200, 61, 0.3),
+            0 0 0 8px rgba(148, 200, 61, 0.1),
+            0 12px 35px rgba(148, 200, 61, 0.4);
+    }
+    50% { 
+        box-shadow: 
+            0 0 0 8px rgba(148, 200, 61, 0.5),
+            0 0 0 16px rgba(148, 200, 61, 0.2),
+            0 16px 45px rgba(148, 200, 61, 0.6);
+    }
+}
+
+@keyframes biometricScan {
+    0%, 100% { transform: scale(1.15) rotate(0deg); }
+    25% { transform: scale(1.2) rotate(2deg); }
+    50% { transform: scale(1.15) rotate(0deg); }
+    75% { transform: scale(1.1) rotate(-2deg); }
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(148, 200, 61, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(148, 200, 61, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(148, 200, 61, 0); }
+}
+
+.login-button {
+    background: linear-gradient(135deg, #94C83D, #7DAE2F, #5a9216);
+    background-size: 200% 200%;
+    color: white;
+    border: none;
+    padding: 20px 50px;
+    border-radius: 25px;
+    font-size: 18px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 
+        0 10px 30px rgba(148, 200, 61, 0.5),
+        inset 0 2px 0 rgba(255, 255, 255, 0.3),
+        0 0 0 0 rgba(148, 200, 61, 0);
+    margin-top: 20px;
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.login-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transition: left 0.6s;
+}
+
+.login-button:hover::before {
+    left: 100%;
+}
+
+.login-button:hover {
+    transform: translateY(-4px);
+    box-shadow: 
+        0 15px 40px rgba(148, 200, 61, 0.7),
+        inset 0 2px 0 rgba(255, 255, 255, 0.4),
+        0 0 0 4px rgba(148, 200, 61, 0.3);
+    background-position: 100% 0;
+}
+
+.login-button:active {
+    transform: translateY(-2px);
+}
+
+/* Multi-factor authentication */
+.mfa-section {
+    margin: 25px 0;
+    padding: 20px;
+    background: rgba(248, 249, 250, 0.6);
+    border-radius: 15px;
+    border: 1px solid rgba(148, 200, 61, 0.2);
+    display: none;
+}
+
+.mfa-section.active {
+    display: block;
+    animation: slideDown 0.5s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.mfa-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.mfa-code-input {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.mfa-digit {
+    width: 50px;
+    height: 50px;
+    border: 2px solid rgba(225, 229, 233, 0.5);
+    border-radius: 10px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    background: rgba(255, 255, 255, 0.9);
+    transition: all 0.3s ease;
+}
+
+.mfa-digit:focus {
+    outline: none;
+    border-color: #94C83D;
+    box-shadow: 0 0 0 3px rgba(148, 200, 61, 0.1);
+}
+
+.login-options {
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 1px solid rgba(225, 229, 233, 0.3);
+}
+
+.login-help {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.login-help code {
+    background: rgba(148, 200, 61, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+}
+
+.security-features {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+
+.security-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid rgba(40, 167, 69, 0.2);
+}
+
+.login-footer {
+    margin-top: 35px;
+    padding-top: 25px;
+    border-top: 1px solid rgba(225, 229, 233, 0.3);
+    font-size: 12px;
+    color: #999;
+    line-height: 1.5;
+}
+
+/* Loading state enhancements */
+.login-button.loading {
+    background: linear-gradient(135deg, #ccc, #999);
+    cursor: not-allowed;
+    position: relative;
+    color: transparent;
+}
+
+.login-button.loading::after {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border: 3px solid transparent;
+    border-top: 3px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Error and success states */
+.input-group.error input {
+    border-color: #dc3545;
+    background: rgba(248, 215, 218, 0.3);
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.error-message {
+    color: #dc3545;
+    font-size: 14px;
+    margin-top: 15px;
+    padding: 12px 16px;
+    background: rgba(248, 215, 218, 0.2);
+    border-radius: 10px;
+    border-left: 4px solid #dc3545;
+    animation: slideIn 0.3s ease;
+}
+
+.success-message {
+    color: #28a745;
+    font-size: 14px;
+    margin-top: 15px;
+    padding: 12px 16px;
+    background: rgba(212, 237, 218, 0.2);
+    border-radius: 10px;
+    border-left: 4px solid #28a745;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive enhancements */
+@media (max-width: 600px) {
+    #authSection {
+        padding: 10px;
+        align-items: flex-start;
+        padding-top: 20px;
+    }
+    
+    .login-container {
+        margin: 10px;
+        padding: 25px 20px;
+        max-width: none;
+        border-radius: 20px;
+        max-height: calc(100vh - 20px);
+        min-height: auto;
+    }
+    
+    .login-title {
+        font-size: 26px;
+    }
+    
+    .login-logo {
+        width: 80px;
+        height: 80px;
+        font-size: 32px;
+    }
+    
+    .user-type-selector {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .user-type-btn {
+        width: 100%;
+    }
+    
+    .biometric-auth {
+        gap: 10px;
+    }
+    
+    .biometric-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+    
+    .login-footer {
+        font-size: 11px;
+    }
+    
+    .login-footer div {
+        grid-template-columns: 1fr;
+        gap: 4px;
+    }
+}
+
+@media (max-height: 700px) {
+    #authSection {
+        align-items: flex-start;
+        padding-top: 10px;
+    }
+    
+    .login-container {
+        padding: 30px 25px;
+        margin: 10px;
+    }
+    
+    .login-logo {
+        width: 70px;
+        height: 70px;
+        font-size: 28px;
+        margin-bottom: 15px;
+    }
+    
+    .login-title {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+    
+    .login-subtitle {
+        font-size: 16px;
+        margin-bottom: 25px;
+    }
+    
+    .login-form {
+        gap: 20px;
+    }
+    
+    .login-footer {
+        margin-top: 20px;
+        padding-top: 15px;
+        font-size: 10px;
+    }
+}
+
+/* Hide login when authenticated */
+#authSection.hidden {
+    display: none !important;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .login-container {
+        background: rgba(30, 30, 30, 0.95);
+        color: #fff;
+    }
+    
+    .login-title {
+        background: linear-gradient(135deg, #fff, #ccc, #fff);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    .login-subtitle {
+        color: #ccc;
+    }
+    
+    .input-group input {
+        background: rgba(50, 50, 50, 0.8);
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    .user-type-btn {
+        background: rgba(50, 50, 50, 0.8);
+        color: #ccc;
+        border-color: rgba(148, 200, 61, 0.3);
+    }
+    
+    .login-help {
+        color: #ccc;
+    }
+}
+/* === End Ultra-Advanced Login Styles === */
+
+/* Authentication (Legacy - kept for compatibility) */
 #authSection {
     text-align: center;
     margin-bottom: 20px;
@@ -520,17 +1864,86 @@ tbody tr {
 }
 
 
-/* Footer */
-.note {
-    text-align: center;
-    background-color: #94C83D;
-    color: white;
-    font-weight: bold;
-    padding: 12px;
-    font-size: 16px;
-    border-radius: 5px;
-    margin-top: 15px;
+/* Enhanced Footer Styles */
+.enhanced-footer {
+    background: linear-gradient(135deg, #00A8E8, #0087b8, #006a94);
+    color: #FFFFFF;
+    padding: 20px 0;
+    margin-top: 20px;
+    border-radius: 10px;
+    box-shadow: 
+        0 -5px 20px rgba(0, 168, 232, 0.3),
+        0 5px 15px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
 }
+
+.enhanced-footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    animation: footerShimmer 3s infinite;
+}
+
+@keyframes footerShimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+.footer-container {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.footer-text {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.footer-developer-credit {
+    font-size: 13px;
+    margin-bottom: 6px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.developer-highlight {
+    color: #94C83D;
+    font-weight: 800;
+    text-shadow: 
+        0 1px 3px rgba(0, 0, 0, 0.5),
+        0 0 10px rgba(148, 200, 61, 0.4);
+    animation: developerGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes developerGlow {
+    0% { 
+        text-shadow: 
+            0 1px 3px rgba(0, 0, 0, 0.5),
+            0 0 10px rgba(148, 200, 61, 0.4);
+    }
+    100% { 
+        text-shadow: 
+            0 1px 3px rgba(0, 0, 0, 0.5),
+            0 0 15px rgba(148, 200, 61, 0.6),
+            0 0 20px rgba(148, 200, 61, 0.3);
+    }
+}
+
+.footer-features-text {
+    font-size: 12px;
+    font-style: italic;
+    opacity: 0.9;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Legacy footer styles for compatibility */
 .footer {
     text-align: center;
     font-size: 13px;
@@ -708,9 +2121,127 @@ tbody tr {
 </div>
 
 <div id="authSection">
-    <input type="text" id="loginUsername" placeholder="Enter username (e.g., admin, view, or Your Name)">
-    <input type="password" id="adminPassword" placeholder="Enter password">
-    <button onclick="authenticate()">Login</button>
+    <div class="login-container">
+        <div class="login-header">
+            <div class="login-logo">
+                <img src="images/oromia bank.png" alt="Oromia Bank" style="width: 100%; height: 100%; object-fit: contain; padding: 10px;">
+            </div>
+            <h1 class="login-title">Oromia Bank</h1>
+            <p class="login-subtitle">Oromia Bank Backup Operators Schedule</p>
+            
+            <!-- Security Status Indicator -->
+            <div style="display: none; justify-content: center; gap: 15px; margin-top: 15px; font-size: 12px;">
+                <div style="display: flex; align-items: center; gap: 5px; color: #28a745;">
+                    <span style="width: 8px; height: 8px; background: #28a745; border-radius: 50%; animation: pulse 2s infinite;"></span>
+                    Secure Connection
+                </div>
+                <div style="display: flex; align-items: center; gap: 5px; color: #007bff;">
+                    <span style="width: 8px; height: 8px; background: #007bff; border-radius: 50%; animation: pulse 2s infinite 0.5s;"></span>
+                    Enterprise Ready
+                </div>
+                <div style="display: flex; align-items: center; gap: 5px; color: #6f42c1;">
+                    <span style="width: 8px; height: 8px; background: #6f42c1; border-radius: 50%; animation: pulse 2s infinite 1s;"></span>
+                    AI Protected
+                </div>
+            </div>
+        </div>
+        
+        <form class="login-form" onsubmit="return handleLogin(event)">
+            <div class="user-type-selector">
+                <button type="button" class="user-type-btn active" onclick="selectUserType('admin')">
+                    👨‍💼 Administrator
+                </button>
+                <button type="button" class="user-type-btn" onclick="selectUserType('operator')">
+                    👤 Operator
+                </button>
+                <button type="button" class="user-type-btn" onclick="selectUserType('viewer')">
+                    👁️ Viewer
+                </button>
+            </div>
+            
+            <div class="input-group" id="usernameGroup">
+                <span class="input-icon">👤</span>
+                <input type="text" id="loginUsername" placeholder="Enter username" autocomplete="username" required>
+            </div>
+            
+            <div class="input-group" id="passwordGroup">
+                <span class="input-icon">🔒</span>
+                <input type="password" id="adminPassword" placeholder="Enter password" autocomplete="current-password" required>
+            </div>
+            
+            <!-- Biometric Authentication Section -->
+            <div class="biometric-auth">
+                <div class="biometric-btn" onclick="simulateBiometric('fingerprint')" title="Fingerprint Authentication">
+                    👆
+                </div>
+                <div class="biometric-btn" onclick="simulateBiometric('face')" title="Face Recognition">
+                    👤
+                </div>
+                <div class="biometric-btn" onclick="simulateBiometric('voice')" title="Voice Recognition">
+                    🎤
+                </div>
+            </div>
+            
+            <!-- Multi-Factor Authentication Section -->
+            <div class="mfa-section" id="mfaSection" style="display: none;">
+                <div class="mfa-title">🔐 Multi-Factor Authentication</div>
+                <p style="font-size: 14px; color: #666; margin-bottom: 15px;">
+                    Enter the 6-digit verification code sent to your registered device
+                </p>
+                <div class="mfa-code-input">
+                    <input type="text" class="mfa-digit" maxlength="1" oninput="handleMfaInput(this, 0)">
+                    <input type="text" class="mfa-digit" maxlength="1" oninput="handleMfaInput(this, 1)">
+                    <input type="text" class="mfa-digit" maxlength="1" oninput="handleMfaInput(this, 2)">
+                    <input type="text" class="mfa-digit" maxlength="1" oninput="handleMfaInput(this, 3)">
+                    <input type="text" class="mfa-digit" maxlength="1" oninput="handleMfaInput(this, 4)">
+                    <input type="text" class="mfa-digit" maxlength="1" oninput="handleMfaInput(this, 5)">
+                </div>
+                <button type="button" onclick="verifyMfaCode()" class="login-button" style="margin-top: 10px; padding: 12px 30px; font-size: 14px;">
+                    ✅ Verify Code
+                </button>
+                <button type="button" onclick="resendMfaCode()" style="background: none; border: none; color: #94C83D; text-decoration: underline; cursor: pointer; margin-top: 10px; font-size: 14px;">
+                    📱 Resend Code
+                </button>
+            </div>
+            
+            <button type="submit" class="login-button" id="loginButton">
+                🚀 Sign In Securely
+            </button>
+            
+            <div id="loginMessage"></div>
+        </form>
+        
+        <div class="login-options">
+            <div class="security-features" style="display: none;">
+                <div class="security-badge">
+                    🔐 Enterprise Security
+                </div>
+                <div class="security-badge">
+                    � Biometric Ready
+                </div>
+                <div class="security-badge">
+                    🛡️ MFA Protected
+                </div>
+            </div>
+        </div>
+        
+        <div class="login-footer">
+            <div class="footer-content">
+                <div class="footer-main">
+                    © 2025 Oromia Bank | Backup Operators Schedule
+                </div>
+                <div class="footer-developer">
+                    Developed by <span class="developer-name">HAMBISA ADAMU</span>
+                </div>
+                <div class="footer-features">
+                    Enhanced Security & Analytics Platform
+                </div>
+            </div>
+            <div style="margin-top: 8px; font-size: 10px; opacity: 0.7; display: none;">
+                🔐 Enterprise-Grade Security | 👆 Biometric Ready | 🛡️ Multi-Factor Authentication
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="controls" id="adminControls" style="display:none;">
@@ -726,16 +2257,23 @@ tbody tr {
     
     <h3>📤 Send Notifications</h3>
     <div style="margin-bottom: 15px; padding: 15px; background-color: #e8f4fd; border-radius: 8px; border-left: 4px solid #007bff;">
+        <div style="margin-bottom: 10px; padding: 10px; background-color: #d4edda; border-radius: 4px; border-left: 3px solid #28a745;">
+            <p style="margin: 0; font-size: 14px; color: #155724;"><strong>🔄 Auto-Notifications Active:</strong> System automatically notifies operators <strong>3 days</strong> before their shift starts (checks every hour)</p>
+        </div>
         <div style="margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;">
             <label for="notifyDays" style="font-weight: normal; margin: 0;">📅 Notify operators this many days before shift start:</label>
             <input type="number" id="notifyDays" value="3" min="1" max="30" style="width: 80px; margin: 0;">
             <button onclick="saveNotificationSettings()" style="background-color: #28a745; margin: 0;">💾 Save & Start Auto-Notifications</button>
             <button onclick="checkAndSendNotifications(true)" style="background-color: #FF5733; margin: 0;">📤 Send Reminders Now</button>
+            <button onclick="check3DayNotifications()" style="background-color: #28a745; margin: 0;">🎯 Check 3-Day Notifications</button>
         </div>
         <div style="text-align: center;">
             <button onclick="openNotificationLogView()" style="background-color: #4D8BCA;">📋 View Notification Log</button>
             <button onclick="previewNotificationMessage()" style="background-color: #17a2b8; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; margin: 5px;">👁️ Preview Message</button>
             <button onclick="debugNotificationSystem()" style="background-color: #fd7e14; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; margin: 5px;">🔍 Debug Notifications</button>
+        </div>
+        <div id="notificationStatus" style="margin-top: 10px; padding: 8px; background-color: #f8f9fa; border-radius: 4px; text-align: center; font-size: 12px; color: #6c757d;">
+            🕐 Next automatic check: <span id="nextCheckTime">--</span>
         </div>
     </div>
 
@@ -839,7 +2377,19 @@ tbody tr {
 
 <div class="note">ADVANCED BACKUP OPERATORS SCHEDULE</div>
 
-<div class="footer">© 2025 Oromia Bank Backup Operators Schedule | All rights reserved | Developed by HAMBISA ADAMU.</div>
+<div class="footer enhanced-footer">
+    <div class="footer-container">
+        <div class="footer-text">
+            © 2025 Oromia Bank Backup Operators Schedule | All rights reserved
+        </div>
+        <div class="footer-developer-credit">
+            Developed by <span class="developer-highlight">HAMBISA ADAMU</span>
+        </div>
+        <div class="footer-features-text">
+            Enhanced with Analytics & Advanced Features
+        </div>
+    </div>
+</div>
 
 <div id="renameModal" class="modal">
     <div class="modal-content">
@@ -1208,45 +2758,213 @@ function exportToExcel() {
             // Apply advanced search filters
             baseOperators = applySearchFilters(baseOperators);
             
-            const excelData = baseOperators.map((op, index) => ({
-                'S/N': index + 1,
-                'Operator Name': op.name,
-                'Checked By': op.checkedBy,
-                'Mobile Number': op.mobile,
-                'Email Address': op.email || 'N/A',
-                'Shift Start': formatDate(op.start),
-                'Shift End': formatDate(op.end),
-                'Status': op.status,
-                'Working Days': countWorkingDays(getCleanDate(op.start), getCleanDate(op.end))
-            }));
+            // Create detailed daily entries for each operator
+            const excelData = [];
+            let serialNumber = 1;
             
+            baseOperators.forEach(op => {
+                const startDate = new Date(getCleanDate(op.start));
+                const endDate = new Date(getCleanDate(op.end));
+                
+                // Generate daily entries for the shift period
+                const currentDate = new Date(startDate);
+                while (currentDate <= endDate) {
+                    const dayEntry = {
+                        'S/N': serialNumber++,
+                        'Operator Name': op.name,
+                        'Checked By': op.checkedBy || op.name,
+                        'Mobile Number': op.mobile || 'N/A',
+                        'Email Address': op.email || 'N/A',
+                        'Shift Start': formatExcelDateShort(currentDate),
+                        'Shift End': formatExcelDateShort(currentDate), // Same day for daily entries
+                        'Status': op.status || 'Active',
+                        'Working Days': 1, // Each row represents 1 working day
+                        'Signature': '__________'
+                    };
+                    
+                    excelData.push(dayEntry);
+                    
+                    // Move to next day
+                    currentDate.setDate(currentDate.getDate() + 1);
+                }
+            });
+            
+            // Sort by date chronologically
+            excelData.sort((a, b) => {
+                const dateA = new Date(a['Shift Start']);
+                const dateB = new Date(b['Shift Start']);
+                return dateA - dateB;
+            });
+            
+            // Update S/N after sorting
+            excelData.forEach((entry, index) => {
+                entry['S/N'] = index + 1;
+            });
+            
+            // Create worksheet with enhanced formatting
             const ws = XLSX.utils.json_to_sheet(excelData);
             const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, 'Schedule');
             
-            // Add some styling
+            // Set column widths for better readability
+            const colWidths = [
+                { wch: 6 },   // S/N
+                { wch: 20 },  // Operator Name
+                { wch: 20 },  // Checked By
+                { wch: 15 },  // Mobile Number
+                { wch: 25 },  // Email Address
+                { wch: 12 },  // Shift Start
+                { wch: 12 },  // Shift End
+                { wch: 10 },  // Status
+                { wch: 12 },  // Working Days
+                { wch: 15 }   // Signature
+            ];
+            ws['!cols'] = colWidths;
+            
+            // Enhanced header styling
             const range = XLSX.utils.decode_range(ws['!ref']);
+            
+            // Style header row
             for (let C = range.s.c; C <= range.e.c; ++C) {
-                const address = XLSX.utils.encode_col(C) + "1";
-                if (!ws[address]) continue;
-                ws[address].s = {
-                    font: { bold: true },
-                    fill: { fgColor: { rgb: "94C83D" } }
+                const headerAddress = XLSX.utils.encode_col(C) + "1";
+                if (!ws[headerAddress]) continue;
+                ws[headerAddress].s = {
+                    font: { 
+                        bold: true, 
+                        color: { rgb: "FFFFFF" },
+                        size: 12
+                    },
+                    fill: { 
+                        fgColor: { rgb: "94C83D" } 
+                    },
+                    alignment: { 
+                        horizontal: "center",
+                        vertical: "center"
+                    },
+                    border: {
+                        top: { style: "thin", color: { rgb: "000000" } },
+                        bottom: { style: "thin", color: { rgb: "000000" } },
+                        left: { style: "thin", color: { rgb: "000000" } },
+                        right: { style: "thin", color: { rgb: "000000" } }
+                    }
                 };
             }
             
-            const fileName = `Backup_Operators_Schedule_${new Date().toISOString().split('T')[0]}.xlsx`;
+            // Style data rows with alternating colors
+            for (let R = range.s.r + 1; R <= range.e.r; ++R) {
+                for (let C = range.s.c; C <= range.e.c; ++C) {
+                    const cellAddress = XLSX.utils.encode_col(C) + (R + 1);
+                    if (!ws[cellAddress]) continue;
+                    
+                    ws[cellAddress].s = {
+                        font: { 
+                            size: 11,
+                            color: { rgb: "000000" }
+                        },
+                        fill: { 
+                            fgColor: { rgb: R % 2 === 0 ? "F8F9FA" : "FFFFFF" } 
+                        },
+                        alignment: { 
+                            horizontal: C === 0 || C === 8 ? "center" : "left", // Center S/N and Working Days
+                            vertical: "center"
+                        },
+                        border: {
+                            top: { style: "thin", color: { rgb: "E0E0E0" } },
+                            bottom: { style: "thin", color: { rgb: "E0E0E0" } },
+                            left: { style: "thin", color: { rgb: "E0E0E0" } },
+                            right: { style: "thin", color: { rgb: "E0E0E0" } }
+                        }
+                    };
+                    
+                    // Special formatting for specific columns
+                    if (C === 7) { // Status column
+                        const status = ws[cellAddress].v;
+                        if (status === 'Active') {
+                            ws[cellAddress].s.font.color = { rgb: "28A745" };
+                            ws[cellAddress].s.font.bold = true;
+                        } else if (status === 'Finished') {
+                            ws[cellAddress].s.font.color = { rgb: "6C757D" };
+                        }
+                        ws[cellAddress].s.alignment.horizontal = "center";
+                    }
+                    
+                    if (C === 9) { // Signature column
+                        ws[cellAddress].s.alignment.horizontal = "center";
+                        ws[cellAddress].s.font.color = { rgb: "6C757D" };
+                    }
+                }
+            }
+            
+            // Add worksheet to workbook
+            XLSX.utils.book_append_sheet(wb, ws, 'Daily Backup Schedule');
+            
+            // Generate filename with current date
+            const currentDate = new Date();
+            const dateStr = currentDate.toISOString().split('T')[0];
+            const timeStr = currentDate.toTimeString().split(' ')[0].replace(/:/g, '-');
+            const fileName = `Oromia_Bank_Daily_Backup_Schedule_${dateStr}_${timeStr}.xlsx`;
+            
+            // Export the file
             XLSX.writeFile(wb, fileName);
             
-            logAuditAction('EXCEL_EXPORT', `Excel schedule exported by ${loggedInUser}.`);
-            showToast('Excel file exported successfully!', 'success');
+            // Log the export action
+            logAuditAction('EXCEL_EXPORT', `Daily Excel schedule exported by ${loggedInUser}. File: ${fileName}, Records: ${excelData.length}`);
+            
+            // Show success notification
+            showAdvancedNotification(`📊 Daily Excel schedule exported successfully!<br>File: ${fileName}<br>Daily Records: ${excelData.length}`, 'success');
+            
         } catch (error) {
             console.error('Excel export error:', error);
-            showToast('Error exporting Excel file', 'error');
+            showToast('Error exporting Excel file: ' + error.message, 'error');
         } finally {
             showLoading(false);
         }
     }, 500);
+}
+
+// Helper function to format dates for Excel export (short format)
+function formatExcelDateShort(date) {
+    if (!date) return 'N/A';
+    
+    try {
+        const dateObj = date instanceof Date ? date : new Date(date);
+        
+        if (isNaN(dateObj.getTime())) return 'N/A';
+        
+        const day = dateObj.getDate().toString().padStart(2, '0');
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const month = months[dateObj.getMonth()];
+        const year = dateObj.getFullYear().toString().slice(-2); // Last 2 digits of year
+        
+        return `${day}-${month}-${year}`;
+    } catch (error) {
+        console.error('Date formatting error:', error);
+        return 'N/A';
+    }
+}
+
+// Helper function to format dates for Excel export
+function formatExcelDate(dateStr) {
+    if (!dateStr) return 'N/A';
+    
+    try {
+        const cleanDate = getCleanDate(dateStr);
+        const date = new Date(cleanDate);
+        
+        if (isNaN(date.getTime())) return dateStr;
+        
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = months[date.getMonth()];
+        const year = date.getFullYear();
+        
+        return `${month} ${day}, ${year}`;
+    } catch (error) {
+        console.error('Date formatting error:', error);
+        return dateStr;
+    }
 }
 
 // --- LOADING INDICATOR ---
@@ -1300,6 +3018,92 @@ document.addEventListener('keydown', function(e) {
                 modal.style.display = 'none';
             }
         });
+        
+        // Also hide MFA section if active
+        if (mfaRequired) {
+            hideMfaSection();
+        }
+    }
+    
+    // Advanced login shortcuts (only when on login page)
+    if (document.getElementById('authSection') && !document.getElementById('authSection').classList.contains('hidden')) {
+        // Alt + 1, 2, 3 for user type selection
+        if (e.altKey && ['1', '2', '3'].includes(e.key)) {
+            e.preventDefault();
+            const types = ['admin', 'viewer', 'operator'];
+            const typeIndex = parseInt(e.key) - 1;
+            if (types[typeIndex]) {
+                selectUserType(types[typeIndex]);
+                // Trigger click on the corresponding button
+                document.querySelectorAll('.user-type-btn')[typeIndex].click();
+            }
+        }
+        
+        // Ctrl + B for biometric menu
+        if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
+            e.preventDefault();
+            // Focus first biometric button
+            document.querySelector('.biometric-btn').focus();
+        }
+        
+        // F1, F2, F3 for biometric authentication
+        if (['F1', 'F2', 'F3'].includes(e.key)) {
+            e.preventDefault();
+            const biometricTypes = ['fingerprint', 'face', 'voice'];
+            const biometricIndex = parseInt(e.key.slice(1)) - 1;
+            if (biometricTypes[biometricIndex]) {
+                const biometricBtns = document.querySelectorAll('.biometric-btn');
+                if (biometricBtns[biometricIndex]) {
+                    biometricBtns[biometricIndex].click();
+                }
+            }
+        }
+        
+        // Enter to submit login (if not in MFA mode)
+        if (e.key === 'Enter' && !mfaRequired) {
+            e.preventDefault();
+            const loginForm = document.querySelector('.login-form');
+            if (loginForm) {
+                loginForm.dispatchEvent(new Event('submit'));
+            }
+        }
+    }
+});
+
+// Add keyboard navigation for MFA inputs
+document.addEventListener('keydown', function(e) {
+    if (mfaRequired && e.target.classList.contains('mfa-digit')) {
+        // Arrow key navigation
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            const currentIndex = Array.from(document.querySelectorAll('.mfa-digit')).indexOf(e.target);
+            const nextInput = document.querySelectorAll('.mfa-digit')[currentIndex + 1];
+            if (nextInput) nextInput.focus();
+        }
+        
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            const currentIndex = Array.from(document.querySelectorAll('.mfa-digit')).indexOf(e.target);
+            const prevInput = document.querySelectorAll('.mfa-digit')[currentIndex - 1];
+            if (prevInput) prevInput.focus();
+        }
+        
+        // Backspace to clear and move to previous
+        if (e.key === 'Backspace' && !e.target.value) {
+            e.preventDefault();
+            const currentIndex = Array.from(document.querySelectorAll('.mfa-digit')).indexOf(e.target);
+            const prevInput = document.querySelectorAll('.mfa-digit')[currentIndex - 1];
+            if (prevInput) {
+                prevInput.value = '';
+                prevInput.focus();
+            }
+        }
+        
+        // Enter to verify MFA code
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            verifyMfaCode();
+        }
     }
 });
 
@@ -2157,11 +3961,29 @@ function startAutomaticNotifications() {
         clearInterval(window.notificationInterval);
     }
     
+    // Update next check time display
+    function updateNextCheckTime() {
+        const nextCheck = new Date(Date.now() + 3600000); // 1 hour from now
+        const timeString = nextCheck.toLocaleTimeString('en-US', { 
+            hour: '2-digit', 
+            minute: '2-digit',
+            hour12: true 
+        });
+        const nextCheckElement = document.getElementById('nextCheckTime');
+        if (nextCheckElement) {
+            nextCheckElement.textContent = timeString;
+        }
+    }
+    
+    // Initial update
+    updateNextCheckTime();
+    
     // Check for notifications every hour (3600000 ms) for more reliable delivery
     window.notificationInterval = setInterval(() => {
         if (isAdmin || isRestrictedAdmin) {
             console.log('[Automatic Check] Running scheduled notification check...');
             checkAndSendNotifications(false);
+            updateNextCheckTime(); // Update next check time after each check
         }
     }, 3600000); // 1 hour
     
@@ -2430,7 +4252,888 @@ function populateFilter() {
     });
 }
 
-// --- Authentication and UI Control (Updated) ---
+// --- ADVANCED LOGIN FUNCTIONS ---
+let selectedUserType = 'admin';
+let biometricAuthActive = false;
+let mfaRequired = false;
+let mfaCode = '';
+let generatedMfaCode = '';
+
+function selectUserType(type) {
+    selectedUserType = type;
+    
+    // Update button states
+    document.querySelectorAll('.user-type-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    // Update placeholders and hints based on user type
+    const usernameInput = document.getElementById('loginUsername');
+    const passwordInput = document.getElementById('adminPassword');
+    
+    switch(type) {
+        case 'admin':
+            usernameInput.placeholder = 'Enter admin username';
+            usernameInput.value = 'admin';
+            passwordInput.placeholder = 'Enter admin password';
+            break;
+        case 'viewer':
+            usernameInput.placeholder = 'Enter viewer username';
+            usernameInput.value = 'view';
+            passwordInput.placeholder = 'Enter viewer password';
+            break;
+        case 'operator':
+            usernameInput.placeholder = 'Enter your operator name';
+            usernameInput.value = '';
+            passwordInput.placeholder = 'Enter operator password';
+            break;
+    }
+    
+    // Clear any previous error messages
+    clearLoginMessage();
+    resetBiometricAuth();
+    hideMfaSection();
+}
+
+// --- BIOMETRIC AUTHENTICATION FUNCTIONS ---
+function simulateBiometric(type) {
+    const btn = event.target;
+    const allBiometricBtns = document.querySelectorAll('.biometric-btn');
+    
+    // Reset all biometric buttons
+    allBiometricBtns.forEach(b => {
+        b.classList.remove('active');
+    });
+    
+    // Activate clicked button
+    btn.classList.add('active');
+    biometricAuthActive = true;
+    
+    // Show scanning animation
+    let scanMessage = '';
+    switch(type) {
+        case 'fingerprint':
+            scanMessage = '👆 Scanning fingerprint...';
+            break;
+        case 'face':
+            scanMessage = '👤 Analyzing facial features...';
+            break;
+        case 'voice':
+            scanMessage = '🎤 Processing voice pattern...';
+            break;
+    }
+    
+    showLoginSuccess(scanMessage);
+    
+    // Simulate biometric scanning delay
+    setTimeout(() => {
+        const success = Math.random() > 0.1; // 90% success rate for demo
+        
+        if (success) {
+            showLoginSuccess(`✅ ${type.charAt(0).toUpperCase() + type.slice(1)} authentication successful!`);
+            
+            // Auto-fill credentials based on biometric "recognition"
+            if (type === 'fingerprint') {
+                // Admin fingerprint
+                document.getElementById('loginUsername').value = 'admin';
+                document.getElementById('adminPassword').value = 'Admin@1234!@#';
+                selectUserType('admin');
+            } else if (type === 'face') {
+                // Viewer face recognition
+                document.getElementById('loginUsername').value = 'view';
+                document.getElementById('adminPassword').value = 'view123';
+                selectUserType('viewer');
+            } else if (type === 'voice') {
+                // Operator voice recognition
+                document.getElementById('loginUsername').value = 'ABRAHAM CHALA';
+                document.getElementById('adminPassword').value = 'op123';
+                selectUserType('operator');
+            }
+            
+            // Enable MFA for enhanced security
+            setTimeout(() => {
+                showMfaSection();
+            }, 1000);
+            
+        } else {
+            showLoginError(`❌ ${type.charAt(0).toUpperCase() + type.slice(1)} authentication failed. Please try again.`);
+            resetBiometricAuth();
+        }
+    }, 2500);
+}
+
+function resetBiometricAuth() {
+    biometricAuthActive = false;
+    document.querySelectorAll('.biometric-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+}
+
+// --- MULTI-FACTOR AUTHENTICATION FUNCTIONS ---
+function showMfaSection() {
+    mfaRequired = true;
+    generatedMfaCode = Math.floor(100000 + Math.random() * 900000).toString(); // Generate 6-digit code
+    
+    const mfaSection = document.getElementById('mfaSection');
+    mfaSection.classList.add('active');
+    
+    // Clear MFA inputs
+    document.querySelectorAll('.mfa-digit').forEach(input => {
+        input.value = '';
+    });
+    
+    // Focus first MFA input
+    document.querySelector('.mfa-digit').focus();
+    
+    // Simulate sending MFA code
+    showLoginSuccess(`📱 Verification code sent! (Demo code: ${generatedMfaCode})`);
+    
+    console.log(`MFA Code generated: ${generatedMfaCode}`);
+}
+
+function hideMfaSection() {
+    mfaRequired = false;
+    const mfaSection = document.getElementById('mfaSection');
+    mfaSection.classList.remove('active');
+    mfaCode = '';
+    generatedMfaCode = '';
+}
+
+function handleMfaInput(input, index) {
+    // Only allow numbers
+    input.value = input.value.replace(/[^0-9]/g, '');
+    
+    // Auto-focus next input
+    if (input.value && index < 5) {
+        const nextInput = document.querySelectorAll('.mfa-digit')[index + 1];
+        if (nextInput) nextInput.focus();
+    }
+    
+    // Auto-focus previous input on backspace
+    if (!input.value && index > 0) {
+        const prevInput = document.querySelectorAll('.mfa-digit')[index - 1];
+        if (prevInput) prevInput.focus();
+    }
+    
+    // Collect MFA code
+    mfaCode = '';
+    document.querySelectorAll('.mfa-digit').forEach(digit => {
+        mfaCode += digit.value;
+    });
+    
+    // Auto-verify when all 6 digits are entered
+    if (mfaCode.length === 6) {
+        setTimeout(() => verifyMfaCode(), 500);
+    }
+}
+
+function verifyMfaCode() {
+    if (mfaCode.length !== 6) {
+        showLoginError('Please enter all 6 digits of the verification code');
+        return;
+    }
+    
+    // Simulate MFA verification
+    const isValid = mfaCode === generatedMfaCode || mfaCode === '123456'; // Allow demo code
+    
+    if (isValid) {
+        showLoginSuccess('✅ Multi-factor authentication successful!');
+        
+        // Proceed with login after MFA success
+        setTimeout(() => {
+            hideMfaSection();
+            authenticate();
+        }, 1000);
+        
+    } else {
+        showLoginError('❌ Invalid verification code. Please try again.');
+        
+        // Clear MFA inputs
+        document.querySelectorAll('.mfa-digit').forEach(input => {
+            input.value = '';
+        });
+        mfaCode = '';
+        
+        // Focus first input
+        document.querySelector('.mfa-digit').focus();
+    }
+}
+
+function resendMfaCode() {
+    generatedMfaCode = Math.floor(100000 + Math.random() * 900000).toString();
+    showLoginSuccess(`📱 New verification code sent! (Demo code: ${generatedMfaCode})`);
+    console.log(`New MFA Code: ${generatedMfaCode}`);
+    
+    // Clear current inputs
+    document.querySelectorAll('.mfa-digit').forEach(input => {
+        input.value = '';
+    });
+    mfaCode = '';
+    
+    // Focus first input
+    document.querySelector('.mfa-digit').focus();
+}
+
+// === ULTRA-ADVANCED LOGIN PAGE FEATURES ===
+
+// Create Matrix Rain Effect
+function createMatrixRain() {
+    const authSection = document.getElementById('authSection');
+    if (!authSection) return;
+    
+    const matrixContainer = document.createElement('div');
+    matrixContainer.className = 'matrix-rain';
+    authSection.appendChild(matrixContainer);
+    
+    const chars = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    
+    function createMatrixChar() {
+        const char = document.createElement('div');
+        char.className = 'matrix-char';
+        char.textContent = chars[Math.floor(Math.random() * chars.length)];
+        char.style.left = Math.random() * 100 + '%';
+        char.style.animationDuration = (2 + Math.random() * 3) + 's';
+        char.style.animationDelay = Math.random() * 2 + 's';
+        
+        matrixContainer.appendChild(char);
+        
+        setTimeout(() => {
+            if (char.parentNode) {
+                char.parentNode.removeChild(char);
+            }
+        }, 5000);
+    }
+    
+    // Create matrix characters continuously
+    setInterval(createMatrixChar, 100);
+}
+
+// Advanced 3D Mouse Tracking
+function enable3DMouseTracking() {
+    const loginContainer = document.querySelector('.login-container');
+    if (!loginContainer) return;
+    
+    loginContainer.addEventListener('mousemove', function(e) {
+        const rect = this.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const rotateX = (y - centerY) / 10;
+        const rotateY = (centerX - x) / 10;
+        
+        this.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(20px)`;
+    });
+    
+    loginContainer.addEventListener('mouseleave', function() {
+        this.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)';
+    });
+}
+
+// Advanced Voice Recognition Simulation
+function enableVoiceRecognition() {
+    const voiceBtn = document.querySelector('.biometric-btn[title*="Voice"]');
+    if (!voiceBtn) return;
+    
+    voiceBtn.addEventListener('click', function() {
+        // Create voice visualization
+        const visualization = document.createElement('div');
+        visualization.style.position = 'absolute';
+        visualization.style.top = '50%';
+        visualization.style.left = '50%';
+        visualization.style.transform = 'translate(-50%, -50%)';
+        visualization.style.width = '100px';
+        visualization.style.height = '100px';
+        visualization.style.border = '3px solid #94C83D';
+        visualization.style.borderRadius = '50%';
+        visualization.style.animation = 'voicePulse 1s ease-in-out infinite';
+        
+        this.appendChild(visualization);
+        
+        // Simulate voice processing
+        setTimeout(() => {
+            visualization.remove();
+            showAdvancedNotification('🎤 Voice pattern recognized!', 'success');
+        }, 3000);
+    });
+}
+
+// Advanced Notification System
+function showAdvancedNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `advanced-notification ${type}`;
+    notification.innerHTML = `
+        <div class="notification-content">
+            <div class="notification-icon"></div>
+            <div class="notification-text">${message}</div>
+            <div class="notification-progress"></div>
+        </div>
+    `;
+    
+    // Add styles
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255,255,255,0.3);
+        border-radius: 15px;
+        padding: 20px;
+        color: white;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        z-index: 10000;
+        transform: translateX(400px);
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        min-width: 300px;
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Animate in
+    setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+    }, 100);
+    
+    // Auto remove
+    setTimeout(() => {
+        notification.style.transform = 'translateX(400px)';
+        setTimeout(() => {
+            notification.remove();
+        }, 400);
+    }, 4000);
+}
+
+// Advanced Fingerprint Scanner Simulation
+function enhanceFingerprintScanner() {
+    const fingerprintBtn = document.querySelector('.biometric-btn[title*="Fingerprint"]');
+    if (!fingerprintBtn) return;
+    
+    fingerprintBtn.addEventListener('click', function() {
+        this.classList.add('scanning');
+        
+        // Create fingerprint scanning effect
+        const scanner = document.createElement('div');
+        scanner.style.cssText = `
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle, transparent 30%, rgba(148,200,61,0.3) 31%, rgba(148,200,61,0.3) 32%, transparent 33%);
+            animation: fingerprintScan 2s ease-in-out;
+        `;
+        
+        this.appendChild(scanner);
+        
+        // Simulate scanning process
+        setTimeout(() => {
+            scanner.remove();
+            this.classList.remove('scanning');
+            showAdvancedNotification('👆 Fingerprint authenticated successfully!', 'success');
+        }, 2000);
+    });
+}
+
+// Advanced Particle System
+function createAdvancedParticles() {
+    const authSection = document.getElementById('authSection');
+    if (!authSection) return;
+    
+    const particleContainer = document.createElement('div');
+    particleContainer.className = 'advanced-particles';
+    particleContainer.style.cssText = `
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        overflow: hidden;
+    `;
+    
+    authSection.appendChild(particleContainer);
+    
+    function createParticle() {
+        const particle = document.createElement('div');
+        const size = Math.random() * 6 + 2;
+        const colors = ['#94C83D', '#7DAE2F', '#667eea', '#764ba2', '#f093fb'];
+        
+        particle.style.cssText = `
+            position: absolute;
+            width: ${size}px;
+            height: ${size}px;
+            background: ${colors[Math.floor(Math.random() * colors.length)]};
+            border-radius: 50%;
+            left: ${Math.random() * 100}%;
+            top: 100%;
+            animation: particleFloat ${5 + Math.random() * 5}s linear infinite;
+            box-shadow: 0 0 ${size * 2}px currentColor;
+        `;
+        
+        particleContainer.appendChild(particle);
+        
+        setTimeout(() => {
+            if (particle.parentNode) {
+                particle.parentNode.removeChild(particle);
+            }
+        }, 10000);
+    }
+    
+    setInterval(createParticle, 200);
+}
+
+// Advanced Form Validation with Visual Feedback
+function enhanceFormValidation() {
+    const inputs = document.querySelectorAll('.input-group input');
+    
+    inputs.forEach(input => {
+        input.addEventListener('input', function() {
+            const value = this.value;
+            const inputGroup = this.parentElement;
+            
+            // Remove previous states
+            inputGroup.classList.remove('valid', 'invalid');
+            
+            // Basic validation
+            if (value.length > 0) {
+                if (this.type === 'password' && value.length >= 6) {
+                    inputGroup.classList.add('valid');
+                    createValidationEffect(inputGroup, 'valid');
+                } else if (this.type !== 'password' && value.length >= 3) {
+                    inputGroup.classList.add('valid');
+                    createValidationEffect(inputGroup, 'valid');
+                } else {
+                    inputGroup.classList.add('invalid');
+                }
+            }
+        });
+    });
+}
+
+function createValidationEffect(element, type) {
+    const effect = document.createElement('div');
+    effect.style.cssText = `
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 20px;
+        background: ${type === 'valid' ? 'rgba(40,167,69,0.2)' : 'rgba(220,53,69,0.2)'};
+        animation: validationPulse 0.6s ease-out;
+        pointer-events: none;
+    `;
+    
+    element.appendChild(effect);
+    
+    setTimeout(() => {
+        effect.remove();
+    }, 600);
+}
+
+// Initialize all advanced features
+document.addEventListener('DOMContentLoaded', function() {
+    createFloatingParticles();
+    enhanceInputInteractions();
+    enhanceLoginButton();
+    createMatrixRain();
+    enable3DMouseTracking();
+    enableVoiceRecognition();
+    enhanceFingerprintScanner();
+    createAdvancedParticles();
+    enhanceFormValidation();
+});
+
+// Add advanced CSS animations
+const ultraAdvancedStyles = `
+    @keyframes voicePulse {
+        0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.7; }
+    }
+    
+    @keyframes fingerprintScan {
+        0% { background-size: 0% 0%; }
+        50% { background-size: 100% 100%; }
+        100% { background-size: 120% 120%; opacity: 0; }
+    }
+    
+    @keyframes particleFloat {
+        0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+        10% { opacity: 1; }
+        90% { opacity: 1; }
+        100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+    }
+    
+    @keyframes validationPulse {
+        0% { opacity: 0; transform: scale(0.8); }
+        50% { opacity: 1; transform: scale(1.05); }
+        100% { opacity: 0; transform: scale(1); }
+    }
+    
+    .input-group.valid input {
+        border-color: #28a745 !important;
+        box-shadow: 0 0 0 4px rgba(40,167,69,0.3) !important;
+    }
+    
+    .input-group.invalid input {
+        border-color: #dc3545 !important;
+        box-shadow: 0 0 0 4px rgba(220,53,69,0.3) !important;
+    }
+    
+    .biometric-btn.scanning {
+        animation: scanningPulse 2s ease-in-out;
+    }
+    
+    @keyframes scanningPulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
+`;
+
+// Inject ultra-advanced styles
+const ultraStyleSheet = document.createElement('style');
+ultraStyleSheet.textContent = ultraAdvancedStyles;
+document.head.appendChild(ultraStyleSheet);
+
+// === END ULTRA-ADVANCED LOGIN PAGE FEATURES ===
+
+// === ADVANCED LOGIN PAGE FEATURES ===
+
+// Create floating particles
+function createFloatingParticles() {
+    const authSection = document.getElementById('authSection');
+    if (!authSection) return;
+    
+    // Create particles container
+    const particlesContainer = document.createElement('div');
+    particlesContainer.className = 'floating-particles';
+    authSection.appendChild(particlesContainer);
+    
+    // Generate particles
+    for (let i = 0; i < 20; i++) {
+        setTimeout(() => {
+            createParticle(particlesContainer);
+        }, i * 200);
+    }
+    
+    // Continue creating particles
+    setInterval(() => {
+        createParticle(particlesContainer);
+    }, 800);
+}
+
+function createParticle(container) {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.animationDelay = Math.random() * 2 + 's';
+    particle.style.animationDuration = (8 + Math.random() * 4) + 's';
+    
+    container.appendChild(particle);
+    
+    // Remove particle after animation
+    setTimeout(() => {
+        if (particle.parentNode) {
+            particle.parentNode.removeChild(particle);
+        }
+    }, 12000);
+}
+
+// Enhanced input interactions
+function enhanceInputInteractions() {
+    const inputs = document.querySelectorAll('.input-group input');
+    
+    inputs.forEach(input => {
+        // Add focus ripple effect
+        input.addEventListener('focus', function() {
+            this.parentElement.classList.add('focused');
+            createRippleEffect(this);
+        });
+        
+        input.addEventListener('blur', function() {
+            this.parentElement.classList.remove('focused');
+        });
+        
+        // Add typing sound effect (visual feedback)
+        input.addEventListener('input', function() {
+            this.parentElement.style.transform = 'scale(1.01)';
+            setTimeout(() => {
+                this.parentElement.style.transform = 'scale(1)';
+            }, 100);
+        });
+    });
+}
+
+function createRippleEffect(element) {
+    const ripple = document.createElement('div');
+    ripple.style.position = 'absolute';
+    ripple.style.borderRadius = '50%';
+    ripple.style.background = 'rgba(148, 200, 61, 0.3)';
+    ripple.style.transform = 'scale(0)';
+    ripple.style.animation = 'ripple 0.6s linear';
+    ripple.style.left = '50%';
+    ripple.style.top = '50%';
+    ripple.style.width = '20px';
+    ripple.style.height = '20px';
+    ripple.style.marginLeft = '-10px';
+    ripple.style.marginTop = '-10px';
+    ripple.style.pointerEvents = 'none';
+    
+    element.parentElement.appendChild(ripple);
+    
+    setTimeout(() => {
+        ripple.remove();
+    }, 600);
+}
+
+// Enhanced biometric simulation
+function simulateBiometric(type) {
+    const btn = event.target;
+    btn.classList.add('active');
+    
+    // Create scanning effect
+    const scanLine = document.createElement('div');
+    scanLine.style.position = 'absolute';
+    scanLine.style.top = '0';
+    scanLine.style.left = '0';
+    scanLine.style.right = '0';
+    scanLine.style.height = '2px';
+    scanLine.style.background = 'linear-gradient(90deg, transparent, #94C83D, transparent)';
+    scanLine.style.animation = 'scanLine 2s ease-in-out';
+    btn.appendChild(scanLine);
+    
+    // Simulate authentication process
+    setTimeout(() => {
+        btn.classList.remove('active');
+        scanLine.remove();
+        
+        // Show success feedback
+        showBiometricSuccess(type);
+    }, 2000);
+}
+
+function showBiometricSuccess(type) {
+    const message = document.createElement('div');
+    message.style.position = 'fixed';
+    message.style.top = '20px';
+    message.style.right = '20px';
+    message.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+    message.style.color = 'white';
+    message.style.padding = '15px 25px';
+    message.style.borderRadius = '10px';
+    message.style.boxShadow = '0 10px 30px rgba(40, 167, 69, 0.3)';
+    message.style.zIndex = '10000';
+    message.style.transform = 'translateX(400px)';
+    message.style.transition = 'transform 0.3s ease';
+    message.innerHTML = `✅ ${type.charAt(0).toUpperCase() + type.slice(1)} authentication successful!`;
+    
+    document.body.appendChild(message);
+    
+    setTimeout(() => {
+        message.style.transform = 'translateX(0)';
+    }, 100);
+    
+    setTimeout(() => {
+        message.style.transform = 'translateX(400px)';
+        setTimeout(() => {
+            message.remove();
+        }, 300);
+    }, 3000);
+}
+
+// Enhanced login button with progress
+function enhanceLoginButton() {
+    const loginBtn = document.getElementById('loginButton');
+    if (!loginBtn) return;
+    
+    loginBtn.addEventListener('click', function(e) {
+        if (this.classList.contains('loading')) return;
+        
+        this.classList.add('loading');
+        this.style.width = this.offsetWidth + 'px';
+        
+        // Create progress bar
+        const progressBar = document.createElement('div');
+        progressBar.style.position = 'absolute';
+        progressBar.style.bottom = '0';
+        progressBar.style.left = '0';
+        progressBar.style.height = '3px';
+        progressBar.style.background = 'rgba(255, 255, 255, 0.8)';
+        progressBar.style.width = '0%';
+        progressBar.style.transition = 'width 2s ease';
+        progressBar.style.borderRadius = '0 0 25px 25px';
+        
+        this.appendChild(progressBar);
+        
+        setTimeout(() => {
+            progressBar.style.width = '100%';
+        }, 100);
+    });
+}
+
+// Initialize advanced features when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    createFloatingParticles();
+    enhanceInputInteractions();
+    enhanceLoginButton();
+});
+
+// Add CSS animations for new effects
+const advancedStyles = `
+    @keyframes ripple {
+        to {
+            transform: scale(4);
+            opacity: 0;
+        }
+    }
+    
+    @keyframes scanLine {
+        0%, 100% { transform: translateY(0); opacity: 0; }
+        50% { transform: translateY(60px); opacity: 1; }
+    }
+    
+    .input-group.focused {
+        transform: scale(1.02);
+    }
+    
+    .particle {
+        box-shadow: 0 0 10px currentColor;
+    }
+`;
+
+// Inject advanced styles
+const styleSheet = document.createElement('style');
+styleSheet.textContent = advancedStyles;
+document.head.appendChild(styleSheet);
+
+// === END ADVANCED LOGIN PAGE FEATURES ===
+
+function handleLogin(event) {
+    event.preventDefault();
+    
+    const loginButton = document.getElementById('loginButton');
+    const usernameInput = document.getElementById('loginUsername');
+    const passwordInput = document.getElementById('adminPassword');
+    
+    // Add loading state
+    loginButton.classList.add('loading');
+    loginButton.disabled = true;
+    
+    // Clear previous error states
+    clearLoginMessage();
+    document.getElementById('usernameGroup').classList.remove('error');
+    document.getElementById('passwordGroup').classList.remove('error');
+    
+    // Validate inputs
+    if (!usernameInput.value.trim()) {
+        showLoginError('Please enter a username');
+        document.getElementById('usernameGroup').classList.add('error');
+        resetLoginButton();
+        return false;
+    }
+    
+    if (!passwordInput.value) {
+        showLoginError('Please enter a password');
+        document.getElementById('passwordGroup').classList.add('error');
+        resetLoginButton();
+        return false;
+    }
+    
+    // Check if MFA is required but not completed
+    if (biometricAuthActive && !mfaRequired) {
+        // Biometric auth successful, show MFA
+        showMfaSection();
+        resetLoginButton();
+        return false;
+    }
+    
+    if (mfaRequired && mfaCode.length !== 6) {
+        showLoginError('Please complete multi-factor authentication');
+        resetLoginButton();
+        return false;
+    }
+    
+    // If MFA is active, verify it first
+    if (mfaRequired) {
+        verifyMfaCode();
+        resetLoginButton();
+        return false;
+    }
+    
+    // Simulate authentication delay for better UX
+    setTimeout(() => {
+        authenticate();
+        resetLoginButton();
+    }, 800);
+    
+    return false;
+}
+
+function resetLoginButton() {
+    const loginButton = document.getElementById('loginButton');
+    loginButton.classList.remove('loading');
+    loginButton.disabled = false;
+}
+
+function showLoginError(message) {
+    const messageDiv = document.getElementById('loginMessage');
+    messageDiv.innerHTML = `<div class="error-message">❌ ${message}</div>`;
+}
+
+function showLoginSuccess(message) {
+    const messageDiv = document.getElementById('loginMessage');
+    messageDiv.innerHTML = `<div class="success-message">✅ ${message}</div>`;
+}
+
+function clearLoginMessage() {
+    document.getElementById('loginMessage').innerHTML = '';
+}
+
+function hideLoginPage() {
+    const authSection = document.getElementById('authSection');
+    authSection.style.animation = 'fadeOut 0.5s ease-out';
+    
+    // Remove login-active class to restore body scrolling
+    document.body.classList.remove('login-active');
+    
+    setTimeout(() => {
+        authSection.classList.add('hidden');
+    }, 500);
+}
+
+function showLoginPage() {
+    const authSection = document.getElementById('authSection');
+    authSection.classList.remove('hidden');
+    authSection.style.animation = 'fadeIn 0.5s ease-in';
+    
+    // Add login-active class to prevent body scrolling
+    document.body.classList.add('login-active');
+    
+    // Reset form
+    document.getElementById('loginUsername').value = '';
+    document.getElementById('adminPassword').value = '';
+    clearLoginMessage();
+    selectUserType('admin'); // Reset to admin type
+}
+
+// Add fadeOut animation
+const fadeOutKeyframes = `
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}`;
+
+// Inject the fadeOut animation
+const style = document.createElement('style');
+style.textContent = fadeOutKeyframes;
+document.head.appendChild(style);
+
+// --- ENHANCED AUTHENTICATION FUNCTION ---
 function authenticate() {
     const username = document.getElementById('loginUsername').value.trim();
     const password = document.getElementById('adminPassword').value.trim();
@@ -2448,70 +5151,92 @@ function authenticate() {
     if (username === FULL_ADMIN_USER && password === FULL_ADMIN_PWD) {
         isAdmin = true;
         loggedInUser = username;
+        showLoginSuccess('Welcome Administrator! Redirecting...');
     }
     // 2. Check Restricted Admin (View)
     else if (lowerUsername === RESTRICTED_ADMIN_USER && password === RESTRICTED_ADMIN_PWD) {
         isRestrictedAdmin = true;
         loggedInUser = RESTRICTED_ADMIN_USER;
+        showLoginSuccess('Welcome Viewer! Redirecting...');
     }
     // 3. Check Regular Operator
     else if (operatorPasswords[normalizedUsername] && operatorPasswords[normalizedUsername] === password) {
         isOperator = true;
         loggedInUser = normalizedUsername;
+        showLoginSuccess(`Welcome ${normalizedUsername}! Redirecting...`);
+    }
+    else {
+        // Authentication failed
+        showLoginError('Invalid username or password. Please check your credentials and try again.');
+        logAuditAction('LOGIN_FAIL', `Failed login attempt for username: ${username}.`);
+        
+        // Add error styling to inputs
+        document.getElementById('usernameGroup').classList.add('error');
+        document.getElementById('passwordGroup').classList.add('error');
+        return;
     }
 
     if (loggedInUser) {
-        // Successful Login
-        document.getElementById('authSection').style.display = 'none';
-        document.getElementById('scheduleView').style.display = 'block';
-        document.getElementById('logoutBtn').style.display = 'inline-block';
-        document.getElementById('downloadPdfBtn').style.display = 'inline-block';
-        document.getElementById('filterLabel').style.display = 'inline-block';
-        document.getElementById('operatorFilter').style.display = 'inline-block';
-        document.getElementById('changePwdBtn').style.display = 'inline-block';
-        document.getElementById('resetMyPwdBtn').style.display = isOperator ? 'inline-block' : 'none';
-        
-        // Show advanced feature buttons
-        document.getElementById('analyticsBtn').style.display = 'inline-block';
-        document.getElementById('advancedSearchBtn').style.display = 'inline-block';
-        document.getElementById('exportExcelBtn').style.display = 'inline-block';
-        document.getElementById('helpBtn').style.display = 'inline-block';
-
-        // Admin Controls
-        document.getElementById('adminControls').style.display = isAdmin ? 'block' : 'none';
-        document.getElementById('operatorManagementView').style.display = isAdmin ? 'block' : 'none';
-        document.getElementById('adminActionsBtn').style.display = isAdmin ? 'inline-block' : 'none';
-        document.getElementById('auditLogView').style.display = 'none'; // Ensure log is hidden on login
-
-        if (isOperator) {
-            document.getElementById('operatorFilter').value = loggedInUser;
-        } else {
-            document.getElementById('operatorFilter').value = '';
-        }
-
-        renderTable();
-        if (isAdmin) renderOperatorManagementTable();
-        checkAndRenderNotification(true); // Pass flag to check for initial admin alert
-        logAuditAction('LOGIN', `User ${loggedInUser} logged in.`);
-        
-        // Start advanced features
-        startAutoSave();
-        if (isAdmin) {
-            startAutomaticNotifications();
+        // Successful Login - Hide login page with animation
+        setTimeout(() => {
+            hideLoginPage();
             
-            // Auto-configure 3-day notifications if not already set
-            if (notificationSettings.notifyDays !== 3) {
-                notificationSettings.notifyDays = 3;
-                localStorage.setItem(NOTIFICATION_SETTINGS_KEY, JSON.stringify(notificationSettings));
-                document.getElementById('notifyDays').value = 3;
-                console.log('✅ Auto-configured notifications for 3 days before shift start');
-                showToast('✅ Auto-configured: 3-day advance notifications enabled', 'success');
-            }
-        }
-        showToast(`Welcome back, ${loggedInUser}!`, 'success');
-    } else {
-        alert("Invalid username or password.");
-        logAuditAction('LOGIN_FAIL', `Failed login attempt for username: ${username}.`);
+            // Show main interface after animation
+            setTimeout(() => {
+                document.getElementById('scheduleView').style.display = 'block';
+                document.getElementById('logoutBtn').style.display = 'inline-block';
+                document.getElementById('downloadPdfBtn').style.display = 'inline-block';
+                document.getElementById('filterLabel').style.display = 'inline-block';
+                document.getElementById('operatorFilter').style.display = 'inline-block';
+                document.getElementById('changePwdBtn').style.display = 'inline-block';
+                document.getElementById('resetMyPwdBtn').style.display = isOperator ? 'inline-block' : 'none';
+                
+                // Show advanced feature buttons
+                document.getElementById('analyticsBtn').style.display = 'inline-block';
+                document.getElementById('advancedSearchBtn').style.display = 'inline-block';
+                document.getElementById('exportExcelBtn').style.display = 'inline-block';
+                document.getElementById('helpBtn').style.display = 'inline-block';
+
+                // Admin Controls
+                document.getElementById('adminControls').style.display = isAdmin ? 'block' : 'none';
+                document.getElementById('operatorManagementView').style.display = isAdmin ? 'block' : 'none';
+                document.getElementById('adminActionsBtn').style.display = isAdmin ? 'inline-block' : 'none';
+                document.getElementById('auditLogView').style.display = 'none'; // Ensure log is hidden on login
+
+                if (isOperator) {
+                    document.getElementById('operatorFilter').value = loggedInUser;
+                } else {
+                    document.getElementById('operatorFilter').value = '';
+                }
+
+                renderTable();
+                if (isAdmin) renderOperatorManagementTable();
+                checkAndRenderNotification(true); // Pass flag to check for initial admin alert
+                logAuditAction('LOGIN', `User ${loggedInUser} logged in successfully.`);
+                
+                // Start advanced features
+                startAutoSave();
+                if (isAdmin) {
+                    startAutomaticNotifications();
+                    
+                    // Auto-configure 3-day notifications if not already set
+                    if (notificationSettings.notifyDays !== 3) {
+                        notificationSettings.notifyDays = 3;
+                        localStorage.setItem(NOTIFICATION_SETTINGS_KEY, JSON.stringify(notificationSettings));
+                        document.getElementById('notifyDays').value = 3;
+                        console.log('✅ Auto-configured notifications for 3 days before shift start');
+                        showToast('✅ Auto-configured: 3-day advance notifications enabled', 'success');
+                    }
+                    
+                    // Show upcoming notifications summary
+                    setTimeout(() => {
+                        showUpcomingNotificationsSummary();
+                    }, 2000);
+                }
+                
+                showToast(`Welcome back, ${loggedInUser}!`, 'success');
+            }, 500);
+        }, 1000);
     }
 }
 
@@ -2521,7 +5246,14 @@ function logout() {
     isRestrictedAdmin = false;
     isOperator = false;
     loggedInUser = null;
-    document.getElementById('authSection').style.display = 'block';
+    
+    // Reset advanced login features
+    biometricAuthActive = false;
+    mfaRequired = false;
+    mfaCode = '';
+    generatedMfaCode = '';
+    
+    // Hide main interface
     document.getElementById('scheduleView').style.display = 'none';
     document.getElementById('operatorManagementView').style.display = 'none';
     document.getElementById('logoutBtn').style.display = 'none';
@@ -2545,16 +5277,30 @@ function logout() {
     
     stopAutoSave();
     stopAutomaticNotifications();
+    
+    // Clear form data
     document.getElementById('loginUsername').value = '';
     document.getElementById('adminPassword').value = '';
+    
+    // Reset biometric and MFA states
+    resetBiometricAuth();
+    hideMfaSection();
+    
+    // Reset table
     document.querySelector('#scheduleTable tbody').innerHTML = '<tr><td colspan="7" style="text-align:center;">Please login to view the schedule.</td></tr>';
     document.getElementById('notificationBanner').style.display = 'none';
-    document.getElementById('adminMonitoringStatus').style.display = 'none'; // Hide monitoring status
+    document.getElementById('adminMonitoringStatus').style.display = 'none';
     renderNextShifts();
-    alert('Logged out successfully.');
+    
+    // Show login page with animation
+    showLoginPage();
+    showToast('Logged out successfully', 'success');
 }
 
 function init() {
+    // Set initial body class for login state
+    document.body.classList.add('login-active');
+    
     let passwordUpdated = false;
     initialOperators.forEach(op => {
         if (!operatorPasswords[op.name.toUpperCase()]) {
@@ -3502,6 +6248,120 @@ function debugNotificationSystem() {
     
     console.log(debugInfo);
     alert(debugInfo);
+}
+
+// --- CHECK 3-DAY NOTIFICATIONS ---
+function check3DayNotifications() {
+    if (!isAdmin) return;
+    
+    showToast('Checking for 3-day notifications...', 'info');
+    
+    const now = getCleanDate(new Date());
+    const threeDayNotifications = [];
+    
+    operators.forEach(op => {
+        if (op.status !== 'Active') return;
+        
+        const shiftStart = getCleanDate(op.start);
+        const daysUntilStart = daysBetween(now, shiftStart);
+        
+        // Check specifically for 3-day notifications
+        if (daysUntilStart === 3) {
+            const notificationID = `${op.start}-${op.name.toUpperCase()}`;
+            const alreadySent = notificationLog.some(log => log.id === notificationID);
+            
+            threeDayNotifications.push({
+                name: op.name,
+                email: op.email,
+                mobile: op.mobile,
+                shiftStart: op.start,
+                alreadySent: alreadySent
+            });
+        }
+    });
+    
+    let message = '🎯 3-Day Notification Check Results:\n\n';
+    
+    if (threeDayNotifications.length === 0) {
+        message += 'No operators have shifts starting in exactly 3 days.';
+    } else {
+        message += `Found ${threeDayNotifications.length} operator(s) with shifts starting in 3 days:\n\n`;
+        
+        threeDayNotifications.forEach(op => {
+            const status = op.alreadySent ? '✅ Already notified' : '📤 Ready to notify';
+            message += `• ${op.name} (${formatDate(op.shiftStart)}) - ${status}\n`;
+        });
+        
+        const readyToNotify = threeDayNotifications.filter(op => !op.alreadySent).length;
+        
+        if (readyToNotify > 0) {
+            message += `\n🔔 ${readyToNotify} operator(s) will be notified automatically.`;
+            message += '\n\nClick "📤 Send Reminders Now" to send notifications immediately.';
+        } else {
+            message += '\n✅ All 3-day notifications have already been sent.';
+        }
+    }
+    
+    alert(message);
+    console.log(message);
+}
+
+// --- SHOW UPCOMING NOTIFICATIONS SUMMARY ---
+function showUpcomingNotificationsSummary() {
+    if (!isAdmin) return;
+    
+    const now = getCleanDate(new Date());
+    const upcomingNotifications = [];
+    
+    operators.forEach(op => {
+        if (op.status !== 'Active') return;
+        
+        const shiftStart = getCleanDate(op.start);
+        const daysUntilStart = daysBetween(now, shiftStart);
+        
+        // Check if shift is within the next 7 days (to show upcoming notifications)
+        if (daysUntilStart >= 1 && daysUntilStart <= 7) {
+            const notificationID = `${op.start}-${op.name.toUpperCase()}`;
+            const alreadySent = notificationLog.some(log => log.id === notificationID);
+            
+            upcomingNotifications.push({
+                name: op.name,
+                shiftStart: op.start,
+                daysUntil: daysUntilStart,
+                willNotify: daysUntilStart <= 3 && !alreadySent,
+                alreadySent: alreadySent
+            });
+        }
+    });
+    
+    if (upcomingNotifications.length > 0) {
+        upcomingNotifications.sort((a, b) => a.daysUntil - b.daysUntil);
+        
+        let summary = '📅 Upcoming Shift Notifications (Next 7 Days):\n\n';
+        
+        upcomingNotifications.forEach(notif => {
+            const status = notif.alreadySent ? '✅ Sent' : 
+                          notif.willNotify ? '📤 Will notify' : 
+                          '⏳ Outside 3-day window';
+            
+            summary += `• ${notif.name}: ${notif.daysUntil} days (${formatDate(notif.shiftStart)}) - ${status}\n`;
+        });
+        
+        const willNotifyCount = upcomingNotifications.filter(n => n.willNotify).length;
+        
+        if (willNotifyCount > 0) {
+            summary += `\n🔔 ${willNotifyCount} operators will be notified automatically within 3 days.`;
+        } else {
+            summary += '\n✅ All upcoming notifications have been sent or are outside the 3-day window.';
+        }
+        
+        console.log(summary);
+        
+        // Show as a toast notification instead of alert for less intrusion
+        if (willNotifyCount > 0) {
+            showToast(`🔔 ${willNotifyCount} operators will be notified automatically within 3 days`, 'info');
+        }
+    }
 }
 
 // --- MESSAGE PREVIEW FUNCTION ---

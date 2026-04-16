@@ -1635,6 +1635,10 @@ body:not(.login-active) {
 /* Hide login when authenticated */
 #authSection.hidden {
     display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    z-index: -1 !important;
 }
 
 /* Dark mode support */
@@ -6505,6 +6509,31 @@ function hideLoginPage() {
     }, 500);
 }
 
+function hideLoginPageImmediate() {
+    // Immediate hide without animation - used for session restoration
+    const authSection = document.getElementById('authSection');
+    authSection.classList.add('hidden');
+    authSection.style.display = 'none';
+    authSection.style.visibility = 'hidden';
+    authSection.style.opacity = '0';
+    authSection.style.pointerEvents = 'none';
+    authSection.style.zIndex = '-1';
+    
+    // Remove login-active class to restore body scrolling
+    document.body.classList.remove('login-active');
+    
+    // Ensure body styles are reset
+    document.body.style.overflow = 'auto';
+    document.body.style.height = 'auto';
+    
+    // Clear any animations
+    authSection.style.animation = 'none';
+    
+    // Remove any particle effects or overlays that might be lingering
+    const particles = authSection.querySelectorAll('.floating-particles, .matrix-rain, .particle');
+    particles.forEach(particle => particle.remove());
+}
+
 function showLoginPage() {
     const authSection = document.getElementById('authSection');
     authSection.classList.remove('hidden');
@@ -6573,8 +6602,8 @@ function restoreSessionState() {
                 
                 console.log('Session restored:', session);
                 
-                // Hide login page and show main content
-                hideLoginPage();
+                // Hide login page immediately (no animation for session restore)
+                hideLoginPageImmediate();
                 
                 // Set up UI based on user type
                 setupUserInterface();
@@ -6653,12 +6682,18 @@ function migrateCyberSecurityUsername() {
 function setupUserInterface() {
     // Set up the interface based on user type
     if (isAdmin) {
+        // ADMIN: Show everything
         document.getElementById('adminControls').style.display = 'block';
         document.getElementById('operatorManagementView').style.display = 'block';
         document.getElementById('adminActionsBtn').style.display = 'inline-block';
         document.getElementById('auditLogView').style.display = 'none';
+        
+        // Show filter for admin
+        document.getElementById('filterLabel').style.display = 'inline-block';
+        document.getElementById('operatorFilter').style.display = 'inline-block';
     } else if (isCyberSecurity) {
-        document.getElementById('adminControls').style.display = 'block';
+        // CYBER SECURITY: Hide admin controls, only show export
+        document.getElementById('adminControls').style.display = 'none';
         document.getElementById('operatorManagementView').style.display = 'none';
         document.getElementById('adminActionsBtn').style.display = 'none';
         document.getElementById('analyticsBtn').style.display = 'none';
@@ -6667,6 +6702,10 @@ function setupUserInterface() {
         document.getElementById('exportExcelBtn').innerHTML = '🔒 Export by Date Range';
         document.getElementById('exportExcelBtn').style.backgroundColor = '#dc3545';
         document.getElementById('helpBtn').style.display = 'none';
+        
+        // Show filter for cyber security
+        document.getElementById('filterLabel').style.display = 'inline-block';
+        document.getElementById('operatorFilter').style.display = 'inline-block';
         
         // Enable password change for cyber security
         document.getElementById('changePwdBtn').style.display = 'inline-block';
@@ -6694,24 +6733,46 @@ function setupUserInterface() {
         }
         cyberResetBtn.style.display = 'inline-block';
     } else if (isRestrictedAdmin) {
-        document.getElementById('adminControls').style.display = 'block';
+        // RESTRICTED ADMIN (VIEWER): Hide admin controls
+        document.getElementById('adminControls').style.display = 'none';
         document.getElementById('operatorManagementView').style.display = 'none';
         document.getElementById('adminActionsBtn').style.display = 'none';
         document.getElementById('analyticsBtn').style.display = 'inline-block';
         document.getElementById('advancedSearchBtn').style.display = 'inline-block';
         document.getElementById('exportExcelBtn').style.display = 'inline-block';
         document.getElementById('helpBtn').style.display = 'inline-block';
+        
+        // Show filter for restricted admin
+        document.getElementById('filterLabel').style.display = 'inline-block';
+        document.getElementById('operatorFilter').style.display = 'inline-block';
     } else if (isOperator) {
-        document.getElementById('adminControls').style.display = 'block';
+        // OPERATOR: Hide admin controls
+        document.getElementById('adminControls').style.display = 'none';
         document.getElementById('operatorManagementView').style.display = 'none';
         document.getElementById('adminActionsBtn').style.display = 'none';
+        
+        // Show filter for operators (they can see their own schedule)
+        document.getElementById('filterLabel').style.display = 'inline-block';
+        document.getElementById('operatorFilter').style.display = 'inline-block';
         
         // Show backup tracking for operators
         showBackupTracking();
     }
     
     // Render the schedule
-    renderSchedule();
+    renderTable();
+    
+    // Show the schedule table
+    document.getElementById('scheduleView').style.display = 'block';
+    
+    // Show logout button
+    document.getElementById('logoutBtn').style.display = 'inline-block';
+    
+    // Populate the filter dropdown
+    populateFilter();
+    
+    // Render next shifts
+    renderNextShifts();
     
     // Initialize advanced features
     initAdvancedFeatures();

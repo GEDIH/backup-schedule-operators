@@ -1864,6 +1864,545 @@ tbody tr {
 }
 
 
+/* === BACKUP TRACKING INTERFACE STYLES === */
+.backup-tracking-section {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border: 2px solid #94C83D;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(148, 200, 61, 0.2);
+}
+
+.backup-tracking-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.backup-date-selector {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.backup-date-selector label {
+    font-weight: 600;
+    color: #333;
+}
+
+.backup-date-selector input[type="date"] {
+    padding: 8px 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+.backup-date-selector input[type="date"]:focus {
+    border-color: #94C83D;
+    outline: none;
+}
+
+.today-btn {
+    background: linear-gradient(135deg, #94C83D, #7DAE2F);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.today-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(148, 200, 61, 0.3);
+}
+
+.backup-status-card {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e9ecef;
+}
+
+.backup-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 25px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #94C83D;
+}
+
+.backup-info div {
+    font-size: 14px;
+}
+
+.backup-info strong {
+    color: #333;
+}
+
+.backup-status-buttons {
+    margin-bottom: 20px;
+}
+
+.backup-status-buttons h4 {
+    margin-bottom: 15px;
+    color: #333;
+    text-align: center;
+}
+
+.backup-status-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.backup-btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.success-btn {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+}
+
+.success-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+}
+
+.warning-btn {
+    background: linear-gradient(135deg, #ffc107, #fd7e14);
+    color: #333;
+}
+
+.warning-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 193, 7, 0.3);
+}
+
+.holiday-btn {
+    background: linear-gradient(135deg, #6f42c1, #e83e8c);
+    color: white;
+}
+
+.holiday-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(111, 66, 193, 0.3);
+}
+
+.weekend-btn {
+    background: linear-gradient(135deg, #6c757d, #495057);
+    color: white;
+}
+
+.weekend-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(108, 117, 125, 0.3);
+}
+
+.backup-times {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #e8f5e8;
+    border-radius: 8px;
+    border-left: 4px solid #28a745;
+}
+
+.time-inputs {
+    display: grid;
+    grid-template-columns: auto 1fr auto 1fr;
+    gap: 10px;
+    align-items: center;
+}
+
+.time-inputs label {
+    font-weight: 600;
+    color: #333;
+}
+
+.time-inputs input[type="time"] {
+    padding: 8px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.backup-notes {
+    margin-bottom: 20px;
+}
+
+.backup-notes h4 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.backup-notes textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+    resize: vertical;
+    transition: border-color 0.3s ease;
+}
+
+.backup-notes textarea:focus {
+    border-color: #94C83D;
+    outline: none;
+}
+
+.backup-confirmation {
+    margin-bottom: 25px;
+    padding: 15px;
+    background: #fff3cd;
+    border-radius: 8px;
+    border-left: 4px solid #ffc107;
+}
+
+.confirmation-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-weight: 500;
+    color: #333;
+}
+
+.confirmation-checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.backup-submit {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.submit-btn {
+    background: linear-gradient(135deg, #94C83D, #7DAE2F);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(148, 200, 61, 0.4);
+}
+
+.view-history-btn {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.view-history-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
+}
+
+.current-status {
+    background: #d4edda;
+    border-radius: 10px;
+    padding: 20px;
+    border-left: 4px solid #28a745;
+}
+
+.status-display {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.status-item {
+    font-size: 14px;
+    padding: 5px 0;
+}
+
+.status-item strong {
+    color: #333;
+}
+
+.edit-btn {
+    background: linear-gradient(135deg, #17a2b8, #138496);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.edit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(23, 162, 184, 0.3);
+}
+
+/* Responsive design for backup tracking */
+@media (max-width: 768px) {
+    .backup-status-buttons {
+        grid-template-columns: 1fr;
+    }
+    
+    .time-inputs {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    
+    .backup-submit {
+        flex-direction: column;
+    }
+    
+    .status-display {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Backup History Modal Styles */
+.history-list {
+    max-height: 400px;
+    overflow-y: auto;
+    margin: 20px 0;
+}
+
+.history-item {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    border-left: 4px solid #ddd;
+    background: #f8f9fa;
+}
+
+.history-item.status-success {
+    border-left-color: #28a745;
+    background: #d4edda;
+}
+
+.history-item.status-warning {
+    border-left-color: #ffc107;
+    background: #fff3cd;
+}
+
+.history-item.status-holiday {
+    border-left-color: #6f42c1;
+    background: #e2e3f3;
+}
+
+.history-item.status-weekend {
+    border-left-color: #6c757d;
+    background: #e9ecef;
+}
+
+.history-date {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.history-status {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.history-times {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.history-confirmation {
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.history-notes {
+    font-size: 12px;
+    color: #555;
+    font-style: italic;
+}
+
+.close-btn {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 15px;
+}
+
+.close-btn:hover {
+    background: #5a6268;
+}
+
+/* === BACKUP ACTION BUTTONS IN TABLE === */
+.operator-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+}
+
+.backup-status-actions {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.backup-action-btn {
+    padding: 4px 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    min-width: 60px;
+    text-align: center;
+}
+
+.completed-btn {
+    background: linear-gradient(135deg, #d4edda, #c3e6cb);
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.completed-btn:hover {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    transform: translateY(-1px);
+}
+
+.completed-btn.active {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+}
+
+.failed-btn {
+    background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.failed-btn:hover {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+    transform: translateY(-1px);
+}
+
+.failed-btn.active {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+}
+
+.pending-btn {
+    background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.pending-btn:hover {
+    background: linear-gradient(135deg, #ffc107, #e0a800);
+    color: #333;
+    transform: translateY(-1px);
+}
+
+.pending-btn.active {
+    background: linear-gradient(135deg, #ffc107, #e0a800);
+    color: #333;
+    box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
+}
+
+/* Responsive design for backup action buttons */
+@media (max-width: 768px) {
+    .backup-action-btn {
+        font-size: 10px;
+        padding: 3px 6px;
+        min-width: 40px;
+    }
+    
+    .operator-actions {
+        gap: 4px;
+    }
+}
+
+/* === END BACKUP ACTION BUTTONS IN TABLE === */
+
+/* Status-specific styling */
+.status-completed {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.status-failed {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.status-holiday {
+    color: #6f42c1;
+    font-weight: bold;
+}
+
+.status-weekend {
+    color: #6c757d;
+    font-weight: bold;
+}
+
+.status-pending {
+    color: #ffc107;
+    font-weight: bold;
+}
+
+.status-confirmed {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.status-not-confirmed {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+/* === END BACKUP TRACKING INTERFACE STYLES === */
+
 /* Enhanced Footer Styles */
 .enhanced-footer {
     background: linear-gradient(135deg, #00A8E8, #0087b8, #006a94);
@@ -2157,6 +2696,9 @@ tbody tr {
                 <button type="button" class="user-type-btn" onclick="selectUserType('viewer')">
                     👁️ Viewer
                 </button>
+                <button type="button" class="user-type-btn" onclick="selectUserType('cybersecurity')">
+                    🔒 Cyber Security
+                </button>
             </div>
             
             <div class="input-group" id="usernameGroup">
@@ -2217,7 +2759,7 @@ tbody tr {
                     🔐 Enterprise Security
                 </div>
                 <div class="security-badge">
-                    � Biometric Ready
+                      Biometric Ready
                 </div>
                 <div class="security-badge">
                     🛡️ MFA Protected
@@ -2231,7 +2773,7 @@ tbody tr {
                     © 2025 Oromia Bank | Backup Operators Schedule
                 </div>
                 <div class="footer-developer">
-                    Developed by <span class="developer-name">HAMBISA ADAMU</span>
+                    Designed and developed by <span class="developer-name">Database and Analytics Division</span>
                 </div>
                 <div class="footer-features">
                     Enhanced Security & Analytics Platform
@@ -2251,6 +2793,8 @@ tbody tr {
     <button onclick="generateScheduleButton()">Generate Full Schedule</button>
     <button onclick="resetAll()" style="background-color: #cc0000;">Clear ALL Data</button>
     <button onclick="openAuditLogView()" style="background-color: #343a40;">View Audit Log</button>
+    <button onclick="createSampleBackupData()" style="background-color: #17a2b8;">🧪 Create Sample Backup Data</button>
+    <button onclick="debugBackupData()" style="background-color: #6f42c1;">🔍 Debug Backup Data</button>
     <button onclick="openNotificationConfigModal()" style="background-color: #6c757d;">⚙️ Configure Notification APIs</button>
     <button onclick="testNotificationSystem()" style="background-color: #6f42c1; color: white;">🧪 Test Notification System</button>
     <button onclick="testNotificationToAllOperators()" style="background-color: #e83e8c; color: white;">📧 Test All Operators</button>
@@ -2316,6 +2860,110 @@ tbody tr {
     END NOTIFICATION SECTION HIDDEN -->
     </div>
 
+<!-- Daily Backup Status Tracking Section -->
+<div class="controls backup-tracking-section" id="backupTrackingSection" style="display:none;">
+    <h3>📋 Daily Backup Status Tracking</h3>
+    <div class="backup-tracking-container">
+        <div class="backup-date-selector">
+            <label for="backupDate">Select Date:</label>
+            <input type="date" id="backupDate" onchange="loadBackupStatus()">
+            <button onclick="setTodayDate()" class="today-btn">Today</button>
+        </div>
+        
+        <div class="backup-status-card" id="backupStatusCard">
+            <div class="backup-info">
+                <div class="operator-info">
+                    <strong>Operator:</strong> <span id="currentOperatorName"></span>
+                </div>
+                <div class="date-info">
+                    <strong>Date:</strong> <span id="selectedDateDisplay"></span>
+                </div>
+                <div class="day-type-info">
+                    <strong>Day Type:</strong> <span id="dayTypeDisplay"></span>
+                </div>
+                <div class="work-week-info">
+                    <small><em>Ethiopian Work Week: Monday-Saturday (Sunday is weekend)</em></small>
+                </div>
+            </div>
+            
+            <div class="backup-actions" id="backupActions">
+                <div class="backup-status-buttons">
+                    <h4>Backup Status:</h4>
+                    <button class="backup-btn success-btn" onclick="setBackupStatus('Completely Backed Up')">
+                        ✅ Completely Backed Up
+                    </button>
+                    <button class="backup-btn warning-btn" onclick="setBackupStatus('Issue Encountered')">
+                        ⚠️ Issue Encountered
+                    </button>
+                    <button class="backup-btn holiday-btn" onclick="setBackupStatus('Holiday')">
+                        🏖️ Holiday
+                    </button>
+                    <button class="backup-btn weekend-btn" onclick="setBackupStatus('Weekend')">
+                        📅 Sunday (Weekend)
+                    </button>
+                </div>
+                
+                <div class="backup-times" id="backupTimesSection" style="display:none;">
+                    <h4>Backup Times:</h4>
+                    <div class="time-inputs">
+                        <label>Start Time:</label>
+                        <input type="time" id="backupStartTime">
+                        <label>End Time:</label>
+                        <input type="time" id="backupEndTime">
+                    </div>
+                </div>
+                
+                <div class="backup-notes">
+                    <h4>Notes/Issues:</h4>
+                    <textarea id="backupNotes" placeholder="Enter any notes, issues, or additional information..." rows="3"></textarea>
+                </div>
+                
+                <div class="backup-confirmation">
+                    <label class="confirmation-checkbox">
+                        <input type="checkbox" id="operatorConfirmation">
+                        <span class="checkmark"></span>
+                        I confirm that I have properly initiated and monitored the backup process for this date.
+                    </label>
+                </div>
+                
+                <div class="backup-submit">
+                    <button class="submit-btn" onclick="saveBackupStatus()">
+                        💾 Save Backup Status
+                    </button>
+                    <button class="view-history-btn" onclick="viewBackupHistory()">
+                        📊 View History
+                    </button>
+                </div>
+            </div>
+            
+            <div class="current-status" id="currentBackupStatus" style="display:none;">
+                <h4>Current Status:</h4>
+                <div class="status-display">
+                    <div class="status-item">
+                        <strong>Status:</strong> <span id="displayStatus"></span>
+                    </div>
+                    <div class="status-item">
+                        <strong>Start Time:</strong> <span id="displayStartTime"></span>
+                    </div>
+                    <div class="status-item">
+                        <strong>End Time:</strong> <span id="displayEndTime"></span>
+                    </div>
+                    <div class="status-item">
+                        <strong>Notes:</strong> <span id="displayNotes"></span>
+                    </div>
+                    <div class="status-item">
+                        <strong>Confirmed:</strong> <span id="displayConfirmation"></span>
+                    </div>
+                    <div class="status-item">
+                        <strong>Last Updated:</strong> <span id="displayLastUpdated"></span>
+                    </div>
+                </div>
+                <button class="edit-btn" onclick="editBackupStatus()">✏️ Edit Status</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="table-container" id="operatorManagementView" style="display:none;">
     <h3 style="text-align: center;">Master Operator List Management</h3>
     <div style="text-align: center; margin-bottom: 10px;">
@@ -2375,7 +3023,7 @@ tbody tr {
     </table>
 </div>
 
-<div class="note">ADVANCED BACKUP OPERATORS SCHEDULE</div>
+<div class="note">Oromia Bank Backup Operators Schedule</div>
 
 <div class="footer enhanced-footer">
     <div class="footer-container">
@@ -2383,7 +3031,7 @@ tbody tr {
             © 2025 Oromia Bank Backup Operators Schedule | All rights reserved
         </div>
         <div class="footer-developer-credit">
-            Developed by <span class="developer-highlight">HAMBISA ADAMU</span>
+            Designed and developed by <span class="developer-highlight">Database and Analytics Division</span>
         </div>
         <div class="footer-features-text">
             Enhanced with Analytics & Advanced Features
@@ -2495,7 +3143,7 @@ tbody tr {
             <li><strong>📊 Excel Export:</strong> Export data to Excel format</li>
             <li><strong>🌙 Dark Mode:</strong> Automatic dark theme support</li>
             <li><strong>💾 Auto-Save:</strong> Automatic data backup every minute</li>
-            <li><strong>�📱 Real Notifications:</strong> Automatic email and SMS alerts</li>
+            <li><strong> 📱 Real Notifications:</strong> Automatic email and SMS alerts</li>
         </ul>
         
         <h4>⌨️ Keyboard Shortcuts:</h4>
@@ -2742,6 +3390,152 @@ function exportToExcel() {
         return;
     }
     
+    // For cyber security users, show date range selection modal
+    if (isCyberSecurity) {
+        showDateRangeExportModal();
+        return;
+    }
+    
+    // Original export logic for other users
+    performExcelExport();
+}
+
+// New function to show date range selection modal for cyber security
+function showDateRangeExportModal() {
+    // Remove any existing modals first
+    const existingModals = document.querySelectorAll('.modal');
+    existingModals.forEach(modal => {
+        if (modal.innerHTML.includes('Cyber Security - Export Excel by Shift Date Range')) {
+            modal.remove();
+        }
+    });
+    
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.style.display = 'block';
+    modal.id = 'dateRangeExportModal'; // Add unique ID
+    
+    // Add click event to close modal when clicking backdrop
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeDateRangeModal();
+        }
+    });
+    
+    modal.innerHTML = `
+        <div class="modal-content" style="max-width: 500px;">
+            <span class="close" onclick="closeDateRangeModal(); return false;">&times;</span>
+            <h3>🔒 Cyber Security - Export Excel by Shift Date Range</h3>
+            <div style="margin: 20px 0;">
+                <label for="exportStartDate" style="display: block; margin-bottom: 5px; font-weight: bold;">Shift Start Date:</label>
+                <input type="date" id="exportStartDate" style="width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px;">
+                
+                <label for="exportEndDate" style="display: block; margin-bottom: 5px; font-weight: bold;">Shift End Date:</label>
+                <input type="date" id="exportEndDate" style="width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px;">
+                
+                <div style="margin: 15px 0; padding: 10px; background-color: #e8f4fd; border-radius: 4px; border-left: 3px solid #007bff;">
+                    <p style="margin: 0; font-size: 14px; color: #0056b3;">
+                        <strong>📊 Export Information:</strong><br>
+                        • Filters records by <strong>Shift Date</strong> column within selected range<br>
+                        • Includes all operators with shifts in the specified date range<br>
+                        • Daily backup status, times, and confirmation details<br>
+                        • Suitable for security auditing and compliance reporting
+                    </p>
+                </div>
+                
+                <div style="margin: 15px 0; padding: 10px; background-color: #fff3cd; border-radius: 4px; border-left: 3px solid #ffc107;">
+                    <p style="margin: 0; font-size: 13px; color: #856404;">
+                        <strong>⚠️ Note:</strong> Only records where the <strong>Shift Date</strong> falls between the selected start and end dates will be included in the export.
+                    </p>
+                </div>
+            </div>
+            <div style="text-align: center;">
+                <button onclick="performDateRangeExport()" style="background-color: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; margin-right: 10px;">
+                    📊 Export by Shift Date Range
+                </button>
+                <button onclick="closeDateRangeModal(); return false;" style="background-color: #6c757d; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    
+    // Add keyboard event listener for ESC key
+    document.addEventListener('keydown', handleModalKeydown);
+    
+    // Set default dates (last 30 days)
+    const today = new Date();
+    const thirtyDaysAgo = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000));
+    
+    document.getElementById('exportStartDate').value = thirtyDaysAgo.toISOString().split('T')[0];
+    document.getElementById('exportEndDate').value = today.toISOString().split('T')[0];
+}
+
+function closeDateRangeModal() {
+    console.log('closeDateRangeModal called'); // Debug log
+    
+    // Find all modals with the date range export content
+    const modals = document.querySelectorAll('.modal');
+    console.log('Found modals:', modals.length); // Debug log
+    
+    let modalClosed = false;
+    modals.forEach(modal => {
+        // Check if this modal contains the date range export content
+        if (modal.innerHTML.includes('Cyber Security - Export Excel by Shift Date Range') || 
+            modal.innerHTML.includes('Export by Shift Date Range')) {
+            console.log('Removing date range modal'); // Debug log
+            modal.remove();
+            modalClosed = true;
+        }
+    });
+    
+    // Fallback: remove the most recent modal if the above doesn't work
+    if (!modalClosed) {
+        const lastModal = document.querySelector('.modal:last-of-type');
+        if (lastModal) {
+            console.log('Removing last modal as fallback'); // Debug log
+            lastModal.remove();
+        }
+    }
+    
+    // Remove keyboard event listener
+    document.removeEventListener('keydown', handleModalKeydown);
+    console.log('Modal close completed'); // Debug log
+}
+
+// Add keyboard support for modal
+function handleModalKeydown(e) {
+    if (e.key === 'Escape') {
+        closeDateRangeModal();
+    }
+}
+
+function performDateRangeExport() {
+    const startDate = document.getElementById('exportStartDate').value;
+    const endDate = document.getElementById('exportEndDate').value;
+    
+    if (!startDate || !endDate) {
+        alert('Please select both shift start and end dates.');
+        return;
+    }
+    
+    if (new Date(startDate) > new Date(endDate)) {
+        alert('Shift start date cannot be after shift end date.');
+        return;
+    }
+    
+    closeDateRangeModal();
+    performExcelExport(startDate, endDate);
+}
+
+// Modified export function to handle date range filtering by Shift Date
+function performExcelExport(filterStartDate = null, filterEndDate = null) {
+    if (!operators.length) {
+        showToast('No schedule data to export', 'error');
+        return;
+    }
+    
     showLoading(true);
     
     setTimeout(() => {
@@ -2769,20 +3563,41 @@ function exportToExcel() {
                 // Generate daily entries for the shift period
                 const currentDate = new Date(startDate);
                 while (currentDate <= endDate) {
+                    // Get backup data for this specific date and operator
+                    const backupData = getBackupData(op.name, currentDate);
+                    
+                    // Create the day entry first to get the Shift Date
                     const dayEntry = {
                         'S/N': serialNumber++,
                         'Operator Name': op.name,
                         'Checked By': op.checkedBy || op.name,
                         'Mobile Number': op.mobile || 'N/A',
                         'Email Address': op.email || 'N/A',
-                        'Shift Start': formatExcelDateShort(currentDate),
-                        'Shift End': formatExcelDateShort(currentDate), // Same day for daily entries
+                        'Shift Date': formatExcelDateShort(currentDate),
+                        'Day Type': getDayType(currentDate),
+                        'Backup Status': backupData ? getConvertedStatus(backupData.status) : 'Pending',
+                        'Backup Start Time': backupData ? (backupData.startTime || 'N/A') : 'N/A',
+                        'Backup End Time': backupData ? (backupData.endTime || 'N/A') : 'N/A',
+                        'Issues/Notes': backupData ? (backupData.notes || 'No notes') : 'No notes',
+                        'Operator Confirmation': backupData ? (backupData.confirmed ? 'Confirmed' : 'Not Confirmed') : 'Not Confirmed',
                         'Status': op.status || 'Active',
-                        'Working Days': 1, // Each row represents 1 working day
                         'Signature': '__________'
                     };
                     
-                    excelData.push(dayEntry);
+                    // Apply date range filter based on Shift Date (for cyber security)
+                    if (filterStartDate && filterEndDate) {
+                        const shiftDate = new Date(currentDate);
+                        const filterStart = new Date(filterStartDate);
+                        const filterEnd = new Date(filterEndDate);
+                        
+                        // Only include records where Shift Date falls within the selected range
+                        if (shiftDate >= filterStart && shiftDate <= filterEnd) {
+                            excelData.push(dayEntry);
+                        }
+                    } else {
+                        // No date filter - include all records
+                        excelData.push(dayEntry);
+                    }
                     
                     // Move to next day
                     currentDate.setDate(currentDate.getDate() + 1);
@@ -2808,14 +3623,18 @@ function exportToExcel() {
             // Set column widths for better readability
             const colWidths = [
                 { wch: 6 },   // S/N
-                { wch: 20 },  // Operator Name
-                { wch: 20 },  // Checked By
+                { wch: 18 },  // Operator Name
+                { wch: 18 },  // Checked By
                 { wch: 15 },  // Mobile Number
                 { wch: 25 },  // Email Address
-                { wch: 12 },  // Shift Start
-                { wch: 12 },  // Shift End
+                { wch: 12 },  // Shift Date
+                { wch: 12 },  // Day Type
+                { wch: 18 },  // Backup Status
+                { wch: 15 },  // Backup Start Time
+                { wch: 15 },  // Backup End Time
+                { wch: 25 },  // Issues/Notes
+                { wch: 18 },  // Operator Confirmation
                 { wch: 10 },  // Status
-                { wch: 12 },  // Working Days
                 { wch: 15 }   // Signature
             ];
             ws['!cols'] = colWidths;
@@ -2876,7 +3695,51 @@ function exportToExcel() {
                     };
                     
                     // Special formatting for specific columns
-                    if (C === 7) { // Status column
+                    if (C === 7) { // Backup Status column
+                        const status = ws[cellAddress].v;
+                        ws[cellAddress].s.alignment.horizontal = "center";
+                        ws[cellAddress].s.font.bold = true;
+                        
+                        if (status === 'Completed') {
+                            ws[cellAddress].s.font.color = { rgb: "28A745" }; // Green
+                        } else if (status === 'Failed') {
+                            ws[cellAddress].s.font.color = { rgb: "DC3545" }; // Red
+                        } else if (status === 'Holiday') {
+                            ws[cellAddress].s.font.color = { rgb: "6F42C1" }; // Purple
+                        } else if (status === 'Weekend') {
+                            ws[cellAddress].s.font.color = { rgb: "6C757D" }; // Gray
+                        } else if (status === 'Pending') {
+                            ws[cellAddress].s.font.color = { rgb: "FFC107" }; // Orange
+                        }
+                    }
+                    
+                    if (C === 8) { // Backup Start Time column
+                        ws[cellAddress].s.alignment.horizontal = "center";
+                    }
+                    
+                    if (C === 9) { // Backup End Time column
+                        ws[cellAddress].s.alignment.horizontal = "center";
+                    }
+                    
+                    if (C === 10) { // Issues/Notes column
+                        ws[cellAddress].s.alignment.horizontal = "left";
+                        // Wrap text for notes
+                        ws[cellAddress].s.alignment.wrapText = true;
+                    }
+                    
+                    if (C === 11) { // Operator Confirmation column
+                        const confirmation = ws[cellAddress].v;
+                        ws[cellAddress].s.alignment.horizontal = "center";
+                        ws[cellAddress].s.font.bold = true;
+                        
+                        if (confirmation === 'Confirmed') {
+                            ws[cellAddress].s.font.color = { rgb: "28A745" }; // Green
+                        } else if (confirmation === 'Not Confirmed') {
+                            ws[cellAddress].s.font.color = { rgb: "DC3545" }; // Red
+                        }
+                    }
+                    
+                    if (C === 12) { // Status column (Active/Finished)
                         const status = ws[cellAddress].v;
                         if (status === 'Active') {
                             ws[cellAddress].s.font.color = { rgb: "28A745" };
@@ -2887,7 +3750,7 @@ function exportToExcel() {
                         ws[cellAddress].s.alignment.horizontal = "center";
                     }
                     
-                    if (C === 9) { // Signature column
+                    if (C === 13) { // Signature column
                         ws[cellAddress].s.alignment.horizontal = "center";
                         ws[cellAddress].s.font.color = { rgb: "6C757D" };
                     }
@@ -2897,20 +3760,38 @@ function exportToExcel() {
             // Add worksheet to workbook
             XLSX.utils.book_append_sheet(wb, ws, 'Daily Backup Schedule');
             
-            // Generate filename with current date
+            // Generate filename with current date and range info
             const currentDate = new Date();
             const dateStr = currentDate.toISOString().split('T')[0];
             const timeStr = currentDate.toTimeString().split(' ')[0].replace(/:/g, '-');
-            const fileName = `Oromia_Bank_Daily_Backup_Schedule_${dateStr}_${timeStr}.xlsx`;
+            
+            let fileName;
+            if (filterStartDate && filterEndDate) {
+                // For cyber security date range exports
+                const startStr = filterStartDate.replace(/-/g, '');
+                const endStr = filterEndDate.replace(/-/g, '');
+                fileName = `Oromia_Bank_CyberSec_Backup_Report_${startStr}_to_${endStr}_${dateStr}_${timeStr}.xlsx`;
+            } else {
+                // For regular exports
+                fileName = `Oromia_Bank_Daily_Backup_Schedule_${dateStr}_${timeStr}.xlsx`;
+            }
             
             // Export the file
             XLSX.writeFile(wb, fileName);
             
             // Log the export action
-            logAuditAction('EXCEL_EXPORT', `Daily Excel schedule exported by ${loggedInUser}. File: ${fileName}, Records: ${excelData.length}`);
+            if (filterStartDate && filterEndDate) {
+                logAuditAction('CYBER_SEC_EXPORT', `Cyber Security date range Excel export by ${loggedInUser}. Date Range: ${filterStartDate} to ${filterEndDate}, File: ${fileName}, Records: ${excelData.length}`);
+            } else {
+                logAuditAction('EXCEL_EXPORT', `Daily Excel schedule exported by ${loggedInUser}. File: ${fileName}, Records: ${excelData.length}`);
+            }
             
             // Show success notification
-            showAdvancedNotification(`📊 Daily Excel schedule exported successfully!<br>File: ${fileName}<br>Daily Records: ${excelData.length}`, 'success');
+            if (filterStartDate && filterEndDate) {
+                showAdvancedNotification(`� Cyber Security Excel report exported successfully!<br>Date Range: ${filterStartDate} to ${filterEndDate}<br>File: ${fileName}<br>Daily Records: ${excelData.length}`, 'success');
+            } else {
+                showAdvancedNotification(`�📊 Daily Excel schedule exported successfully!<br>File: ${fileName}<br>Daily Records: ${excelData.length}`, 'success');
+            }
             
         } catch (error) {
             console.error('Excel export error:', error);
@@ -2919,6 +3800,442 @@ function exportToExcel() {
             showLoading(false);
         }
     }, 500);
+}
+
+// === QUICK BACKUP STATUS ACTIONS ===
+
+// Quick set backup status from table actions
+function quickSetBackupStatus(status) {
+    const today = new Date();
+    const dateStr = today.toISOString().split('T')[0];
+    const operatorName = loggedInUser;
+    
+    // Check if it's a working day
+    const dayType = getDayType(today);
+    if (dayType === 'Weekend' || dayType === 'Holiday') {
+        showToast(`Today is ${dayType}. No backup operation expected.`, 'info');
+        return;
+    }
+    
+    // Create backup data
+    const backupData = {
+        status: status,
+        startTime: status === 'Completely Backed Up' ? getCurrentTime() : '',
+        endTime: status === 'Completely Backed Up' ? getCurrentTime() : '',
+        notes: status === 'Issue Encountered' ? 'Quick status update from table' : '',
+        confirmed: true, // Auto-confirm for quick actions
+        lastUpdated: new Date().toLocaleString(),
+        operator: operatorName,
+        date: dateStr
+    };
+    
+    // Save to localStorage
+    saveBackupData(operatorName, today, backupData);
+    
+    // Log the action
+    const convertedStatus = getConvertedStatus(status);
+    logAuditAction('BACKUP_STATUS_QUICK', `${operatorName} quick-updated backup status: ${status} (${convertedStatus})`);
+    
+    // Show success message
+    showAdvancedNotification(`✅ Backup status updated!<br>Status: ${convertedStatus}`, 'success');
+    
+    // Refresh the table to show updated status
+    renderTable();
+}
+
+// Open backup tracking section
+function openBackupTracking() {
+    // Scroll to backup tracking section
+    const backupSection = document.getElementById('backupTrackingSection');
+    if (backupSection) {
+        backupSection.scrollIntoView({ behavior: 'smooth' });
+        
+        // Set today's date and load status
+        setTodayDate();
+        
+        // Highlight the section briefly
+        backupSection.style.border = '3px solid #94C83D';
+        setTimeout(() => {
+            backupSection.style.border = '2px solid #94C83D';
+        }, 2000);
+    }
+}
+
+// Get current time in HH:MM format
+function getCurrentTime() {
+    const now = new Date();
+    return now.toTimeString().slice(0, 5);
+}
+
+// === END QUICK BACKUP STATUS ACTIONS ===
+
+// === BACKUP STATUS TRACKING FUNCTIONS ===
+
+// Show backup tracking section for operators
+function showBackupTracking() {
+    if (!isOperator) return;
+    
+    document.getElementById('backupTrackingSection').style.display = 'block';
+    document.getElementById('currentOperatorName').textContent = loggedInUser;
+    
+    // Set today's date by default
+    setTodayDate();
+}
+
+// Hide backup tracking section
+function hideBackupTracking() {
+    document.getElementById('backupTrackingSection').style.display = 'none';
+}
+
+// Set today's date in the date picker
+function setTodayDate() {
+    const today = new Date();
+    const dateStr = today.toISOString().split('T')[0];
+    document.getElementById('backupDate').value = dateStr;
+    loadBackupStatus();
+}
+
+// Load backup status for selected date
+function loadBackupStatus() {
+    const selectedDate = document.getElementById('backupDate').value;
+    if (!selectedDate) return;
+    
+    const date = new Date(selectedDate);
+    const operatorName = loggedInUser;
+    
+    // Update display
+    document.getElementById('selectedDateDisplay').textContent = formatExcelDateShort(date);
+    document.getElementById('dayTypeDisplay').textContent = getDayType(date);
+    
+    // Load existing backup data
+    const backupData = getBackupData(operatorName, date);
+    
+    if (backupData) {
+        // Show current status
+        showCurrentStatus(backupData);
+    } else {
+        // Show input form
+        showBackupForm();
+    }
+}
+
+// Show current backup status
+function showCurrentStatus(backupData) {
+    document.getElementById('backupActions').style.display = 'none';
+    document.getElementById('currentBackupStatus').style.display = 'block';
+    
+    // Convert status for display
+    const displayStatus = getConvertedStatus(backupData.status);
+    const statusClass = getStatusClass(backupData.status);
+    
+    document.getElementById('displayStatus').innerHTML = `<span class="${statusClass}">${displayStatus}</span> (${backupData.status})`;
+    document.getElementById('displayStartTime').textContent = backupData.startTime || 'N/A';
+    document.getElementById('displayEndTime').textContent = backupData.endTime || 'N/A';
+    document.getElementById('displayNotes').textContent = backupData.notes || 'No notes';
+    document.getElementById('displayConfirmation').innerHTML = backupData.confirmed ? 
+        '<span class="status-confirmed">Confirmed</span>' : 
+        '<span class="status-not-confirmed">Not Confirmed</span>';
+    document.getElementById('displayLastUpdated').textContent = backupData.lastUpdated || 'N/A';
+}
+
+// Convert operator selection to standardized status
+function getConvertedStatus(operatorStatus) {
+    switch (operatorStatus) {
+        case 'Completely Backed Up':
+            return 'Completed';
+        case 'Issue Encountered':
+            return 'Failed';
+        case 'Holiday':
+            return 'Holiday';
+        case 'Weekend':
+            return 'Weekend';
+        default:
+            return 'Pending';
+    }
+}
+
+// Show backup input form
+function showBackupForm() {
+    document.getElementById('backupActions').style.display = 'block';
+    document.getElementById('currentBackupStatus').style.display = 'none';
+    
+    // Reset form
+    document.getElementById('backupStartTime').value = '';
+    document.getElementById('backupEndTime').value = '';
+    document.getElementById('backupNotes').value = '';
+    document.getElementById('operatorConfirmation').checked = false;
+    document.getElementById('backupTimesSection').style.display = 'none';
+}
+
+// Set backup status
+function setBackupStatus(status) {
+    // Show/hide time inputs based on status
+    if (status === 'Completely Backed Up' || status === 'Issue Encountered') {
+        document.getElementById('backupTimesSection').style.display = 'block';
+    } else {
+        document.getElementById('backupTimesSection').style.display = 'none';
+    }
+    
+    // Store selected status
+    window.selectedBackupStatus = status;
+    
+    // Highlight selected button
+    document.querySelectorAll('.backup-btn').forEach(btn => {
+        btn.style.opacity = '0.6';
+        btn.style.transform = 'scale(0.95)';
+    });
+    
+    event.target.style.opacity = '1';
+    event.target.style.transform = 'scale(1.05)';
+}
+
+// Save backup status
+function saveBackupStatus() {
+    const selectedDate = document.getElementById('backupDate').value;
+    const operatorName = loggedInUser;
+    
+    if (!selectedDate || !window.selectedBackupStatus) {
+        showToast('Please select a date and backup status', 'error');
+        return;
+    }
+    
+    const confirmed = document.getElementById('operatorConfirmation').checked;
+    if (!confirmed) {
+        showToast('Please confirm that you have properly initiated and monitored the backup process', 'error');
+        return;
+    }
+    
+    const backupData = {
+        status: window.selectedBackupStatus,
+        startTime: document.getElementById('backupStartTime').value,
+        endTime: document.getElementById('backupEndTime').value,
+        notes: document.getElementById('backupNotes').value,
+        confirmed: confirmed,
+        lastUpdated: new Date().toLocaleString(),
+        operator: operatorName,
+        date: selectedDate
+    };
+    
+    // Validate times for backup statuses that require them
+    if ((backupData.status === 'Completely Backed Up' || backupData.status === 'Issue Encountered')) {
+        if (!backupData.startTime) {
+            showToast('Please enter backup start time', 'error');
+            return;
+        }
+    }
+    
+    // Save to localStorage
+    saveBackupData(operatorName, new Date(selectedDate), backupData);
+    
+    // Log the action
+    const convertedStatus = getConvertedStatus(backupData.status);
+    logAuditAction('BACKUP_STATUS', `${operatorName} updated backup status for ${selectedDate}: ${backupData.status} (${convertedStatus})`);
+    
+    // Show success message
+    showAdvancedNotification(`✅ Backup status saved successfully!<br>Date: ${selectedDate}<br>Status: ${convertedStatus} (${backupData.status})`, 'success');
+    
+    // Refresh display
+    loadBackupStatus();
+}
+
+// Edit backup status
+function editBackupStatus() {
+    showBackupForm();
+}
+
+// View backup history
+function viewBackupHistory() {
+    const operatorName = loggedInUser;
+    const history = [];
+    
+    // Get all backup records for this operator
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith(`backup_${operatorName}_`)) {
+            const data = JSON.parse(localStorage.getItem(key));
+            history.push(data);
+        }
+    }
+    
+    // Sort by date
+    history.sort((a, b) => new Date(b.date) - new Date(a.date));
+    
+    // Create history modal
+    showBackupHistoryModal(history);
+}
+
+// Show backup history modal
+function showBackupHistoryModal(history) {
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.style.display = 'block';
+    
+    let historyHtml = '<h3>📊 Backup History</h3>';
+    
+    if (history.length === 0) {
+        historyHtml += '<p>No backup records found.</p>';
+    } else {
+        historyHtml += '<div class="history-list">';
+        history.forEach(record => {
+            const statusClass = getStatusClass(record.status);
+            const confirmationClass = record.confirmed ? 'status-confirmed' : 'status-not-confirmed';
+            const confirmationText = record.confirmed ? 'Confirmed' : 'Not Confirmed';
+            
+            historyHtml += `
+                <div class="history-item ${statusClass}">
+                    <div class="history-date">${record.date}</div>
+                    <div class="history-status">${record.status}</div>
+                    <div class="history-times">${record.startTime || 'N/A'} - ${record.endTime || 'N/A'}</div>
+                    <div class="history-confirmation">
+                        <span class="${confirmationClass}">${confirmationText}</span>
+                    </div>
+                    <div class="history-notes">${record.notes || 'No notes'}</div>
+                </div>
+            `;
+        });
+        historyHtml += '</div>';
+    }
+    
+    historyHtml += '<button onclick="closeModal()" class="close-btn">Close</button>';
+    
+    modal.innerHTML = `<div class="modal-content">${historyHtml}</div>`;
+    document.body.appendChild(modal);
+}
+
+// Get CSS class for status
+function getStatusClass(status) {
+    switch (status) {
+        case 'Completely Backed Up': return 'status-completed';
+        case 'Issue Encountered': return 'status-failed';
+        case 'Holiday': return 'status-holiday';
+        case 'Weekend': return 'status-weekend';
+        default: return 'status-pending';
+    }
+}
+
+// Close modal
+function closeModal() {
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => modal.remove());
+}
+
+// === END BACKUP STATUS TRACKING FUNCTIONS ===
+
+// Convert operator selection to standardized status
+function getConvertedStatus(operatorStatus) {
+    if (!operatorStatus) return 'Pending';
+    
+    switch (operatorStatus) {
+        case 'Completely Backed Up':
+            return 'Completed';
+        case 'Issue Encountered':
+            return 'Failed';
+        case 'Holiday':
+            return 'Holiday';
+        case 'Weekend':
+            return 'Weekend';
+        default:
+            return 'Pending';
+    }
+}
+
+// Helper functions for backup tracking
+function getDayType(date) {
+    const dayOfWeek = date.getDay(); // 0=Sunday, 1=Monday, ..., 6=Saturday
+    const dateStr = formatExcelDateShort(date);
+    
+    // Check if it's Sunday (weekend day in Ethiopia)
+    if (dayOfWeek === 0) { // Sunday is weekend in Ethiopia
+        return 'Weekend';
+    }
+    
+    // Check if it's a predefined holiday
+    if (isHoliday(date)) {
+        return 'Holiday';
+    }
+    
+    // All other days (Monday, Tuesday, Wednesday, Thursday, Friday, Saturday) are working days
+    return 'Working Day';
+}
+
+function isHoliday(date) {
+    // Define Ethiopian holidays and international holidays
+    // Note: Ethiopian work week is Monday-Saturday (Sunday is weekend)
+    const holidays = [
+        '01-01', // New Year (January 1)
+        '01-07', // Ethiopian Christmas (Genna)
+        '01-19', // Ethiopian Epiphany (Timkat)
+        '03-02', // Victory of Adwa
+        '04-27', // Good Friday (varies yearly - approximate)
+        '04-29', // Easter Sunday (varies yearly - approximate)
+        '05-01', // International Labor Day
+        '05-05', // Patriots Day (Arbegnoch Qen)
+        '05-28', // Downfall of Derg Regime
+        '09-11', // Ethiopian New Year (Enkutatash)
+        '09-27', // Meskel (Finding of the True Cross)
+        '12-25', // Christmas Day (International)
+        // Add more Ethiopian holidays as needed
+        // Note: Islamic holidays vary by lunar calendar and should be updated annually
+    ];
+    
+    const monthDay = `${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+    return holidays.includes(monthDay);
+}
+
+function getBackupStatus(operatorName, date) {
+    // Get backup status from localStorage or return default
+    const backupData = getBackupData(operatorName, date);
+    if (!backupData) return 'Pending';
+    
+    // Convert operator selection to standardized status
+    switch (backupData.status) {
+        case 'Completely Backed Up':
+            return 'Completed';
+        case 'Issue Encountered':
+            return 'Failed';
+        case 'Holiday':
+            return 'Holiday';
+        case 'Weekend':
+            return 'Weekend';
+        default:
+            return 'Pending';
+    }
+}
+
+function getBackupTime(operatorName, date, type) {
+    const backupData = getBackupData(operatorName, date);
+    if (!backupData) return '';
+    return type === 'start' ? backupData.startTime : backupData.endTime;
+}
+
+function getBackupNotes(operatorName, date) {
+    const backupData = getBackupData(operatorName, date);
+    return backupData ? backupData.notes : '';
+}
+
+function getOperatorConfirmation(operatorName, date) {
+    const backupData = getBackupData(operatorName, date);
+    if (!backupData) return 'Not Confirmed';
+    
+    // Convert confirmation status to standardized values
+    if (backupData.confirmed) {
+        return 'Confirmed';
+    } else {
+        return 'Not Confirmed';
+    }
+}
+
+function getBackupData(operatorName, date) {
+    const dateKey = formatExcelDateShort(date);
+    const storageKey = `backup_${operatorName}_${dateKey}`;
+    const data = localStorage.getItem(storageKey);
+    return data ? JSON.parse(data) : null;
+}
+
+function saveBackupData(operatorName, date, backupData) {
+    const dateKey = formatExcelDateShort(date);
+    const storageKey = `backup_${operatorName}_${dateKey}`;
+    localStorage.setItem(storageKey, JSON.stringify(backupData));
 }
 
 // Helper function to format dates for Excel export (short format)
@@ -3027,10 +4344,10 @@ document.addEventListener('keydown', function(e) {
     
     // Advanced login shortcuts (only when on login page)
     if (document.getElementById('authSection') && !document.getElementById('authSection').classList.contains('hidden')) {
-        // Alt + 1, 2, 3 for user type selection
-        if (e.altKey && ['1', '2', '3'].includes(e.key)) {
+        // Alt + 1, 2, 3, 4 for user type selection
+        if (e.altKey && ['1', '2', '3', '4'].includes(e.key)) {
             e.preventDefault();
-            const types = ['admin', 'viewer', 'operator'];
+            const types = ['admin', 'operator', 'viewer', 'cybersecurity'];
             const typeIndex = parseInt(e.key) - 1;
             if (types[typeIndex]) {
                 selectUserType(types[typeIndex]);
@@ -3390,6 +4707,7 @@ let notificationSettings = JSON.parse(localStorage.getItem(NOTIFICATION_SETTINGS
 
 let isAdmin = false;    
 let isRestrictedAdmin = false;
+let isCyberSecurity = false;
 let isOperator = false;
 let loggedInUser = null;    
 let renameTargetGlobalIndex = null;
@@ -3398,6 +4716,9 @@ let editOperatorIndex = null;
 
 const FULL_ADMIN_USER = 'admin';
 const FULL_ADMIN_PWD = 'Admin@1234!@#$'; 
+
+const CYBER_SECURITY_USER = 'A-0891@oib.com';
+const CYBER_SECURITY_PWD = 'CyberSec@2025!';
 
 const RESTRICTED_ADMIN_PWD = 'view123';    
 const RESTRICTED_ADMIN_USER = 'view'; 
@@ -4288,6 +5609,11 @@ function selectUserType(type) {
             usernameInput.value = '';
             passwordInput.placeholder = 'Enter operator password';
             break;
+        case 'cybersecurity':
+            usernameInput.placeholder = 'Enter cyber security username';
+            usernameInput.value = 'A-0891@oib.com';
+            passwordInput.placeholder = 'Enter cyber security password';
+            break;
     }
     
     // Clear any previous error messages
@@ -4474,6 +5800,79 @@ function resendMfaCode() {
     // Focus first input
     document.querySelector('.mfa-digit').focus();
 }
+
+// === EXCEL EXPORT DEBUGGING AND TESTING ===
+
+// Debug function to check backup data
+function debugBackupData() {
+    console.log('=== BACKUP DATA DEBUG ===');
+    const today = new Date();
+    const testOperator = loggedInUser;
+    
+    console.log('Current operator:', testOperator);
+    console.log('Today:', formatExcelDateShort(today));
+    
+    // Check localStorage for backup data
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith('backup_')) {
+            const data = localStorage.getItem(key);
+            console.log('Backup key:', key);
+            console.log('Backup data:', JSON.parse(data));
+        }
+    }
+    
+    // Test backup data retrieval
+    const backupData = getBackupData(testOperator, today);
+    console.log('Retrieved backup data for today:', backupData);
+    
+    console.log('=== END DEBUG ===');
+}
+
+// Test function to create sample backup data
+function createSampleBackupData() {
+    if (!loggedInUser) {
+        showToast('Please login first', 'error');
+        return;
+    }
+    
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    // Create sample data for today
+    const todayData = {
+        status: 'Completely Backed Up',
+        startTime: '09:00',
+        endTime: '11:30',
+        notes: 'Backup completed successfully. All systems operational.',
+        confirmed: true,
+        lastUpdated: new Date().toLocaleString(),
+        operator: loggedInUser,
+        date: today.toISOString().split('T')[0]
+    };
+    
+    // Create sample data for yesterday
+    const yesterdayData = {
+        status: 'Issue Encountered',
+        startTime: '09:15',
+        endTime: '10:45',
+        notes: 'Network timeout during backup process. Resolved and completed manually.',
+        confirmed: true,
+        lastUpdated: new Date().toLocaleString(),
+        operator: loggedInUser,
+        date: yesterday.toISOString().split('T')[0]
+    };
+    
+    // Save sample data
+    saveBackupData(loggedInUser, today, todayData);
+    saveBackupData(loggedInUser, yesterday, yesterdayData);
+    
+    showToast('Sample backup data created for testing', 'success');
+    console.log('Sample data created:', { todayData, yesterdayData });
+}
+
+// === END EXCEL EXPORT DEBUGGING ===
 
 // === ULTRA-ADVANCED LOGIN PAGE FEATURES ===
 
@@ -5133,6 +6532,197 @@ const style = document.createElement('style');
 style.textContent = fadeOutKeyframes;
 document.head.appendChild(style);
 
+// --- SESSION MANAGEMENT FUNCTIONS ---
+function saveSessionState() {
+    const sessionData = {
+        isAdmin: isAdmin,
+        isRestrictedAdmin: isRestrictedAdmin,
+        isCyberSecurity: isCyberSecurity,
+        isOperator: isOperator,
+        loggedInUser: loggedInUser,
+        loginTime: new Date().toISOString()
+    };
+    localStorage.setItem('userSession', JSON.stringify(sessionData));
+    console.log('Session saved:', sessionData);
+}
+
+function restoreSessionState() {
+    const sessionData = localStorage.getItem('userSession');
+    if (sessionData) {
+        try {
+            const session = JSON.parse(sessionData);
+            
+            // Check if session is still valid (optional: add expiration check)
+            // Session expires after 24 hours for security
+            const loginTime = new Date(session.loginTime);
+            const now = new Date();
+            const hoursSinceLogin = (now - loginTime) / (1000 * 60 * 60);
+            
+            if (hoursSinceLogin > 24) {
+                console.log('Session expired after 24 hours');
+                clearSessionState();
+                return false;
+            }
+            
+            if (session.loggedInUser) {
+                isAdmin = session.isAdmin || false;
+                isRestrictedAdmin = session.isRestrictedAdmin || false;
+                isCyberSecurity = session.isCyberSecurity || false;
+                isOperator = session.isOperator || false;
+                loggedInUser = session.loggedInUser;
+                
+                console.log('Session restored:', session);
+                
+                // Hide login page and show main content
+                hideLoginPage();
+                
+                // Set up UI based on user type
+                setupUserInterface();
+                
+                return true;
+            }
+        } catch (error) {
+            console.error('Error restoring session:', error);
+            clearSessionState();
+        }
+    }
+    return false;
+}
+
+function clearSessionState() {
+    localStorage.removeItem('userSession');
+    console.log('Session cleared');
+}
+
+function refreshSessionState() {
+    // Update the session timestamp to extend the session
+    if (loggedInUser) {
+        saveSessionState();
+    }
+}
+
+// Add activity listeners to refresh session
+function initSessionActivityListeners() {
+    // Refresh session on user activity (every 30 minutes of activity)
+    let lastActivity = Date.now();
+    const activityEvents = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
+    
+    const refreshSession = () => {
+        const now = Date.now();
+        if (now - lastActivity > 30 * 60 * 1000) { // 30 minutes
+            refreshSessionState();
+            lastActivity = now;
+        }
+    };
+    
+    activityEvents.forEach(event => {
+        document.addEventListener(event, refreshSession, true);
+    });
+}
+
+// Migrate old cyber security username to new one
+function migrateCyberSecurityUsername() {
+    const cyberSecPasswords = JSON.parse(localStorage.getItem('cyberSecurityPasswords') || '{}');
+    const oldUsername = 'ob abdi';
+    const newUsername = 'A-0891@oib.com';
+    
+    // If old username exists, migrate to new username
+    if (cyberSecPasswords[oldUsername]) {
+        cyberSecPasswords[newUsername] = cyberSecPasswords[oldUsername];
+        delete cyberSecPasswords[oldUsername];
+        localStorage.setItem('cyberSecurityPasswords', JSON.stringify(cyberSecPasswords));
+        console.log('Migrated cyber security username from "ob abdi" to "A-0891@oib.com"');
+    }
+    
+    // Also check and migrate session data
+    const sessionData = localStorage.getItem('userSession');
+    if (sessionData) {
+        try {
+            const session = JSON.parse(sessionData);
+            if (session.loggedInUser === oldUsername) {
+                session.loggedInUser = newUsername;
+                localStorage.setItem('userSession', JSON.stringify(session));
+                console.log('Migrated session username from "ob abdi" to "A-0891@oib.com"');
+            }
+        } catch (error) {
+            console.error('Error migrating session data:', error);
+        }
+    }
+}
+
+function setupUserInterface() {
+    // Set up the interface based on user type
+    if (isAdmin) {
+        document.getElementById('adminControls').style.display = 'block';
+        document.getElementById('operatorManagementView').style.display = 'block';
+        document.getElementById('adminActionsBtn').style.display = 'inline-block';
+        document.getElementById('auditLogView').style.display = 'none';
+    } else if (isCyberSecurity) {
+        document.getElementById('adminControls').style.display = 'block';
+        document.getElementById('operatorManagementView').style.display = 'none';
+        document.getElementById('adminActionsBtn').style.display = 'none';
+        document.getElementById('analyticsBtn').style.display = 'none';
+        document.getElementById('advancedSearchBtn').style.display = 'none';
+        document.getElementById('exportExcelBtn').style.display = 'inline-block';
+        document.getElementById('exportExcelBtn').innerHTML = '🔒 Export by Date Range';
+        document.getElementById('exportExcelBtn').style.backgroundColor = '#dc3545';
+        document.getElementById('helpBtn').style.display = 'none';
+        
+        // Enable password change for cyber security
+        document.getElementById('changePwdBtn').style.display = 'inline-block';
+        document.getElementById('resetMyPwdBtn').style.display = 'none';
+        
+        // Add cyber security reset button if it doesn't exist
+        let cyberResetBtn = document.getElementById('cyberSecResetBtn');
+        if (!cyberResetBtn) {
+            cyberResetBtn = document.createElement('button');
+            cyberResetBtn.id = 'cyberSecResetBtn';
+            cyberResetBtn.onclick = resetCyberSecurityPassword;
+            cyberResetBtn.innerHTML = 'Reset Cyber Sec Password';
+            cyberResetBtn.style.backgroundColor = '#FF5733';
+            cyberResetBtn.style.color = 'white';
+            cyberResetBtn.style.padding = '6px 10px';
+            cyberResetBtn.style.fontSize = '15px';
+            cyberResetBtn.style.margin = '5px';
+            cyberResetBtn.style.borderRadius = '4px';
+            cyberResetBtn.style.border = '1px solid #ccc';
+            cyberResetBtn.style.cursor = 'pointer';
+            
+            // Insert after the change password button
+            const changePwdBtn = document.getElementById('changePwdBtn');
+            changePwdBtn.parentNode.insertBefore(cyberResetBtn, changePwdBtn.nextSibling);
+        }
+        cyberResetBtn.style.display = 'inline-block';
+    } else if (isRestrictedAdmin) {
+        document.getElementById('adminControls').style.display = 'block';
+        document.getElementById('operatorManagementView').style.display = 'none';
+        document.getElementById('adminActionsBtn').style.display = 'none';
+        document.getElementById('analyticsBtn').style.display = 'inline-block';
+        document.getElementById('advancedSearchBtn').style.display = 'inline-block';
+        document.getElementById('exportExcelBtn').style.display = 'inline-block';
+        document.getElementById('helpBtn').style.display = 'inline-block';
+    } else if (isOperator) {
+        document.getElementById('adminControls').style.display = 'block';
+        document.getElementById('operatorManagementView').style.display = 'none';
+        document.getElementById('adminActionsBtn').style.display = 'none';
+        
+        // Show backup tracking for operators
+        showBackupTracking();
+    }
+    
+    // Render the schedule
+    renderSchedule();
+    
+    // Initialize advanced features
+    initAdvancedFeatures();
+    
+    // Check for notifications
+    checkAndRenderNotification(true);
+    
+    // Initialize session activity listeners
+    initSessionActivityListeners();
+}
+
 // --- ENHANCED AUTHENTICATION FUNCTION ---
 function authenticate() {
     const username = document.getElementById('loginUsername').value.trim();
@@ -5141,6 +6731,7 @@ function authenticate() {
     // Clear previous state
     isAdmin = false;
     isRestrictedAdmin = false;
+    isCyberSecurity = false;
     isOperator = false;
     loggedInUser = null;
 
@@ -5151,18 +6742,46 @@ function authenticate() {
     if (username === FULL_ADMIN_USER && password === FULL_ADMIN_PWD) {
         isAdmin = true;
         loggedInUser = username;
+        saveSessionState(); // Save session
         showLoginSuccess('Welcome Administrator! Redirecting...');
     }
-    // 2. Check Restricted Admin (View)
+    // 2. Check Cyber Security Team
+    else if (username === CYBER_SECURITY_USER) {
+        // Check for custom password first, then default
+        const cyberSecPasswords = JSON.parse(localStorage.getItem('cyberSecurityPasswords') || '{}');
+        const customPassword = cyberSecPasswords[CYBER_SECURITY_USER];
+        
+        if ((customPassword && password === customPassword) || password === CYBER_SECURITY_PWD) {
+            isCyberSecurity = true;
+            loggedInUser = username;
+            saveSessionState(); // Save session
+            showLoginSuccess('Welcome Cyber Security Team! Redirecting...');
+        } else {
+            // Authentication failed for cyber security
+            showLoginError('Invalid cyber security credentials. Please check your password and try again.');
+            logAuditAction('LOGIN_FAIL', `Failed cyber security login attempt for username: ${username}.`);
+            document.getElementById('usernameGroup').classList.add('error');
+            document.getElementById('passwordGroup').classList.add('error');
+            setTimeout(() => {
+                document.getElementById('usernameGroup').classList.remove('error');
+                document.getElementById('passwordGroup').classList.remove('error');
+            }, 3000);
+            resetLoginButton();
+            return;
+        }
+    }
+    // 3. Check Restricted Admin (View)
     else if (lowerUsername === RESTRICTED_ADMIN_USER && password === RESTRICTED_ADMIN_PWD) {
         isRestrictedAdmin = true;
         loggedInUser = RESTRICTED_ADMIN_USER;
+        saveSessionState(); // Save session
         showLoginSuccess('Welcome Viewer! Redirecting...');
     }
-    // 3. Check Regular Operator
+    // 4. Check Regular Operator
     else if (operatorPasswords[normalizedUsername] && operatorPasswords[normalizedUsername] === password) {
         isOperator = true;
         loggedInUser = normalizedUsername;
+        saveSessionState(); // Save session
         showLoginSuccess(`Welcome ${normalizedUsername}! Redirecting...`);
     }
     else {
@@ -5185,26 +6804,60 @@ function authenticate() {
             setTimeout(() => {
                 document.getElementById('scheduleView').style.display = 'block';
                 document.getElementById('logoutBtn').style.display = 'inline-block';
-                document.getElementById('downloadPdfBtn').style.display = 'inline-block';
-                document.getElementById('filterLabel').style.display = 'inline-block';
-                document.getElementById('operatorFilter').style.display = 'inline-block';
-                document.getElementById('changePwdBtn').style.display = 'inline-block';
-                document.getElementById('resetMyPwdBtn').style.display = isOperator ? 'inline-block' : 'none';
                 
-                // Show advanced feature buttons
-                document.getElementById('analyticsBtn').style.display = 'inline-block';
-                document.getElementById('advancedSearchBtn').style.display = 'inline-block';
-                document.getElementById('exportExcelBtn').style.display = 'inline-block';
-                document.getElementById('helpBtn').style.display = 'inline-block';
+                // Cyber Security - Limited Access (only Excel export by date range)
+                if (isCyberSecurity) {
+                    document.getElementById('downloadPdfBtn').style.display = 'none';
+                    document.getElementById('filterLabel').style.display = 'inline-block';
+                    document.getElementById('operatorFilter').style.display = 'inline-block';
+                    document.getElementById('changePwdBtn').style.display = 'inline-block'; // Allow cyber security to change password
+                    document.getElementById('resetMyPwdBtn').style.display = 'none';
+                    
+                    // Show only Excel export for cyber security with custom styling
+                    document.getElementById('analyticsBtn').style.display = 'none';
+                    document.getElementById('advancedSearchBtn').style.display = 'none';
+                    document.getElementById('exportExcelBtn').style.display = 'inline-block';
+                    document.getElementById('exportExcelBtn').innerHTML = '🔒 Export by Date Range';
+                    document.getElementById('exportExcelBtn').style.backgroundColor = '#dc3545'; // Red color for cyber security
+                    document.getElementById('helpBtn').style.display = 'none';
+                    
+                    // Hide admin controls
+                    document.getElementById('adminControls').style.display = 'none';
+                    document.getElementById('operatorManagementView').style.display = 'none';
+                    document.getElementById('adminActionsBtn').style.display = 'none';
+                    document.getElementById('auditLogView').style.display = 'none';
+                }
+                // Full access for other users
+                else {
+                    document.getElementById('downloadPdfBtn').style.display = 'inline-block';
+                    document.getElementById('filterLabel').style.display = 'inline-block';
+                    document.getElementById('operatorFilter').style.display = 'inline-block';
+                    document.getElementById('changePwdBtn').style.display = 'inline-block';
+                    document.getElementById('resetMyPwdBtn').style.display = isOperator ? 'inline-block' : 'none';
+                    
+                    // Hide cyber security reset button for other users
+                    const cyberResetBtn = document.getElementById('cyberSecResetBtn');
+                    if (cyberResetBtn) {
+                        cyberResetBtn.style.display = 'none';
+                    }
+                    
+                    // Show advanced feature buttons
+                    document.getElementById('analyticsBtn').style.display = 'inline-block';
+                    document.getElementById('advancedSearchBtn').style.display = 'inline-block';
+                    document.getElementById('exportExcelBtn').style.display = 'inline-block';
+                    document.getElementById('helpBtn').style.display = 'inline-block';
 
-                // Admin Controls
-                document.getElementById('adminControls').style.display = isAdmin ? 'block' : 'none';
-                document.getElementById('operatorManagementView').style.display = isAdmin ? 'block' : 'none';
-                document.getElementById('adminActionsBtn').style.display = isAdmin ? 'inline-block' : 'none';
-                document.getElementById('auditLogView').style.display = 'none'; // Ensure log is hidden on login
+                    // Admin Controls
+                    document.getElementById('adminControls').style.display = isAdmin ? 'block' : 'none';
+                    document.getElementById('operatorManagementView').style.display = isAdmin ? 'block' : 'none';
+                    document.getElementById('adminActionsBtn').style.display = isAdmin ? 'inline-block' : 'none';
+                    document.getElementById('auditLogView').style.display = 'none'; // Ensure log is hidden on login
+                }
 
                 if (isOperator) {
                     document.getElementById('operatorFilter').value = loggedInUser;
+                    // Show backup tracking for operators
+                    showBackupTracking();
                 } else {
                     document.getElementById('operatorFilter').value = '';
                 }
@@ -5244,8 +6897,12 @@ function logout() {
     logAuditAction('LOGOUT', `User ${loggedInUser} logged out.`);
     isAdmin = false;
     isRestrictedAdmin = false;
+    isCyberSecurity = false;
     isOperator = false;
     loggedInUser = null;
+    
+    // Clear session state
+    clearSessionState();
     
     // Reset advanced login features
     biometricAuthActive = false;
@@ -5262,6 +6919,12 @@ function logout() {
     document.getElementById('operatorFilter').style.display = 'none';
     document.getElementById('changePwdBtn').style.display = 'none';
     document.getElementById('resetMyPwdBtn').style.display = 'none';
+    
+    // Hide cyber security reset button if it exists
+    const cyberResetBtn = document.getElementById('cyberSecResetBtn');
+    if (cyberResetBtn) {
+        cyberResetBtn.style.display = 'none';
+    }
     document.getElementById('adminControls').style.display = 'none';
     document.getElementById('adminActionsBtn').style.display = 'inline-block';
     
@@ -5298,6 +6961,16 @@ function logout() {
 }
 
 function init() {
+    // Check for existing session first
+    if (restoreSessionState()) {
+        // Session restored successfully, user is already logged in
+        document.body.classList.remove('login-active');
+        return;
+    }
+    
+    // Migrate old cyber security username if exists
+    migrateCyberSecurityUsername();
+    
     // Set initial body class for login state
     document.body.classList.add('login-active');
     
@@ -5569,8 +7242,57 @@ function renderTable() {
                 <button class="delete-btn" onclick="event.stopPropagation(); deleteOperatorShift(${globalIndex})">Delete</button>
                 ${op.status === 'Finished' ? `<button class="reset-status-btn" onclick="event.stopPropagation(); resetShiftStatus(${globalIndex})">Reset Status</button>` : ''}
             `;
-        } else if (isOperator && index === activeShiftIndexInFilteredList && op.name.toUpperCase() === loggedInUser && op.status === 'Active') {
-            actionHtml = `<button class="finish-btn" onclick="event.stopPropagation(); markShiftFinished(${globalIndex})">Mark Finished</button>`;
+        } else if (isOperator && op.name.toUpperCase() === loggedInUser && op.status === 'Active') {
+            // Get current backup status for today
+            const today = new Date();
+            const currentBackupStatus = getBackupStatus(loggedInUser, today);
+            
+            if (index === activeShiftIndexInFilteredList) {
+                // Active shift - show both finish button and backup status buttons
+                actionHtml = `
+                    <div class="operator-actions">
+                        <button class="finish-btn" onclick="event.stopPropagation(); markShiftFinished(${globalIndex})">Mark Finished</button>
+                        <div class="backup-status-actions">
+                            <button class="backup-action-btn completed-btn ${currentBackupStatus === 'Completed' ? 'active' : ''}" 
+                                    onclick="event.stopPropagation(); quickSetBackupStatus('Completely Backed Up')" 
+                                    title="Mark backup as completed">
+                                ✅ Completed
+                            </button>
+                            <button class="backup-action-btn failed-btn ${currentBackupStatus === 'Failed' ? 'active' : ''}" 
+                                    onclick="event.stopPropagation(); quickSetBackupStatus('Issue Encountered')" 
+                                    title="Mark backup as failed/issue encountered">
+                                ⚠️ Failed
+                            </button>
+                            <button class="backup-action-btn pending-btn ${currentBackupStatus === 'Pending' ? 'active' : ''}" 
+                                    onclick="event.stopPropagation(); openBackupTracking()" 
+                                    title="Open detailed backup tracking">
+                                📋 ${currentBackupStatus}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Non-active shift for this operator - show backup status only
+                actionHtml = `
+                    <div class="backup-status-actions">
+                        <button class="backup-action-btn completed-btn ${currentBackupStatus === 'Completed' ? 'active' : ''}" 
+                                onclick="event.stopPropagation(); quickSetBackupStatus('Completely Backed Up')" 
+                                title="Mark backup as completed">
+                            ✅
+                        </button>
+                        <button class="backup-action-btn failed-btn ${currentBackupStatus === 'Failed' ? 'active' : ''}" 
+                                onclick="event.stopPropagation(); quickSetBackupStatus('Issue Encountered')" 
+                                title="Mark backup as failed">
+                            ⚠️
+                        </button>
+                        <button class="backup-action-btn pending-btn ${currentBackupStatus === 'Pending' ? 'active' : ''}" 
+                                onclick="event.stopPropagation(); openBackupTracking()" 
+                                title="Open backup tracking">
+                            📋
+                        </button>
+                    </div>
+                `;
+            }
         } else {
             actionHtml = `&nbsp;`;
         }
@@ -5977,6 +7699,22 @@ function confirmPasswordChange() {
         return;
     }
 
+    // Handle cyber security password change
+    if (loggedInUser === CYBER_SECURITY_USER) {
+        // Update the cyber security password constant (this will require page refresh to take effect)
+        // For now, we'll store it in localStorage and check there first during authentication
+        const cyberSecPasswords = JSON.parse(localStorage.getItem('cyberSecurityPasswords') || '{}');
+        cyberSecPasswords[CYBER_SECURITY_USER] = newPwd;
+        localStorage.setItem('cyberSecurityPasswords', JSON.stringify(cyberSecPasswords));
+        
+        logAuditAction('PWD_CHANGE', `Cyber Security user ${loggedInUser} successfully changed their password.`);
+        alert("Cyber Security password successfully changed. Please note: You may need to refresh the page for the change to take full effect.");
+        closeChangePasswordModal();
+        return;
+    }
+
+    // Handle regular operator password change
+
     operatorPasswords[loggedInUser] = newPwd;
     localStorage.setItem('operatorPasswords', JSON.stringify(operatorPasswords));
     logAuditAction('PWD_CHANGE', `Operator ${loggedInUser} successfully changed their own password.`);
@@ -5991,6 +7729,21 @@ function resetMyPassword() {
         localStorage.setItem('operatorPasswords', JSON.stringify(operatorPasswords));
         logAuditAction('PWD_RESET_SELF', `Operator ${loggedInUser} reset their own password to default.`);
         alert(`Your password has been reset to the default: ${DEFAULT_OPERATOR_PWD}. Please log in again.`);
+        logout();
+    }
+}
+
+// Reset cyber security password to default
+function resetCyberSecurityPassword() {
+    if (!isCyberSecurity || loggedInUser !== CYBER_SECURITY_USER) return;
+    if (confirm(`Are you sure you want to reset your cyber security password back to the default?`)) {
+        // Remove custom password, will fall back to default
+        const cyberSecPasswords = JSON.parse(localStorage.getItem('cyberSecurityPasswords') || '{}');
+        delete cyberSecPasswords[CYBER_SECURITY_USER];
+        localStorage.setItem('cyberSecurityPasswords', JSON.stringify(cyberSecPasswords));
+        
+        logAuditAction('PWD_RESET_SELF', `Cyber Security user ${loggedInUser} reset their password to default.`);
+        alert("Cyber Security password reset to default successfully. You will be logged out.");
         logout();
     }
 }
@@ -6108,7 +7861,7 @@ function downloadPdf() {
     
     const finalY = doc.lastAutoTable.finalY + 10;
     doc.setFontSize(8);
-    doc.text("© 2025 Backup Operators Schedule | Developed by HAMBISA ADAMU.", 148, finalY, null, null, "center");
+    doc.text("© 2025 Oromia Bank Backup Operators Schedule | Designed and developed by Database and Analytics Division.", 148, finalY, null, null, "center");
     
     doc.save("Backup_Operators_Schedule.pdf");
     logAuditAction('DOWNLOAD', `PDF schedule downloaded by ${loggedInUser}.`);

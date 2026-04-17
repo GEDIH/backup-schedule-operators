@@ -2571,6 +2571,449 @@ tbody tr {
         padding: 8px 12px;
     }
 }
+
+/* ========================================
+   ENHANCED MOBILE RESPONSIVENESS
+   ======================================== */
+
+/* Mobile First - Extra Small Devices (phones, less than 576px) */
+@media (max-width: 575px) {
+    body {
+        margin: 10px;
+        font-size: 14px;
+    }
+    
+    h2 {
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+    
+    /* Login Page Mobile */
+    .login-container {
+        padding: 30px 20px;
+        margin: 10px;
+        max-width: 100%;
+        border-radius: 20px;
+    }
+    
+    .login-logo {
+        width: 80px;
+        height: 80px;
+        font-size: 30px;
+        margin-bottom: 15px;
+    }
+    
+    .login-title {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+    
+    .login-subtitle {
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+    
+    .user-type-selector {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .user-type-btn {
+        width: 100%;
+        padding: 12px 20px;
+        font-size: 13px;
+    }
+    
+    .input-group input {
+        padding: 15px 20px 15px 50px;
+        font-size: 14px;
+    }
+    
+    .input-group .input-icon {
+        left: 18px;
+        font-size: 18px;
+    }
+    
+    .login-button {
+        padding: 14px 30px;
+        font-size: 15px;
+    }
+    
+    /* Top Controls Mobile */
+    .top-section {
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px;
+    }
+    
+    .top-section input[type="date"],
+    .top-section select,
+    .top-section button {
+        width: 100%;
+        padding: 10px;
+        font-size: 14px;
+    }
+    
+    /* Table Mobile - Horizontal Scroll */
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 8px;
+    }
+    
+    table {
+        min-width: 600px;
+        font-size: 12px;
+    }
+    
+    th, td {
+        padding: 8px 6px;
+        font-size: 11px;
+    }
+    
+    /* Next Shifts Slider Mobile */
+    #nextShiftsContainer {
+        gap: 8px;
+        padding: 8px 0;
+    }
+    
+    .shift-card {
+        flex: 0 0 140px;
+        padding: 8px 10px;
+        font-size: 11px;
+    }
+    
+    .shift-card-header {
+        font-size: 0.95em;
+    }
+    
+    .shift-card p {
+        font-size: 0.85em;
+    }
+    
+    /* Modal Mobile */
+    .modal-content {
+        width: 95%;
+        margin: 10% auto;
+        padding: 20px;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+    
+    .modal-content h3 {
+        font-size: 18px;
+    }
+    
+    /* Buttons Mobile */
+    button {
+        padding: 10px 16px;
+        font-size: 13px;
+        min-height: 44px; /* Touch-friendly */
+    }
+    
+    /* Analytics Dashboard Mobile */
+    .analytics-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .analytics-card {
+        padding: 12px;
+    }
+    
+    .analytics-card .metric {
+        font-size: 1.5em;
+    }
+    
+    /* Backup Status Mobile */
+    .backup-status-container {
+        padding: 15px;
+    }
+    
+    .backup-status-buttons {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .backup-action-btn {
+        padding: 12px;
+        font-size: 12px;
+    }
+    
+    /* Notification Banner Mobile */
+    #notificationBanner {
+        padding: 12px 15px;
+        font-size: 13px;
+        margin: 10px auto;
+    }
+    
+    #notificationBanner strong {
+        font-size: 1em;
+    }
+    
+    .banner-detail {
+        font-size: 0.9em;
+    }
+}
+
+/* Small Devices (tablets, 576px to 767px) */
+@media (min-width: 576px) and (max-width: 767px) {
+    body {
+        margin: 15px;
+    }
+    
+    .login-container {
+        padding: 40px 30px;
+        max-width: 500px;
+    }
+    
+    .user-type-selector {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .user-type-btn {
+        flex: 0 0 calc(50% - 6px);
+    }
+    
+    .top-section {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .top-section input[type="date"],
+    .top-section select,
+    .top-section button {
+        flex: 0 0 calc(50% - 8px);
+    }
+    
+    table {
+        font-size: 13px;
+    }
+    
+    th, td {
+        padding: 10px 8px;
+    }
+    
+    .analytics-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Medium Devices (tablets, 768px to 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
+    .login-container {
+        max-width: 550px;
+    }
+    
+    .top-section {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    
+    table {
+        font-size: 14px;
+    }
+    
+    .analytics-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .shift-card {
+        flex: 0 0 180px;
+    }
+}
+
+/* Large Devices (desktops, 992px to 1199px) */
+@media (min-width: 992px) and (max-width: 1199px) {
+    .table-container {
+        max-width: 95%;
+    }
+    
+    .analytics-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) and (pointer: coarse) {
+    /* Increase touch targets */
+    button,
+    .user-type-btn,
+    .backup-action-btn,
+    input[type="button"],
+    input[type="submit"] {
+        min-height: 44px;
+        min-width: 44px;
+        padding: 12px 20px;
+    }
+    
+    /* Larger tap areas for links */
+    a {
+        padding: 8px;
+        margin: -8px;
+    }
+    
+    /* Remove hover effects on touch devices */
+    .user-type-btn:hover,
+    button:hover {
+        transform: none;
+    }
+    
+    /* Better scrolling */
+    .table-container,
+    #nextShiftsContainer,
+    .modal-content {
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+    }
+}
+
+/* Landscape Orientation for Mobile */
+@media (max-width: 767px) and (orientation: landscape) {
+    #authSection {
+        padding: 20px 10px;
+    }
+    
+    .login-container {
+        padding: 20px;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+    
+    .login-logo {
+        width: 60px;
+        height: 60px;
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+    
+    .login-title {
+        font-size: 20px;
+        margin-bottom: 8px;
+    }
+    
+    .login-subtitle {
+        font-size: 12px;
+        margin-bottom: 15px;
+    }
+    
+    .user-type-selector {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    
+    .user-type-btn {
+        flex: 0 0 calc(50% - 6px);
+        padding: 10px 15px;
+    }
+    
+    .input-group {
+        margin-bottom: 15px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    body {
+        background-color: white;
+        margin: 0;
+        padding: 20px;
+    }
+    
+    #authSection,
+    .top-section,
+    #notificationBanner,
+    .controls,
+    button,
+    .modal {
+        display: none !important;
+    }
+    
+    .table-container {
+        box-shadow: none;
+        border: 1px solid #000;
+    }
+    
+    table {
+        page-break-inside: auto;
+    }
+    
+    tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+    
+    thead {
+        display: table-header-group;
+    }
+    
+    th {
+        background-color: #f0f0f0 !important;
+        color: #000 !important;
+    }
+}
+
+/* High DPI / Retina Display Support */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .logo-container img {
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+    }
+    
+    .login-logo {
+        border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+}
+
+/* Reduced Motion for Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Dark Mode Support Enhancement */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1a1a1a;
+        color: #e0e0e0;
+    }
+    
+    .table-container {
+        background-color: #2a2a2a;
+        border-color: #444;
+    }
+    
+    th {
+        background-color: #333;
+        color: #e0e0e0;
+    }
+    
+    td {
+        border-color: #444;
+        color: #d0d0d0;
+    }
+    
+    .modal-content {
+        background-color: #2a2a2a;
+        color: #e0e0e0;
+    }
+    
+    input, select {
+        background-color: #333;
+        color: #e0e0e0;
+        border-color: #555;
+    }
+}
+
+/* ========================================
+   END ENHANCED MOBILE RESPONSIVENESS
+   ======================================== */
 </style>
 </head>
 <body>

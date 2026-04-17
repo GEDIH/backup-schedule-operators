@@ -3958,16 +3958,16 @@ body {
             <div class="backup-actions" id="backupActions">
                 <div class="backup-status-buttons">
                     <h4>Backup Status:</h4>
-                    <button class="backup-btn success-btn" onclick="setBackupStatus('Completely Backed Up')">
+                    <button class="backup-btn success-btn" onclick="setBackupStatus('Completely Backed Up', event)">
                         ✅ Completely Backed Up
                     </button>
-                    <button class="backup-btn warning-btn" onclick="setBackupStatus('Issue Encountered')">
+                    <button class="backup-btn warning-btn" onclick="setBackupStatus('Issue Encountered', event)">
                         ⚠️ Issue Encountered
                     </button>
-                    <button class="backup-btn holiday-btn" onclick="setBackupStatus('Holiday')">
+                    <button class="backup-btn holiday-btn" onclick="setBackupStatus('Holiday', event)">
                         🏖️ Holiday
                     </button>
-                    <button class="backup-btn weekend-btn" onclick="setBackupStatus('Weekend')">
+                    <button class="backup-btn weekend-btn" onclick="setBackupStatus('Weekend', event)">
                         📅 Sunday (Weekend)
                     </button>
                 </div>
@@ -4938,7 +4938,12 @@ function quickSetBackupStatus(status) {
         confirmed: true, // Auto-confirm for quick actions
         lastUpdated: new Date().toLocaleString(),
         operator: operatorName,
-        date: dateStr
+        date: dateStr,
+        signature: {
+            name: operatorName,
+            date: new Date().toLocaleString(),
+            timestamp: Date.now()
+        }
     };
     
     // Save to localStorage
@@ -5050,6 +5055,7 @@ function showCurrentStatus(backupData) {
     document.getElementById('displayLastUpdated').textContent = backupData.lastUpdated || 'N/A';
     
     // Display signature information
+    console.log('Displaying signature:', backupData.signature);
     if (backupData.signature) {
         document.getElementById('displaySignature').innerHTML = `✓ Signed by <strong>${backupData.signature.name}</strong> on ${backupData.signature.date}`;
     } else {
@@ -5087,7 +5093,7 @@ function showBackupForm() {
 }
 
 // Set backup status
-function setBackupStatus(status) {
+function setBackupStatus(status, event) {
     // Show/hide time inputs based on status
     if (status === 'Completely Backed Up' || status === 'Issue Encountered') {
         document.getElementById('backupTimesSection').style.display = 'block';
@@ -5104,14 +5110,18 @@ function setBackupStatus(status) {
         btn.style.transform = 'scale(0.95)';
     });
     
-    event.target.style.opacity = '1';
-    event.target.style.transform = 'scale(1.05)';
+    if (event && event.target) {
+        event.target.style.opacity = '1';
+        event.target.style.transform = 'scale(1.05)';
+    }
 }
 
 // Save backup status
 function saveBackupStatus() {
     const selectedDate = document.getElementById('backupDate').value;
     const operatorName = loggedInUser;
+    
+    console.log('saveBackupStatus called:', { selectedDate, operatorName, selectedBackupStatus: window.selectedBackupStatus });
     
     if (!selectedDate || !window.selectedBackupStatus) {
         showToast('Please select a date and backup status', 'error');
@@ -5139,6 +5149,8 @@ function saveBackupStatus() {
             timestamp: Date.now()
         }
     };
+    
+    console.log('Backup data created:', backupData);
     
     // Validate times for backup statuses that require them
     if ((backupData.status === 'Completely Backed Up' || backupData.status === 'Issue Encountered')) {
@@ -5352,13 +5364,17 @@ function getOperatorConfirmation(operatorName, date) {
 function getBackupData(operatorName, date) {
     const dateKey = formatExcelDateShort(date);
     const storageKey = `backup_${operatorName}_${dateKey}`;
+    console.log('getBackupData:', { operatorName, date, dateKey, storageKey });
     const data = localStorage.getItem(storageKey);
-    return data ? JSON.parse(data) : null;
+    const result = data ? JSON.parse(data) : null;
+    console.log('getBackupData result:', result);
+    return result;
 }
 
 function saveBackupData(operatorName, date, backupData) {
     const dateKey = formatExcelDateShort(date);
     const storageKey = `backup_${operatorName}_${dateKey}`;
+    console.log('saveBackupData:', { operatorName, date, dateKey, storageKey, backupData });
     localStorage.setItem(storageKey, JSON.stringify(backupData));
 }
 

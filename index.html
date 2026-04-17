@@ -3,9 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <title>Oromia Bank Backup Operators Schedule</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
 <meta name="description" content="Advanced backup operators schedule management system with real-time notifications and analytics">
 <meta name="theme-color" content="#94C83D">
+
+<!-- iOS Meta Tags -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Oromia Bank">
+<link rel="apple-touch-icon" href="images/oroo logo.png">
+<link rel="apple-touch-icon" sizes="152x152" href="images/oroo logo.png">
+<link rel="apple-touch-icon" sizes="180x180" href="images/oroo logo.png">
+<link rel="apple-touch-icon" sizes="167x167" href="images/oroo logo.png">
+
+<!-- Android Meta Tags -->
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="Oromia Bank Schedule">
+
+<!-- Microsoft Meta Tags -->
+<meta name="msapplication-TileColor" content="#94C83D">
+<meta name="msapplication-tap-highlight" content="no">
+
+<!-- Favicon -->
+<link rel="icon" type="image/png" href="images/oroo logo.png">
+<link rel="shortcut icon" href="images/oroo logo.png">
+
+<!-- PWA Manifest -->
+<link rel="manifest" href="manifest.json">
+
 <style>
 /* === LOGO STYLES === */
 .logo-container {
@@ -338,7 +363,7 @@ h2 {
     height: 100vh;
     background: 
         linear-gradient(135deg, rgba(102, 126, 234, 0.8) 0%, rgba(118, 75, 162, 0.8) 50%, rgba(240, 147, 251, 0.8) 100%),
-        url('images/logo.png');
+        url('images/oroo logo.png');
     background-size: 400% 400%, cover;
     background-position: center, center;
     background-repeat: no-repeat, no-repeat;
@@ -958,8 +983,8 @@ body:not(.login-active) {
     color: #fff;
 }
 
-/* Advanced Matrix Rain Effect */
-.matrix-rain {
+/* MATRIX RAIN EFFECT DISABLED - per user request */
+/* .matrix-rain {
     position: absolute;
     top: 0;
     left: 0;
@@ -993,7 +1018,7 @@ body:not(.login-active) {
         transform: translateY(100vh);
         opacity: 0;
     }
-}
+} */
 
 /* === END ULTRA-ADVANCED 3D AND INTERACTIVE FEATURES === */
 
@@ -2576,6 +2601,97 @@ tbody tr {
    ENHANCED MOBILE RESPONSIVENESS
    ======================================== */
 
+/* Extra Extra Small Devices (very small phones, less than 360px) */
+@media (max-width: 359px) {
+    body {
+        margin: 5px;
+        font-size: 13px;
+    }
+    
+    /* Login Page - Very Small Screens */
+    #authSection {
+        padding: 5px !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .login-container {
+        padding: 15px 12px !important;
+        margin: 5px !important;
+        max-width: calc(100% - 10px) !important;
+        border-radius: 15px !important;
+        max-height: calc(100vh - 10px) !important;
+        overflow-y: auto !important;
+    }
+    
+    .login-logo {
+        width: 60px !important;
+        height: 60px !important;
+        font-size: 24px !important;
+        margin-bottom: 10px !important;
+    }
+    
+    .login-logo img {
+        padding: 5px !important;
+    }
+    
+    .login-title {
+        font-size: 18px !important;
+        margin-bottom: 8px !important;
+    }
+    
+    .login-subtitle {
+        font-size: 12px !important;
+        margin-bottom: 15px !important;
+    }
+    
+    .user-type-selector {
+        flex-direction: column !important;
+        gap: 6px !important;
+        margin-bottom: 15px !important;
+    }
+    
+    .user-type-btn {
+        width: 100% !important;
+        padding: 10px 15px !important;
+        font-size: 11px !important;
+        border-radius: 20px !important;
+    }
+    
+    .input-group {
+        margin-bottom: 12px !important;
+    }
+    
+    .input-group input {
+        padding: 12px 15px 12px 45px !important;
+        font-size: 13px !important;
+        border-radius: 15px !important;
+    }
+    
+    .input-group .input-icon {
+        left: 15px !important;
+        font-size: 16px !important;
+    }
+    
+    .login-button {
+        padding: 12px 25px !important;
+        font-size: 14px !important;
+        width: 100% !important;
+        border-radius: 15px !important;
+    }
+    
+    .biometric-options {
+        gap: 8px !important;
+        margin: 15px 0 !important;
+    }
+    
+    .biometric-btn {
+        width: 50px !important;
+        height: 50px !important;
+        font-size: 20px !important;
+    }
+}
+
 /* Mobile First - Extra Small Devices (phones, less than 576px) */
 @media (max-width: 575px) {
     body {
@@ -2589,11 +2705,19 @@ tbody tr {
     }
     
     /* Login Page Mobile */
+    #authSection {
+        padding: 10px;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
     .login-container {
         padding: 30px 20px;
         margin: 10px;
         max-width: 100%;
         border-radius: 20px;
+        max-height: calc(100vh - 20px);
+        overflow-y: auto;
     }
     
     .login-logo {
@@ -2872,44 +2996,70 @@ tbody tr {
 /* Landscape Orientation for Mobile */
 @media (max-width: 767px) and (orientation: landscape) {
     #authSection {
-        padding: 20px 10px;
-    }
-    
-    .login-container {
-        padding: 20px;
-        max-height: 90vh;
+        padding: 10px 5px;
         overflow-y: auto;
     }
     
-    .login-logo {
-        width: 60px;
-        height: 60px;
-        font-size: 24px;
-        margin-bottom: 10px;
+    .login-container {
+        padding: 15px 20px;
+        max-height: 95vh;
+        overflow-y: auto;
+        margin: 5px auto;
     }
     
-    .login-title {
+    .login-logo {
+        width: 50px;
+        height: 50px;
         font-size: 20px;
         margin-bottom: 8px;
     }
     
+    .login-title {
+        font-size: 18px;
+        margin-bottom: 6px;
+    }
+    
     .login-subtitle {
-        font-size: 12px;
-        margin-bottom: 15px;
+        font-size: 11px;
+        margin-bottom: 12px;
     }
     
     .user-type-selector {
         flex-direction: row;
         flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 12px;
     }
     
     .user-type-btn {
-        flex: 0 0 calc(50% - 6px);
-        padding: 10px 15px;
+        flex: 0 0 calc(50% - 3px);
+        padding: 8px 12px;
+        font-size: 11px;
     }
     
     .input-group {
-        margin-bottom: 15px;
+        margin-bottom: 10px;
+    }
+    
+    .input-group input {
+        padding: 10px 15px 10px 40px;
+        font-size: 13px;
+    }
+    
+    .login-button {
+        padding: 10px 20px;
+        font-size: 13px;
+    }
+    
+    .biometric-options {
+        margin: 10px 0;
+        gap: 8px;
+    }
+    
+    .biometric-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
     }
 }
 
@@ -3014,11 +3164,465 @@ tbody tr {
 /* ========================================
    END ENHANCED MOBILE RESPONSIVENESS
    ======================================== */
+
+/* ========================================
+   PLATFORM-SPECIFIC OPTIMIZATIONS
+   Android, iOS, macOS, Windows Support
+   ======================================== */
+
+/* iOS Safari Specific Fixes */
+@supports (-webkit-touch-callout: none) {
+    /* Fix for iOS Safari viewport height issue */
+    #authSection {
+        min-height: -webkit-fill-available;
+    }
+    
+    /* Prevent zoom on input focus */
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    input[type="date"],
+    select {
+        font-size: 16px !important; /* Prevents iOS zoom */
+    }
+    
+    /* Fix iOS Safari button styling */
+    button,
+    input[type="button"],
+    input[type="submit"] {
+        -webkit-appearance: none;
+        appearance: none;
+        border-radius: 8px;
+    }
+    
+    /* Smooth scrolling for iOS */
+    .table-container,
+    #nextShiftsContainer,
+    .modal-content {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Fix iOS Safari fixed positioning */
+    .modal {
+        position: fixed;
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+/* iPhone X, XS, 11, 12, 13, 14, 15 - Safe Area Support */
+@supports (padding: max(0px)) {
+    body {
+        padding-left: max(10px, env(safe-area-inset-left));
+        padding-right: max(10px, env(safe-area-inset-right));
+        padding-bottom: max(10px, env(safe-area-inset-bottom));
+    }
+    
+    #authSection {
+        padding-top: max(20px, env(safe-area-inset-top));
+        padding-bottom: max(20px, env(safe-area-inset-bottom));
+    }
+    
+    .modal-content {
+        padding-bottom: max(20px, env(safe-area-inset-bottom));
+    }
+}
+
+/* Android Chrome Specific */
+@media screen and (-webkit-min-device-pixel-ratio: 0) and (min-resolution: .001dpcm) {
+    /* Fix Android Chrome input styling */
+    input,
+    select,
+    textarea {
+        -webkit-appearance: none;
+        appearance: none;
+    }
+    
+    /* Fix Android Chrome button tap highlight */
+    button,
+    a,
+    input[type="button"],
+    input[type="submit"] {
+        -webkit-tap-highlight-color: rgba(148, 200, 61, 0.3);
+    }
+}
+
+/* Samsung Internet Browser */
+@supports (-webkit-appearance: none) {
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        background: transparent;
+        bottom: 0;
+        color: transparent;
+        cursor: pointer;
+        height: auto;
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: auto;
+    }
+}
+
+/* macOS Safari Specific */
+@media screen and (min-width: 1024px) {
+    @supports (-webkit-backdrop-filter: blur(10px)) {
+        .login-container {
+            -webkit-backdrop-filter: blur(30px);
+            backdrop-filter: blur(30px);
+        }
+        
+        .modal-content {
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+        }
+    }
+}
+
+/* Firefox Mobile Specific */
+@-moz-document url-prefix() {
+    @media (max-width: 767px) {
+        input,
+        select,
+        button {
+            -moz-appearance: none;
+            appearance: none;
+        }
+    }
+}
+
+/* Prevent text size adjustment on orientation change */
+html {
+    -webkit-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+/* Remove tap highlight on all mobile browsers */
+* {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+}
+
+/* Allow text selection for inputs */
+input,
+textarea {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+    -webkit-touch-callout: default;
+}
+
+/* Specific Android Device Optimizations */
+@media screen and (max-width: 767px) {
+    /* Samsung Galaxy S Series (S20, S21, S22, S23) */
+    @media (min-width: 360px) and (max-width: 412px) {
+        .login-container {
+            max-width: 95%;
+        }
+        
+        .user-type-btn {
+            font-size: 12px;
+            padding: 10px 18px;
+        }
+    }
+    
+    /* Google Pixel Series */
+    @media (min-width: 393px) and (max-width: 412px) {
+        body {
+            font-size: 14px;
+        }
+        
+        table {
+            font-size: 12px;
+        }
+    }
+    
+    /* OnePlus, Xiaomi, Oppo (larger screens) */
+    @media (min-width: 412px) and (max-width: 480px) {
+        .login-container {
+            max-width: 450px;
+        }
+        
+        .user-type-btn {
+            font-size: 13px;
+        }
+    }
+}
+
+/* Specific iPhone Optimizations */
+@media screen and (max-width: 767px) {
+    /* iPhone SE (2020, 2022) */
+    @media (width: 375px) and (height: 667px) {
+        .login-container {
+            padding: 25px 18px;
+        }
+        
+        .login-logo {
+            width: 70px;
+            height: 70px;
+        }
+    }
+    
+    /* iPhone 12 Mini, 13 Mini */
+    @media (width: 375px) and (height: 812px) {
+        #authSection {
+            padding-top: 40px;
+        }
+    }
+    
+    /* iPhone 12, 12 Pro, 13, 13 Pro, 14, 14 Pro */
+    @media (width: 390px) and (height: 844px) {
+        .login-container {
+            max-width: 360px;
+        }
+    }
+    
+    /* iPhone 14 Plus, 15 Plus */
+    @media (width: 428px) and (height: 926px) {
+        .login-container {
+            max-width: 400px;
+        }
+        
+        .user-type-btn {
+            font-size: 14px;
+        }
+    }
+    
+    /* iPhone 14 Pro Max, 15 Pro Max */
+    @media (width: 430px) and (height: 932px) {
+        body {
+            font-size: 15px;
+        }
+    }
+}
+
+/* iPad Specific Optimizations */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+    /* iPad Mini */
+    @media (width: 768px) and (height: 1024px) {
+        .login-container {
+            max-width: 500px;
+        }
+        
+        .analytics-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    
+    /* iPad Air, iPad Pro 11" */
+    @media (min-width: 820px) and (max-width: 834px) {
+        .top-section {
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        
+        table {
+            font-size: 14px;
+        }
+    }
+    
+    /* iPad Pro 12.9" */
+    @media (min-width: 1024px) and (max-width: 1366px) {
+        .analytics-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        
+        .table-container {
+            max-width: 95%;
+        }
+    }
+}
+
+/* MacBook Specific Optimizations */
+@media screen and (min-width: 1280px) {
+    /* MacBook Air 13" */
+    @media (width: 1280px) and (height: 800px) {
+        .table-container {
+            max-width: 1200px;
+        }
+    }
+    
+    /* MacBook Pro 13" */
+    @media (width: 1440px) and (height: 900px) {
+        .table-container {
+            max-width: 1350px;
+        }
+    }
+    
+    /* MacBook Pro 14" */
+    @media (min-width: 1512px) and (max-width: 1728px) {
+        body {
+            font-size: 16px;
+        }
+        
+        .analytics-grid {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+    
+    /* MacBook Pro 16" */
+    @media (min-width: 1728px) {
+        .table-container {
+            max-width: 1600px;
+        }
+        
+        .analytics-grid {
+            grid-template-columns: repeat(5, 1fr);
+        }
+    }
+}
+
+/* Windows Surface Devices */
+@media screen and (min-width: 768px) and (max-width: 1366px) {
+    /* Surface Pro */
+    @media (width: 912px) and (height: 1368px) {
+        .login-container {
+            max-width: 550px;
+        }
+    }
+    
+    /* Surface Laptop */
+    @media (min-width: 1280px) and (max-width: 1366px) {
+        .table-container {
+            max-width: 1250px;
+        }
+    }
+}
+
+/* Chrome OS / Chromebook Support */
+@media screen and (min-width: 1024px) and (max-width: 1366px) {
+    .table-container {
+        max-width: 95%;
+    }
+    
+    .analytics-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Foldable Devices (Samsung Galaxy Fold, Z Fold) */
+@media screen and (min-width: 280px) and (max-width: 653px) {
+    /* Folded state */
+    @media (max-width: 280px) {
+        body {
+            font-size: 12px;
+        }
+        
+        .login-container {
+            padding: 20px 15px;
+        }
+        
+        .user-type-btn {
+            font-size: 11px;
+            padding: 8px 12px;
+        }
+    }
+    
+    /* Unfolded state */
+    @media (min-width: 653px) {
+        .analytics-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+}
+
+/* High Refresh Rate Display Support (120Hz, 144Hz) */
+@media screen and (min-resolution: 120dpi) {
+    * {
+        scroll-behavior: smooth;
+    }
+    
+    button,
+    .user-type-btn,
+    .login-button {
+        transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+}
+
+/* Retina Display Support (2x, 3x) */
+@media (-webkit-min-device-pixel-ratio: 2),
+       (min-resolution: 192dpi) {
+    .logo-container img,
+    .login-logo {
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+    }
+}
+
+@media (-webkit-min-device-pixel-ratio: 3),
+       (min-resolution: 288dpi) {
+    /* iPhone 12 Pro, 13 Pro, 14 Pro (3x displays) */
+    body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
+
+/* PWA Support - Standalone Mode */
+@media (display-mode: standalone) {
+    body {
+        padding-top: 20px;
+    }
+    
+    #authSection {
+        padding-top: max(40px, env(safe-area-inset-top));
+    }
+}
+
+/* Notch Support (iPhone X and newer) */
+@supports (padding-top: constant(safe-area-inset-top)) {
+    body {
+        padding-top: constant(safe-area-inset-top);
+        padding-bottom: constant(safe-area-inset-bottom);
+        padding-left: constant(safe-area-inset-left);
+        padding-right: constant(safe-area-inset-right);
+    }
+}
+
+@supports (padding-top: env(safe-area-inset-top)) {
+    body {
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+    }
+}
+
+/* Fix for Android Status Bar */
+@media screen and (max-width: 767px) {
+    @supports (-webkit-appearance: none) {
+        #authSection {
+            padding-top: 20px;
+        }
+    }
+}
+
+/* Prevent overscroll bounce on iOS */
+body {
+    overscroll-behavior-y: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Fix for iOS Safari bottom bar */
+@supports (-webkit-touch-callout: none) {
+    @media (max-width: 767px) {
+        .modal-content {
+            max-height: calc(100vh - 100px);
+            margin-bottom: 50px;
+        }
+    }
+}
+
+/* ========================================
+   END PLATFORM-SPECIFIC OPTIMIZATIONS
+   ======================================== */
 </style>
 </head>
 <body>
 <div class="logo-container">
-    <img src="images/oromia bank.png" alt="Oromia Bank">
+    <img src="images/oroo logo.png" alt="Oromia Bank">
 </div>
 
 <h2>Oromia Bank Backup Operators Schedule</h2>
@@ -3111,7 +3715,7 @@ tbody tr {
     <div class="login-container">
         <div class="login-header">
             <div class="login-logo">
-                <img src="images/oromia bank.png" alt="Oromia Bank" style="width: 100%; height: 100%; object-fit: contain; padding: 10px;">
+                <img src="images/oroo logo.png" alt="Oromia Bank" style="width: 100%; height: 100%; object-fit: contain; padding: 10px;">
             </div>
             <h1 class="login-title">Oromia Bank</h1>
             <p class="login-subtitle">Oromia Bank Backup Operators Schedule</p>
@@ -6380,7 +6984,8 @@ function createSampleBackupData() {
 // === ULTRA-ADVANCED LOGIN PAGE FEATURES ===
 
 // Create Matrix Rain Effect
-function createMatrixRain() {
+// MATRIX RAIN DISABLED - per user request (removes moving alphabet characters)
+/* function createMatrixRain() {
     const authSection = document.getElementById('authSection');
     if (!authSection) return;
     
@@ -6409,7 +7014,7 @@ function createMatrixRain() {
     
     // Create matrix characters continuously
     setInterval(createMatrixChar, 100);
-}
+} */
 
 // Advanced 3D Mouse Tracking
 function enable3DMouseTracking() {
@@ -6644,7 +7249,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // createFloatingParticles(); // DISABLED - per user request (removes moving dots)
     enhanceInputInteractions();
     enhanceLoginButton();
-    createMatrixRain();
+    // createMatrixRain(); // DISABLED - per user request (removes moving alphabet characters)
     enable3DMouseTracking();
     enableVoiceRecognition();
     enhanceFingerprintScanner();

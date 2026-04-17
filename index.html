@@ -2118,6 +2118,23 @@ tbody tr {
     width: 18px;
     height: 18px;
     cursor: pointer;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.checkmark {
+    display: inline-block;
+    margin-left: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.confirmation-checkbox input[type="checkbox"]:checked ~ .checkmark {
+    opacity: 1;
+    color: #28a745;
+    text-shadow: 0 0 5px rgba(40, 167, 69, 0.5);
 }
 
 .backup-submit {
@@ -3973,7 +3990,7 @@ body {
                 <div class="backup-confirmation">
                     <label class="confirmation-checkbox">
                         <input type="checkbox" id="operatorConfirmation">
-                        <span class="checkmark"></span>
+                        <span class="checkmark">✅</span>
                         I confirm that I have properly initiated and monitored the backup process for this date.
                     </label>
                 </div>

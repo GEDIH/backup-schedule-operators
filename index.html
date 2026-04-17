@@ -372,8 +372,8 @@ body:not(.login-active) {
     100% { background-position: 0% 50%; }
 }
 
-/* Floating particles background */
-#authSection::before {
+/* Floating particles background - REMOVED per user request */
+/* #authSection::before {
     content: '';
     position: absolute;
     top: 0;
@@ -388,10 +388,10 @@ body:not(.login-active) {
         radial-gradient(circle at 90% 10%, rgba(255,255,255,0.08) 1px, transparent 1px);
     background-size: 100px 100px, 150px 150px, 80px 80px, 120px 120px, 200px 200px;
     animation: float 20s linear infinite;
-}
+} */
 
-/* Advanced particle system */
-#authSection::after {
+/* Advanced particle system - REMOVED per user request */
+/* #authSection::after {
     content: '';
     position: absolute;
     top: 0;
@@ -404,7 +404,7 @@ body:not(.login-active) {
         radial-gradient(circle at 50% 50%, rgba(102,126,234,0.03) 0%, transparent 50%);
     animation: pulse 8s ease-in-out infinite alternate;
     pointer-events: none;
-}
+} */
 
 @keyframes float {
     0% { transform: translateY(0px) rotate(0deg); }
@@ -452,7 +452,8 @@ body:not(.login-active) {
 }
 
 /* Advanced particle system */
-.login-container::after {
+/* Advanced particle system on login container - REMOVED per user request */
+/* .login-container::after {
     content: '';
     position: absolute;
     top: 0;
@@ -466,7 +467,7 @@ body:not(.login-active) {
     animation: particleFloat 8s ease-in-out infinite alternate;
     pointer-events: none;
     border-radius: 30px;
-}
+} */
 
 @keyframes containerGlow {
     0% { 
@@ -998,8 +999,8 @@ body:not(.login-active) {
 
 /* === ADVANCED INTERACTIVE FEATURES === */
 
-/* Floating particles animation */
-.floating-particles {
+/* FLOATING PARTICLES CSS DISABLED - per user request */
+/* .floating-particles {
     position: absolute;
     top: 0;
     left: 0;
@@ -1043,7 +1044,7 @@ body:not(.login-active) {
         transform: translateY(-100px) rotate(360deg);
         opacity: 0;
     }
-}
+} */
 
 /* Advanced hover effects for inputs */
 .input-group {
@@ -2655,7 +2656,7 @@ tbody tr {
 
     <button onclick="openChangePasswordModal()" id="changePwdBtn" style="display:none;">Set New Password</button>
 
-    <button onclick="logout()" id="logoutBtn" style="display:none;">Logout</button>
+    <button onclick="openLogoutConfirmModal()" id="logoutBtn" style="display:none;">Logout</button>
     <button onclick="scrollToAdminActions()" id="adminActionsBtn">Admin Actions</button>
     <button onclick="toggleAnalytics()" id="analyticsBtn" style="display:none; background-color: #6f42c1;">📊 Analytics</button>
     <button onclick="toggleAdvancedSearch()" id="advancedSearchBtn" style="display:none; background-color: #17a2b8;">🔍 Advanced Search</button>
@@ -2961,6 +2962,9 @@ tbody tr {
                     <div class="status-item">
                         <strong>Last Updated:</strong> <span id="displayLastUpdated"></span>
                     </div>
+                    <div class="status-item" style="grid-column: 1 / -1; padding: 10px; background: #e8f5e9; border-radius: 5px; border-left: 4px solid #4caf50;">
+                        <strong>📝 Digital Signature:</strong> <span id="displaySignature" style="color: #2e7d32; font-weight: 600;"></span>
+                    </div>
                 </div>
                 <button class="edit-btn" onclick="editBackupStatus()">✏️ Edit Status</button>
             </div>
@@ -3078,6 +3082,46 @@ tbody tr {
         <button onclick="confirmPasswordChange()">Change Password</button>
     </div>
 </div>
+
+<!-- Logout Confirmation Modal -->
+<div id="logoutConfirmModal" class="modal">
+    <div class="modal-content" style="max-width: 450px; text-align: center; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
+        <span class="close" onclick="closeLogoutConfirmModal()" style="font-size: 28px; color: #999;">&times;</span>
+        <div style="font-size: 70px; margin: 20px 0; animation: doorSwing 0.5s ease;">🚪</div>
+        <h3 style="color: #333; margin-bottom: 10px; font-size: 24px;">Logout Confirmation</h3>
+        <p style="font-size: 16px; color: #666; margin: 20px 0; line-height: 1.6;">
+            Are you sure you want to logout from the system?<br>
+            <small style="color: #999;">Your session will be ended and you'll need to login again.</small>
+        </p>
+        <div style="margin-top: 30px; display: flex; gap: 15px; justify-content: center;">
+            <button onclick="confirmLogout()" style="background: linear-gradient(135deg, #dc3545, #c82333); color: white; padding: 14px 35px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);">
+                ✓ Yes, Logout
+            </button>
+            <button onclick="closeLogoutConfirmModal()" style="background: linear-gradient(135deg, #28a745, #20c997); color: white; padding: 14px 35px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);">
+                ✗ No, Stay
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+@keyframes doorSwing {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(-10deg); }
+    50% { transform: rotate(10deg); }
+    75% { transform: rotate(-5deg); }
+    100% { transform: rotate(0deg); }
+}
+
+#logoutConfirmModal button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+#logoutConfirmModal button:active {
+    transform: translateY(0px);
+}
+</style>
 
 <div id="swapModal" class="modal">
     <div class="modal-content">
@@ -3585,7 +3629,7 @@ function performExcelExport(filterStartDate = null, filterEndDate = null) {
                         'Issues/Notes': backupData ? (backupData.notes || 'No notes') : 'No notes',
                         'Operator Confirmation': backupData ? (backupData.confirmed ? 'Confirmed' : 'Not Confirmed') : 'Not Confirmed',
                         'Status': op.status || 'Active',
-                        'Signature': '__________'
+                        'Signature': backupData && backupData.signature ? `✓ Signed by ${backupData.signature.name} on ${backupData.signature.date}` : 'Not Signed'
                     };
                     
                     // Apply date range filter based on Shift Date (for cyber security)
@@ -3639,7 +3683,7 @@ function performExcelExport(filterStartDate = null, filterEndDate = null) {
                 { wch: 25 },  // Issues/Notes
                 { wch: 18 },  // Operator Confirmation
                 { wch: 10 },  // Status
-                { wch: 15 }   // Signature
+                { wch: 35 }   // Signature (wider for signed info)
             ];
             ws['!cols'] = colWidths;
             
@@ -3940,6 +3984,13 @@ function showCurrentStatus(backupData) {
         '<span class="status-confirmed">Confirmed</span>' : 
         '<span class="status-not-confirmed">Not Confirmed</span>';
     document.getElementById('displayLastUpdated').textContent = backupData.lastUpdated || 'N/A';
+    
+    // Display signature information
+    if (backupData.signature) {
+        document.getElementById('displaySignature').innerHTML = `✓ Signed by <strong>${backupData.signature.name}</strong> on ${backupData.signature.date}`;
+    } else {
+        document.getElementById('displaySignature').innerHTML = '<span style="color: #d32f2f;">Not Signed</span>';
+    }
 }
 
 // Convert operator selection to standardized status
@@ -4017,7 +4068,12 @@ function saveBackupStatus() {
         confirmed: confirmed,
         lastUpdated: new Date().toLocaleString(),
         operator: operatorName,
-        date: selectedDate
+        date: selectedDate,
+        signature: {
+            name: operatorName,
+            date: new Date().toLocaleString(),
+            timestamp: Date.now()
+        }
     };
     
     // Validate times for backup statuses that require them
@@ -4033,10 +4089,10 @@ function saveBackupStatus() {
     
     // Log the action
     const convertedStatus = getConvertedStatus(backupData.status);
-    logAuditAction('BACKUP_STATUS', `${operatorName} updated backup status for ${selectedDate}: ${backupData.status} (${convertedStatus})`);
+    logAuditAction('BACKUP_STATUS', `${operatorName} updated backup status for ${selectedDate}: ${backupData.status} (${convertedStatus}) - Digitally Signed`);
     
     // Show success message
-    showAdvancedNotification(`✅ Backup status saved successfully!<br>Date: ${selectedDate}<br>Status: ${convertedStatus} (${backupData.status})`, 'success');
+    showAdvancedNotification(`✅ Backup status saved and digitally signed!<br>Date: ${selectedDate}<br>Status: ${convertedStatus} (${backupData.status})<br>Signed by: ${operatorName}`, 'success');
     
     // Refresh display
     loadBackupStatus();
@@ -6043,7 +6099,8 @@ function enhanceFingerprintScanner() {
 }
 
 // Advanced Particle System
-function createAdvancedParticles() {
+// ADVANCED PARTICLES DISABLED - per user request
+/* function createAdvancedParticles() {
     const authSection = document.getElementById('authSection');
     if (!authSection) return;
     
@@ -6088,7 +6145,7 @@ function createAdvancedParticles() {
     }
     
     setInterval(createParticle, 200);
-}
+} */
 
 // Advanced Form Validation with Visual Feedback
 function enhanceFormValidation() {
@@ -6141,14 +6198,14 @@ function createValidationEffect(element, type) {
 
 // Initialize all advanced features
 document.addEventListener('DOMContentLoaded', function() {
-    createFloatingParticles();
+    // createFloatingParticles(); // DISABLED - per user request (removes moving dots)
     enhanceInputInteractions();
     enhanceLoginButton();
     createMatrixRain();
     enable3DMouseTracking();
     enableVoiceRecognition();
     enhanceFingerprintScanner();
-    createAdvancedParticles();
+    // createAdvancedParticles(); // DISABLED - per user request (removes moving dots)
     enhanceFormValidation();
 });
 
@@ -6208,7 +6265,8 @@ document.head.appendChild(ultraStyleSheet);
 // === ADVANCED LOGIN PAGE FEATURES ===
 
 // Create floating particles
-function createFloatingParticles() {
+// FLOATING PARTICLES DISABLED - per user request
+/* function createFloatingParticles() {
     const authSection = document.getElementById('authSection');
     if (!authSection) return;
     
@@ -6245,7 +6303,7 @@ function createParticle(container) {
             particle.parentNode.removeChild(particle);
         }
     }, 12000);
-}
+} */
 
 // Enhanced input interactions
 function enhanceInputInteractions() {
@@ -6381,7 +6439,7 @@ function enhanceLoginButton() {
 
 // Initialize advanced features when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    createFloatingParticles();
+    // createFloatingParticles(); // DISABLED - per user request (removes moving dots)
     enhanceInputInteractions();
     enhanceLoginButton();
 });
@@ -7021,6 +7079,22 @@ function logout() {
     showToast('Logged out successfully', 'success');
 }
 
+// Open logout confirmation modal
+function openLogoutConfirmModal() {
+    document.getElementById('logoutConfirmModal').style.display = 'block';
+}
+
+// Close logout confirmation modal
+function closeLogoutConfirmModal() {
+    document.getElementById('logoutConfirmModal').style.display = 'none';
+}
+
+// Confirm logout
+function confirmLogout() {
+    closeLogoutConfirmModal();
+    logout();
+}
+
 function init() {
     // Check for existing session first
     if (restoreSessionState()) {
@@ -7104,6 +7178,14 @@ function init() {
 }
 
 window.onload = init;
+
+// Add click-outside-to-close functionality for all modals
+window.addEventListener('click', function(event) {
+    // Check if click is on a modal background (not the modal content)
+    if (event.target.classList.contains('modal')) {
+        event.target.style.display = 'none';
+    }
+});
 
 function scrollToAdminActions() {
     document.getElementById('adminControls').scrollIntoView({ behavior: 'smooth' });

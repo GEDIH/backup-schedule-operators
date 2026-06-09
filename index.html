@@ -5695,8 +5695,7 @@ async function testNotificationToAllOperators() {
         { name: 'DAME TERFASSA', email: 'maldame@gmail.com' },
         { name: 'TSION GIRMA', email: 'tsion22girma@gmail.com' },
         { name: 'ABRAHAM CHALA', email: 'abrishc101@gmail.com' },
-        { name: 'BERISO SHIBIRU', email: 'bariidanse2012@gmail.com' },
-        { name: 'KETE MANEW', email: 'ketemanew@gmail.com' }
+        { name: 'BERISO SHIBIRU', email: 'bariidanse2012@gmail.com' }
     ];
     
     const confirmed = confirm(`📧 Send Test Notifications to All Operators?\n\nThis will send test emails to:\n${operatorEmails.map(op => `• ${op.name} (${op.email})`).join('\n')}\n\nContinue?`);
@@ -5836,8 +5835,7 @@ let initialOperators = JSON.parse(localStorage.getItem(INITIAL_OPERATORS_DATA_KE
     { name: "BERISO SHIBIRU", mobile: "0902911411", email: "bariidanse2012@gmail.com" },
     { name: "HAMBISA ADAMU", mobile: "0913456466", email: "adamuhambisa033@gmail.com" } ,
     { name: "DAME TERFASSA", mobile: "0911117524", email: "maldame@gmail.com" },
-    { name: "TSION GIRMA", mobile: "0946700418", email: "tsion22girma@gmail.com" },
-    { name: "KETE MANEW", mobile: "0911000000", email: "ketemanew@gmail.com" }
+    { name: "TSION GIRMA", mobile: "0946700418", email: "tsion22girma@gmail.com" }
 ];
 
 let operators = JSON.parse(localStorage.getItem('operators') || '[]');
@@ -8780,8 +8778,7 @@ function resetAll() {
             { name: "BERISO SHIBIRU", mobile: "0902911411", email: "bariidanse2012@gmail.com" },
             { name: "HAMBISA ADAMU", mobile: "0913456466", email: "adamuhambisa033@gmail.com" } ,
             { name: "DAME TERFASSA", mobile: "0911117524", email: "maldame@gmail.com" },
-            { name: "TSION GIRMA", mobile: "0946700418", email: "tsion22girma@gmail.com" },
-            { name: "KETE MANEW", mobile: "0911000000", email: "ketemanew@gmail.com" }
+            { name: "TSION GIRMA", mobile: "0946700418", email: "tsion22girma@gmail.com" }
         ];
         localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
 

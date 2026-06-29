@@ -6353,55 +6353,29 @@ async function testNotificationSystem() {
         
         let message = '🧪 Test Notification Results:\n\n';
         message += `📧 Email: ${results.email.success ? '✅ Success' : '❌ Failed'}\n`;
-        if (!results.email.success && results.email.error) {
-            message += `   Error: ${results.email.error}\n`;
+        if (!results.email.success) {
+            message += `   ↳ Error: ${results.email.error || 'Unknown error'}\n`;
         }
-        message += `📱 SMS: ${results.sms.success ? '✅ Success' : '❌ Failed'}\n`;
+        message += `📱 SMS: ${results.sms.success ? '✅ Success (simulation)' : '❌ Failed'}\n`;
         if (!results.sms.success && results.sms.error) {
-            message += `   Error: ${results.sms.error}\n`;
+            message += `   ↳ Error: ${results.sms.error}\n`;
         }
         message += '\n';
-        
-        if (!results.email.success && !results.sms.success) {
-            message += '⚠️ Both email and SMS failed. Please check your API configuration.\n\n';
-            message += '💡 To fix issues:\n';
-            message += '📧 Email: Click "⚙️ Configure Notification APIs" → Set EmailJS credentials\n';
-            message += '📱 SMS: Configure SMS service (Twilio, etc.) in the same modal\n';
-            message += '🧪 Or use "Enable Demo Mode" for testing interface only';
-        } else if (results.email.success && results.sms.success) {
-            message += '🎉 Both email and SMS sent successfully!';
-            
-            // Check if in demo mode
-            const emailDemo = EMAIL_API_CONFIG.serviceId === 'demo_service';
-            const smsDemo = SMS_API_CONFIG.accountSid === 'demo_account';
-            
-            if (emailDemo && smsDemo) {
-                message += '\n\n⚠️ Note: Both are in DEMO MODE - no real notifications sent.';
-                message += '\nConfigure real credentials for actual delivery.';
-            } else if (emailDemo) {
-                message += '\n\n⚠️ Email in DEMO MODE - only SMS was real.';
-            } else if (smsDemo) {
-                message += '\n\n⚠️ SMS in DEMO MODE - only Email was real.';
-            } else {
-                message += '\n\n✅ Real notifications sent to: ' + testOperator.email + ' & ' + testOperator.mobile;
-            }
+
+        if (results.email.success) {
+            message += '🎉 Email sent successfully!\n';
+            message += `✅ Check inbox: ${testOperator.email}`;
         } else {
-            message += '⚠️ Partial success. ';
-            if (!results.email.success) {
-                message += 'Email failed - ';
-                if (EMAIL_API_CONFIG.serviceId === 'demo_service') {
-                    message += 'demo mode active, configure real EmailJS for actual emails.';
-                } else {
-                    message += 'check EmailJS configuration.';
-                }
-            } else if (!results.sms.success) {
-                message += 'SMS failed - ';
-                if (SMS_API_CONFIG.accountSid === 'demo_account') {
-                    message += 'demo mode active, configure real SMS service for actual SMS.';
-                } else {
-                    message += 'check SMS configuration.';
-                }
-            }
+            message += '──────────────────────────\n';
+            message += '� HOW TO FIX EMAIL:\n\n';
+            message += '1. Open EmailJS → "Contact Us" template\n';
+            message += '2. Change "To Email" field to: {{to_email}}\n';
+            message += '3. Click Save\n';
+            message += '4. Try test again\n\n';
+            message += `Config in use:\n`;
+            message += `  Service:  ${EMAIL_API_CONFIG.serviceId}\n`;
+            message += `  Template: ${EMAIL_API_CONFIG.templateId}\n`;
+            message += `  Key:      ${EMAIL_API_CONFIG.publicKey ? EMAIL_API_CONFIG.publicKey.slice(0,8)+'...' : 'MISSING'}`;
         }
         
         alert(message);
@@ -6888,17 +6862,29 @@ Backup Operations Management System`;
     };
 
     try {
+        // EmailJS v4 send format
         const response = await emailjs.send(
             EMAIL_API_CONFIG.serviceId,
             EMAIL_API_CONFIG.templateId,
-            templateParams
+            templateParams,
+            { publicKey: EMAIL_API_CONFIG.publicKey }
         );
         
-        console.log('Email sent successfully:', response);
+        console.log('✅ Email sent successfully:', response);
         return { success: true, response: response };
     } catch (error) {
-        console.error('Email sending failed:', error);
-        return { success: false, error: error.message };
+        // Log full error details to help diagnose
+        console.error('❌ Email sending failed:', error);
+        console.error('   Status:', error.status);
+        console.error('   Text:', error.text);
+        console.error('   Config used → serviceId:', EMAIL_API_CONFIG.serviceId,
+                      '| templateId:', EMAIL_API_CONFIG.templateId,
+                      '| publicKey:', EMAIL_API_CONFIG.publicKey ? '✅ set' : '❌ missing');
+        console.error('   Recipient:', templateParams.to_email);
+        return { 
+            success: false, 
+            error: `${error.status || ''} ${error.text || error.message || 'Unknown error'}`
+        };
     }
 }
 

@@ -6504,9 +6504,21 @@ function loadApiConfiguration() {
     // Hardcoded defaults — always apply unless user has overridden via config modal
     const defaults = {
         emailServiceId:  'service_lsvcr99',
-        emailTemplateId: 'template_1s9it4q',
+        emailTemplateId: 'template_1x9it4q',
         emailPublicKey:  'AkOxQ1p_UcC3AvL1N'
     };
+
+    // Force-reset any stale/wrong template IDs cached in localStorage
+    if (!savedConfig.emailTemplateId ||
+        savedConfig.emailTemplateId === 'template_1s9it4q' ||
+        savedConfig.emailTemplateId === 'template_qiurj0u' ||
+        savedConfig.emailTemplateId === 'TEMPLATE_ID_PENDING') {
+        savedConfig.emailTemplateId = defaults.emailTemplateId;
+        savedConfig.emailServiceId  = defaults.emailServiceId;
+        savedConfig.emailPublicKey  = defaults.emailPublicKey;
+        localStorage.setItem('notificationApiConfig', JSON.stringify(savedConfig));
+        console.log('✅ EmailJS config reset to correct values:', defaults);
+    }
 
     // Seed localStorage with defaults if not yet saved
     let needsSave = false;
@@ -6515,7 +6527,7 @@ function loadApiConfiguration() {
     if (!savedConfig.emailPublicKey)  { savedConfig.emailPublicKey  = defaults.emailPublicKey;  needsSave = true; }
     if (needsSave) localStorage.setItem('notificationApiConfig', JSON.stringify(savedConfig));
 
-    // Apply to runtime config
+    // Apply to runtime config — always use defaults as fallback
     EMAIL_API_CONFIG.serviceId  = savedConfig.emailServiceId  || defaults.emailServiceId;
     EMAIL_API_CONFIG.templateId = savedConfig.emailTemplateId || defaults.emailTemplateId;
     EMAIL_API_CONFIG.publicKey  = savedConfig.emailPublicKey  || defaults.emailPublicKey;
@@ -6536,7 +6548,7 @@ const NOTIFICATION_SETTINGS_KEY = 'notificationSettings'; // NEW
 const EMAIL_API_CONFIG = {
     service:    'emailjs',
     serviceId:  'service_lsvcr99',       // ✅ Gmail service
-    templateId: 'template_1s9it4q',      // ✅ "Contact Us" template
+    templateId: 'template_1x9it4q',      // ✅ confirmed from Email Templates page
     publicKey:  'AkOxQ1p_UcC3AvL1N'     // ✅ public key
 };
 

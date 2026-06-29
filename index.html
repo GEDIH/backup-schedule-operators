@@ -3983,6 +3983,8 @@ body {
     </div>
     <div class="topbar-actions" id="topbarActions">
         <span class="topbar-clock" id="topbarClock">--:--</span>
+        <button class="topbar-btn" onclick="toggleCalendar()" id="topbarCalendarBtn">📅 Calendar</button>
+        <button class="topbar-btn" onclick="toggleCompletionChart()" id="topbarChartBtn">📊 Chart</button>
         <button class="topbar-btn" onclick="toggleAnalytics()" id="topbarAnalyticsBtn">📊 Analytics</button>
         <button class="topbar-btn" onclick="toggleAdvancedSearch()" id="topbarSearchBtn">🔍 Search</button>
         <button class="topbar-btn" onclick="exportToExcel()" id="topbarExportBtn">📥 Export</button>
@@ -4563,6 +4565,11 @@ body {
                 <button class="admin-btn btn-dark"    onclick="openAuditLogView()">📋 View Audit Log</button>
                 <button class="admin-btn btn-teal"    onclick="createSampleBackupData()">🧪 Sample Backup Data</button>
                 <button class="admin-btn btn-purple"  onclick="debugBackupData()">🔍 Debug Backup Data</button>
+                <button class="admin-btn btn-green"   onclick="exportOperatorsCSV()">📥 Export Operators CSV</button>
+                <button class="admin-btn btn-blue"    onclick="importOperatorsCSV()">📤 Import Operators CSV</button>
+                <button class="admin-btn btn-orange"  onclick="detectShiftConflicts()">⚠️ Check Conflicts</button>
+                <button class="admin-btn btn-lime"    onclick="toggleCompletionChart()">📊 Completion Chart</button>
+                <button class="admin-btn btn-indigo"  onclick="toggleCalendar()">📅 Calendar View</button>
             </div>
         </div>
 
@@ -4578,6 +4585,8 @@ body {
                 <button class="admin-btn btn-gray"   onclick="openNotificationConfigModal()">⚙️ Configure APIs</button>
                 <button class="admin-btn btn-purple" onclick="testNotificationSystem()">📨 Send Notification</button>
                 <button class="admin-btn btn-pink"   onclick="testNotificationToAllOperators()">📧 Send to All Operators</button>
+                <button class="admin-btn btn-green"  onclick="sendWhatsAppToAll()" style="background:linear-gradient(135deg,#25D366,#128C7E);">💬 WhatsApp All</button>
+                <button class="admin-btn btn-blue"   onclick="requestPushPermission()">🔔 Enable Push Alerts</button>
             </div>
         </div>
 
@@ -4819,6 +4828,76 @@ body {
 
 <div class="note">Oromia Bank Backup Operators Schedule</div>
 
+<!-- ============================================================
+     FEATURE 1: SHIFT COMPLETION RATE CHART
+     ============================================================ -->
+<div id="completionChartSection" style="display:none; max-width:1000px; margin:0 auto 20px auto;">
+    <div style="background:white; border-radius:14px; box-shadow:0 4px 20px rgba(0,0,0,0.1); overflow:hidden;">
+        <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460); padding:16px 22px; display:flex; align-items:center; justify-content:space-between;">
+            <div style="display:flex; align-items:center; gap:10px; color:white;">
+                <span style="font-size:20px;">📊</span>
+                <div>
+                    <div style="font-weight:800; font-size:15px;">Backup Completion Rate</div>
+                    <div style="font-size:11px; opacity:0.65;">Per operator — based on logged backup records</div>
+                </div>
+            </div>
+            <button onclick="document.getElementById('completionChartSection').style.display='none'" 
+                    style="background:rgba(255,255,255,0.15); border:none; color:white; border-radius:8px; padding:6px 12px; cursor:pointer; font-size:12px;">✕ Close</button>
+        </div>
+        <div style="padding:20px;">
+            <canvas id="completionChart" height="120"></canvas>
+            <div id="completionLegend" style="display:flex; flex-wrap:wrap; gap:12px; margin-top:15px; justify-content:center;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================
+     FEATURE 3: CALENDAR VIEW
+     ============================================================ -->
+<div id="calendarSection" style="display:none; max-width:1000px; margin:0 auto 20px auto;">
+    <div style="background:white; border-radius:14px; box-shadow:0 4px 20px rgba(0,0,0,0.1); overflow:hidden;">
+        <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460); padding:16px 22px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+            <div style="display:flex; align-items:center; gap:10px; color:white;">
+                <span style="font-size:20px;">📅</span>
+                <div>
+                    <div style="font-weight:800; font-size:15px;">Monthly Schedule Calendar</div>
+                    <div style="font-size:11px; opacity:0.65;">Color-coded operator shifts</div>
+                </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <button onclick="changeCalendarMonth(-1)" style="background:rgba(255,255,255,0.15); border:none; color:white; border-radius:8px; padding:6px 12px; cursor:pointer; font-size:16px;">‹</button>
+                <span id="calendarMonthLabel" style="color:white; font-weight:700; font-size:14px; min-width:120px; text-align:center;"></span>
+                <button onclick="changeCalendarMonth(1)"  style="background:rgba(255,255,255,0.15); border:none; color:white; border-radius:8px; padding:6px 12px; cursor:pointer; font-size:16px;">›</button>
+                <button onclick="document.getElementById('calendarSection').style.display='none'" 
+                        style="background:rgba(255,255,255,0.15); border:none; color:white; border-radius:8px; padding:6px 12px; cursor:pointer; font-size:12px; margin-left:8px;">✕</button>
+            </div>
+        </div>
+        <div style="padding:16px;">
+            <div id="calendarLegend" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px;"></div>
+            <div id="calendarGrid" style="display:grid; grid-template-columns:repeat(7,1fr); gap:3px;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================
+     FEATURE 4: SHIFT CONFLICT DETECTOR
+     ============================================================ -->
+<div id="conflictBanner" style="display:none; max-width:1000px; margin:0 auto 15px auto; background:#fff3cd; border:2px solid #ffc107; border-radius:12px; padding:14px 18px;">
+    <div style="font-weight:800; color:#856404; margin-bottom:8px;">⚠️ Schedule Conflicts Detected</div>
+    <div id="conflictList" style="font-size:13px; color:#533f03;"></div>
+</div>
+
+<!-- ============================================================
+     FEATURE 8: COUNTDOWN TIMER ON ACTIVE SHIFT (injected via JS into table)
+     ============================================================ -->
+<div id="countdownBanner" style="display:none; max-width:1000px; margin:0 auto 15px auto; background:linear-gradient(135deg,#e8f5e9,#c8e6c9); border:2px solid #4caf50; border-radius:12px; padding:14px 20px; display:none; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+    <div>
+        <div style="font-weight:800; color:#1b5e20; font-size:14px;">⏰ Active Shift Countdown</div>
+        <div id="countdownOperatorName" style="font-size:13px; color:#2e7d32; margin-top:3px;"></div>
+    </div>
+    <div id="countdownDisplay" style="font-size:28px; font-weight:900; color:#1b5e20; letter-spacing:1px; font-variant-numeric:tabular-nums;"></div>
+</div>
+
 <div class="footer enhanced-footer">
     <div class="footer-container">
         <div class="footer-text">
@@ -5050,6 +5129,7 @@ body {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.1/jspdf.plugin.autotable.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
     // Auto-initialize EmailJS immediately when library loads — no manual step needed
@@ -10336,6 +10416,550 @@ window.addEventListener('scroll', function() {
         else btn.classList.remove('show');
     }
 });
+
+// ================================================================
+// FEATURE 1: SHIFT COMPLETION RATE CHART
+// ================================================================
+let completionChartInstance = null;
+
+function toggleCompletionChart() {
+    const section = document.getElementById('completionChartSection');
+    if (section.style.display === 'none' || !section.style.display) {
+        section.style.display = 'block';
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        renderCompletionChart();
+    } else {
+        section.style.display = 'none';
+    }
+}
+
+function renderCompletionChart() {
+    const operatorColors = [
+        '#94C83D','#007bff','#e83e8c','#fd7e14','#6f42c1','#17a2b8','#28a745','#dc3545'
+    ];
+
+    const labels = [], completed = [], failed = [], pending = [], colors = [];
+
+    initialOperators.forEach((op, i) => {
+        const color = operatorColors[i % operatorColors.length];
+        colors.push(color);
+        labels.push(op.name.split(' ')[0]);
+
+        // Count backup records for this operator
+        let c = 0, f = 0, p = 0;
+        for (let k = 0; k < localStorage.length; k++) {
+            const key = localStorage.key(k);
+            if (key && key.startsWith(`backup_${op.name}_`)) {
+                const data = JSON.parse(localStorage.getItem(key) || '{}');
+                const s = (data.status || '').toLowerCase();
+                if (s.includes('completely') || s.includes('completed')) c++;
+                else if (s.includes('issue') || s.includes('failed')) f++;
+                else if (s.includes('holiday') || s.includes('weekend')) p++;
+                else p++;
+            }
+        }
+        completed.push(c); failed.push(f); pending.push(p);
+    });
+
+    const ctx = document.getElementById('completionChart').getContext('2d');
+    if (completionChartInstance) completionChartInstance.destroy();
+
+    completionChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [
+                { label: '✅ Completed', data: completed, backgroundColor: '#28a745', borderRadius: 6 },
+                { label: '⚠️ Failed',    data: failed,    backgroundColor: '#dc3545', borderRadius: 6 },
+                { label: '⏳ Pending',   data: pending,   backgroundColor: '#ffc107', borderRadius: 6 }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top', labels: { font: { size: 13 }, padding: 15 } },
+                tooltip: {
+                    callbacks: {
+                        afterBody: (items) => {
+                            const idx = items[0].dataIndex;
+                            const total = completed[idx] + failed[idx] + pending[idx];
+                            const pct = total > 0 ? Math.round((completed[idx]/total)*100) : 0;
+                            return [`Completion rate: ${pct}%`];
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: { stacked: true, grid: { display: false } },
+                y: { stacked: true, beginAtZero: true, ticks: { stepSize: 1 } }
+            }
+        }
+    });
+
+    // Legend
+    const legend = document.getElementById('completionLegend');
+    legend.innerHTML = initialOperators.map((op, i) => {
+        const c = completed[i], f = failed[i], p = pending[i];
+        const total = c + f + p;
+        const pct = total > 0 ? Math.round((c/total)*100) : 0;
+        return `<div style="display:flex;align-items:center;gap:6px;background:#f8f9fa;padding:6px 12px;border-radius:20px;font-size:12px;">
+            <span style="width:10px;height:10px;background:${operatorColors[i%operatorColors.length]};border-radius:50%;"></span>
+            <strong>${op.name.split(' ')[0]}</strong>: ${pct}% complete (${total} days)
+        </div>`;
+    }).join('');
+}
+
+// ================================================================
+// FEATURE 2: BROWSER PUSH NOTIFICATIONS
+// ================================================================
+let pushNotifPermission = 'default';
+
+async function requestPushPermission() {
+    if (!('Notification' in window)) {
+        showToast('Browser does not support notifications', 'error'); return;
+    }
+    if (Notification.permission === 'granted') {
+        pushNotifPermission = 'granted';
+        showToast('✅ Push notifications already enabled!', 'success');
+        return;
+    }
+    const permission = await Notification.requestPermission();
+    pushNotifPermission = permission;
+    if (permission === 'granted') {
+        showToast('✅ Push notifications enabled!', 'success');
+        new Notification('Oromia Bank Backup Schedule', {
+            body: '✅ You will now receive shift reminders!',
+            icon: 'images/oroo logo.png'
+        });
+        schedulePushNotifications();
+    } else {
+        showToast('Push notifications denied by browser', 'warning');
+    }
+}
+
+function sendPushNotification(title, body, tag = 'shift-reminder') {
+    if (Notification.permission !== 'granted') return;
+    const n = new Notification(title, {
+        body,
+        icon: 'images/oroo logo.png',
+        badge: 'images/oroo logo.png',
+        tag,
+        requireInteraction: true
+    });
+    n.onclick = () => { window.focus(); n.close(); };
+    setTimeout(() => n.close(), 12000);
+}
+
+function schedulePushNotifications() {
+    if (Notification.permission !== 'granted') return;
+    const now = getCleanDate(new Date());
+    operators.forEach(op => {
+        if (op.status !== 'Active') return;
+        const start = getCleanDate(op.start);
+        const days = daysBetween(now, start);
+        if (days === 3) {
+            sendPushNotification(
+                `⚠️ Shift starts in 3 days!`,
+                `${op.name} — ${formatDate(op.start)} to ${formatDate(op.end)}`,
+                `shift-3day-${op.start}`
+            );
+        } else if (days === 1) {
+            sendPushNotification(
+                `🚨 Shift starts TOMORROW!`,
+                `${op.name} — Starts: ${formatDate(op.start)}`,
+                `shift-1day-${op.start}`
+            );
+        } else if (days === 0) {
+            sendPushNotification(
+                `🔔 Shift starts TODAY!`,
+                `${op.name} — Please confirm readiness.`,
+                `shift-today-${op.start}`
+            );
+        }
+    });
+}
+
+function initPushNotifications() {
+    if (!('Notification' in window)) return;
+    if (Notification.permission === 'granted') {
+        pushNotifPermission = 'granted';
+        schedulePushNotifications();
+    }
+}
+
+// ================================================================
+// FEATURE 3: CALENDAR VIEW
+// ================================================================
+let calendarYear  = new Date().getFullYear();
+let calendarMonth = new Date().getMonth(); // 0-indexed
+
+const OP_COLORS = [
+    '#94C83D','#007bff','#e83e8c','#fd7e14',
+    '#6f42c1','#17a2b8','#e74c3c','#2ecc71'
+];
+
+function getOpColor(name) {
+    const idx = initialOperators.findIndex(op => op.name === name);
+    return OP_COLORS[idx >= 0 ? idx % OP_COLORS.length : 0];
+}
+
+function toggleCalendar() {
+    const sec = document.getElementById('calendarSection');
+    if (sec.style.display === 'none' || !sec.style.display) {
+        calendarYear  = new Date().getFullYear();
+        calendarMonth = new Date().getMonth();
+        sec.style.display = 'block';
+        sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        renderCalendar();
+    } else {
+        sec.style.display = 'none';
+    }
+}
+
+function changeCalendarMonth(delta) {
+    calendarMonth += delta;
+    if (calendarMonth > 11) { calendarMonth = 0; calendarYear++; }
+    if (calendarMonth < 0)  { calendarMonth = 11; calendarYear--; }
+    renderCalendar();
+}
+
+function renderCalendar() {
+    const months = ['January','February','March','April','May','June',
+                    'July','August','September','October','November','December'];
+    document.getElementById('calendarMonthLabel').textContent = `${months[calendarMonth]} ${calendarYear}`;
+
+    const grid   = document.getElementById('calendarGrid');
+    const legend = document.getElementById('calendarLegend');
+    grid.innerHTML = '';
+
+    // Day headers
+    ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d => {
+        const hdr = document.createElement('div');
+        hdr.style.cssText = 'text-align:center;font-size:11px;font-weight:700;color:#888;padding:4px 0;';
+        hdr.textContent = d;
+        grid.appendChild(hdr);
+    });
+
+    const firstDay = new Date(calendarYear, calendarMonth, 1).getDay();
+    const daysInMonth = new Date(calendarYear, calendarMonth + 1, 0).getDate();
+    const todayStr = today.toISOString().split('T')[0];
+
+    // Empty cells
+    for (let i = 0; i < firstDay; i++) {
+        grid.appendChild(document.createElement('div'));
+    }
+
+    // Day cells
+    for (let d = 1; d <= daysInMonth; d++) {
+        const dateStr = `${calendarYear}-${String(calendarMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        const dateObj  = getCleanDate(new Date(calendarYear, calendarMonth, d));
+        const isToday  = dateStr === todayStr;
+        const isSunday = dateObj.getDay() === 0;
+
+        // Find operator for this date
+        const op = operators.find(o => {
+            const s = getCleanDate(o.start), e = getCleanDate(o.end);
+            return dateObj >= s && dateObj <= e && o.status === 'Active';
+        });
+
+        const cell = document.createElement('div');
+        const opColor = op ? getOpColor(op.name) : null;
+        cell.style.cssText = `
+            border-radius:8px; padding:4px 3px; min-height:48px; text-align:center;
+            font-size:12px; position:relative; cursor:${op?'pointer':'default'};
+            background:${isSunday ? '#fff5f5' : op ? opColor+'22' : '#fafafa'};
+            border:1px solid ${isToday ? '#94C83D' : '#e9ecef'};
+            ${isToday ? 'box-shadow:0 0 0 2px #94C83D;' : ''}
+        `;
+
+        const dayNum = document.createElement('div');
+        dayNum.style.cssText = `font-weight:${isToday?'900':'600'}; color:${isToday?'#94C83D':isSunday?'#dc3545':'#333'}; font-size:13px; margin-bottom:2px;`;
+        dayNum.textContent = d;
+        cell.appendChild(dayNum);
+
+        if (op) {
+            const opLabel = document.createElement('div');
+            opLabel.style.cssText = `font-size:9px; font-weight:700; color:${opColor}; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding:0 2px;`;
+            opLabel.textContent = op.name.split(' ')[0];
+            cell.appendChild(opLabel);
+
+            // Backup status dot
+            const bData = getBackupData(op.name, dateObj);
+            if (bData) {
+                const dot = document.createElement('div');
+                const s = (bData.status||'').toLowerCase();
+                const dotColor = s.includes('completely')||s.includes('completed') ? '#28a745' :
+                                 s.includes('issue')||s.includes('failed') ? '#dc3545' : '#ffc107';
+                dot.style.cssText = `width:6px;height:6px;background:${dotColor};border-radius:50%;margin:2px auto 0;`;
+                cell.appendChild(dot);
+            }
+
+            cell.title = `${op.name}\n${formatDate(op.start)} – ${formatDate(op.end)}`;
+            cell.onclick = () => showDetailModal(op);
+        }
+
+        if (isSunday) {
+            const wk = document.createElement('div');
+            wk.style.cssText = 'font-size:8px; color:#dc3545; margin-top:2px;';
+            wk.textContent = 'WKD';
+            cell.appendChild(wk);
+        }
+
+        grid.appendChild(cell);
+    }
+
+    // Legend
+    legend.innerHTML = initialOperators.map((op, i) => {
+        const col = OP_COLORS[i % OP_COLORS.length];
+        return `<div style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:#333;">
+            <span style="width:12px;height:12px;background:${col};border-radius:3px;flex-shrink:0;"></span>${op.name}
+        </div>`;
+    }).join('');
+}
+
+// ================================================================
+// FEATURE 4: SHIFT CONFLICT DETECTOR
+// ================================================================
+function detectShiftConflicts() {
+    const conflicts = [];
+    const gaps      = [];
+
+    const activeOps = operators.filter(o => o.status === 'Active')
+        .sort((a,b) => new Date(a.start) - new Date(b.start));
+
+    for (let i = 0; i < activeOps.length - 1; i++) {
+        const curr = activeOps[i], next = activeOps[i+1];
+        const currEnd  = getCleanDate(curr.end);
+        const nextStart= getCleanDate(next.start);
+
+        // Overlap: next starts before current ends
+        if (nextStart < currEnd) {
+            conflicts.push(`🔴 <strong>Overlap:</strong> ${curr.name} (ends ${formatDate(curr.end)}) overlaps with ${next.name} (starts ${formatDate(next.start)})`);
+        }
+
+        // Gap: next starts more than 1 day after current ends
+        const gapDays = daysBetween(currEnd, nextStart);
+        if (gapDays > 1) {
+            gaps.push(`🟡 <strong>Gap:</strong> ${gapDays - 1} uncovered day(s) between ${curr.name} (${formatDate(curr.end)}) and ${next.name} (${formatDate(next.start)})`);
+        }
+    }
+
+    const banner = document.getElementById('conflictBanner');
+    const list   = document.getElementById('conflictList');
+    const all    = [...conflicts, ...gaps];
+
+    if (all.length > 0) {
+        list.innerHTML = all.map(c => `<div style="margin:4px 0; padding:4px 0; border-bottom:1px solid #ffeeba;">${c}</div>`).join('');
+        banner.style.display = 'block';
+    } else {
+        banner.style.display = 'none';
+        showToast('✅ No conflicts or gaps detected in the schedule!', 'success');
+    }
+}
+
+// ================================================================
+// FEATURE 5: WHATSAPP NOTIFICATION LINKS
+// ================================================================
+function sendWhatsAppNotification(operatorData, shiftData, notificationType = 'reminder') {
+    const daysUntil = daysBetween(getCleanDate(new Date()), getCleanDate(shiftData.start));
+    let msg = '';
+
+    switch(notificationType) {
+        case 'urgent':
+            msg = `🚨 *URGENT - Oromia Bank Backup*\n\nDear *${operatorData.name}*,\n\nYour backup shift starts *TOMORROW*.\n📅 Start: ${formatDate(shiftData.start)}\n📅 End: ${formatDate(shiftData.end)}\n\nPlease confirm your readiness immediately.\n\n_Oromia Bank IT Department_`;
+            break;
+        case 'today':
+            msg = `🔔 *Oromia Bank Backup - Starts TODAY*\n\nDear *${operatorData.name}*,\n\nYour backup shift begins *TODAY*.\n📅 ${formatDate(shiftData.start)} – ${formatDate(shiftData.end)}\n\nEnsure all backup systems are operational.\n\n_Oromia Bank IT Department_`;
+            break;
+        default:
+            msg = `📋 *Oromia Bank Backup Reminder*\n\nDear *${operatorData.name}*,\n\nYour backup shift starts in *${daysUntil} day(s)*.\n📅 Start: ${formatDate(shiftData.start)}\n📅 End: ${formatDate(shiftData.end)}\n📱 Mobile: ${operatorData.mobile}\n\nPlease review and confirm readiness.\n\n_Oromia Bank IT Department_`;
+    }
+
+    // Clean mobile number (strip leading 0, add Ethiopia code +251)
+    let mobile = (operatorData.mobile || '').replace(/\s+/g,'');
+    if (mobile.startsWith('0')) mobile = '251' + mobile.slice(1);
+    if (mobile.startsWith('+')) mobile = mobile.slice(1);
+
+    const url = `https://wa.me/${mobile}?text=${encodeURIComponent(msg)}`;
+    window.open(url, '_blank');
+    logAuditAction('WHATSAPP_NOTIF', `WhatsApp notification opened for ${operatorData.name} (${mobile})`);
+    showToast(`📱 WhatsApp opened for ${operatorData.name}`, 'success');
+}
+
+function sendWhatsAppToAll() {
+    if (!isAdmin && !isManager) return;
+    const now = getCleanDate(new Date());
+    let sent = 0;
+
+    operators.forEach(op => {
+        if (op.status !== 'Active') return;
+        const start = getCleanDate(op.start);
+        const days  = daysBetween(now, start);
+        if (days >= 0 && days <= 3) {
+            const masterOp = initialOperators.find(io => io.name === op.name) || op;
+            const type = days === 0 ? 'today' : days === 1 ? 'urgent' : 'reminder';
+            setTimeout(() => sendWhatsAppNotification(masterOp, op, type), sent * 800);
+            sent++;
+        }
+    });
+
+    if (sent === 0) showToast('No operators with upcoming shifts in the next 3 days', 'info');
+    else showToast(`📱 Opening WhatsApp for ${sent} operator(s)...`, 'success');
+}
+
+// ================================================================
+// FEATURE 6: CSV IMPORT / EXPORT OPERATORS
+// ================================================================
+function exportOperatorsCSV() {
+    if (!isAdmin) return;
+    const rows = [['Name','Mobile','Email']];
+    initialOperators.forEach(op => rows.push([op.name, op.mobile, op.email]));
+    const csv = rows.map(r => r.map(v => `"${(v||'').replace(/"/g,'""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url; a.download = 'oromia_bank_operators.csv';
+    a.click(); URL.revokeObjectURL(url);
+    logAuditAction('CSV_EXPORT', `Operator list exported to CSV by ${loggedInUser}`);
+    showToast('✅ Operators exported to CSV!', 'success');
+}
+
+function importOperatorsCSV() {
+    if (!isAdmin) return;
+    const input = document.createElement('input');
+    input.type = 'file'; input.accept = '.csv';
+    input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            try {
+                const lines = ev.target.result.split('\n').filter(l => l.trim());
+                const dataLines = lines.slice(1); // skip header
+                let added = 0, skipped = 0;
+
+                dataLines.forEach(line => {
+                    const cols = line.split(',').map(c => c.trim().replace(/^"|"$/g,''));
+                    if (cols.length < 2) return;
+                    const [name, mobile, email=''] = cols;
+                    const nameUpper = name.trim().toUpperCase();
+                    if (!nameUpper) return;
+                    const exists = initialOperators.some(op => op.name.toUpperCase() === nameUpper);
+                    if (exists) { skipped++; return; }
+                    initialOperators.push({ name: nameUpper, mobile: mobile.trim(), email: email.trim() });
+                    if (!operatorPasswords[nameUpper]) operatorPasswords[nameUpper] = DEFAULT_OPERATOR_PWD;
+                    added++;
+                });
+
+                localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
+                localStorage.setItem('operatorPasswords', JSON.stringify(operatorPasswords));
+                if (added > 0) {
+                    const startDate = document.getElementById('startDate').value || DEFAULT_SCHEDULE_START_DATE;
+                    generateFullSchedule(startDate);
+                }
+                logAuditAction('CSV_IMPORT', `CSV import: ${added} added, ${skipped} skipped by ${loggedInUser}`);
+                showToast(`✅ Imported ${added} operator(s). Skipped ${skipped} duplicate(s).`, 'success');
+                if (isAdmin) renderOperatorManagementTable();
+            } catch(err) {
+                showToast('❌ CSV parse error: ' + err.message, 'error');
+            }
+        };
+        reader.readAsText(file);
+    };
+    input.click();
+}
+
+// ================================================================
+// FEATURE 8: COUNTDOWN TIMER
+// ================================================================
+let countdownInterval = null;
+
+function startCountdownTimer() {
+    if (countdownInterval) clearInterval(countdownInterval);
+
+    const banner = document.getElementById('countdownBanner');
+    const display = document.getElementById('countdownDisplay');
+    const nameEl  = document.getElementById('countdownOperatorName');
+
+    function tick() {
+        const activeOp = operators.find(op => {
+            const s = getCleanDate(op.start), e = getCleanDate(op.end);
+            return today.getTime() >= s.getTime() && today.getTime() <= e.getTime() && op.status === 'Active';
+        });
+
+        if (!activeOp) {
+            banner.style.display = 'none';
+            return;
+        }
+
+        const endDate  = getCleanDate(activeOp.end);
+        const now      = new Date();
+        // End of the shift's last day
+        const endTime  = new Date(endDate.getTime() + 24*60*60*1000 - 1000);
+        const diffMs   = endTime - now;
+
+        if (diffMs <= 0) {
+            banner.style.display = 'none';
+            return;
+        }
+
+        const days  = Math.floor(diffMs / (1000*60*60*24));
+        const hours = Math.floor((diffMs % (1000*60*60*24)) / (1000*60*60));
+        const mins  = Math.floor((diffMs % (1000*60*60)) / (1000*60));
+        const secs  = Math.floor((diffMs % (1000*60)) / 1000);
+
+        display.textContent = `${days}d ${String(hours).padStart(2,'0')}h ${String(mins).padStart(2,'0')}m ${String(secs).padStart(2,'0')}s`;
+        nameEl.textContent  = `Operator: ${activeOp.name} | Shift ends: ${formatDate(activeOp.end)}`;
+        banner.style.display = 'flex';
+    }
+
+    tick();
+    countdownInterval = setInterval(tick, 1000);
+}
+
+function stopCountdownTimer() {
+    if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+    const banner = document.getElementById('countdownBanner');
+    if (banner) banner.style.display = 'none';
+}
+
+// ================================================================
+// HOOK ALL NEW FEATURES INTO EXISTING FLOW
+// ================================================================
+// Called after login is complete
+const _origSetupUI = setupUserInterface;
+function setupUserInterface() {
+    _origSetupUI.call(this);
+    setTimeout(() => {
+        initPushNotifications();
+        detectShiftConflicts();
+        startCountdownTimer();
+    }, 600);
+}
+
+// Called after renderTable to refresh conflict detection & countdown
+const _origRenderTable = renderTable;
+function renderTable() {
+    _origRenderTable.call(this);
+    if (loggedInUser) {
+        detectShiftConflicts();
+        if (countdownInterval) startCountdownTimer(); // refresh
+    }
+}
+
+// Called after logout
+const _origLogout = logout;
+function logout() {
+    stopCountdownTimer();
+    const sec1 = document.getElementById('completionChartSection');
+    const sec2 = document.getElementById('calendarSection');
+    if (sec1) sec1.style.display = 'none';
+    if (sec2) sec2.style.display = 'none';
+    _origLogout.call(this);
+}
+// ================================================================
+// END NEW FEATURES
+// ================================================================
 </script>
 <!-- Scroll to Top Button -->
 <button id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>

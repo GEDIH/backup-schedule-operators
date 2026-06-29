@@ -5050,12 +5050,21 @@ body {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
-    // Auto-initialize EmailJS as soon as the library loads
+    // Auto-initialize EmailJS immediately when library loads — no manual step needed
     (function(){
         if (typeof emailjs !== 'undefined') {
             emailjs.init({ publicKey: 'AkOxQ1p_UcC3AvL1N' });
-            console.log('✅ EmailJS initialized with public key');
+            console.log('✅ EmailJS auto-initialized on page load');
         }
+        // Also force-clear any stale notificationApiConfig from localStorage
+        // so the hardcoded master credentials always take effect
+        try {
+            const cfg = JSON.parse(localStorage.getItem('notificationApiConfig') || '{}');
+            cfg.emailServiceId  = 'service_lsvcr99';
+            cfg.emailTemplateId = 'template_1x9it4q';
+            cfg.emailPublicKey  = 'AkOxQ1p_UcC3AvL1N';
+            localStorage.setItem('notificationApiConfig', JSON.stringify(cfg));
+        } catch(e) {}
     })();
 </script>
 
@@ -6394,10 +6403,11 @@ async function testNotificationToAllOperators() {
     
     // List of all operator emails
     const operatorEmails = [
-        { name: 'DAME TERFASSA', email: 'maldame@gmail.com' },
-        { name: 'TSION GIRMA', email: 'tsion22girma@gmail.com' },
-        { name: 'ABRAHAM CHALA', email: 'abrishc101@gmail.com' },
-        { name: 'BERISO SHIBIRU', email: 'bariidanse2012@gmail.com' }
+        { name: 'DAME TERFASSA',  email: 'dame.terfassa@oromiabank.com' },
+        { name: 'TSION GIRMA',    email: 'tsion.g@orointbank.com' },
+        { name: 'ABRAHAM CHALA',  email: 'abraham.chala@oromiabank.com' },
+        { name: 'BERISO SHIBIRU', email: 'bariso.s@orointbank.com' },
+        { name: 'HAMBISA ADAMU',  email: 'hambisa.adamu@oromiabank.com' }
     ];
     
     const confirmed = confirm(`📧 Send Test Notifications to All Operators?\n\nThis will send test emails to:\n${operatorEmails.map(op => `• ${op.name} (${op.email})`).join('\n')}\n\nContinue?`);
@@ -6499,42 +6509,34 @@ function initAdvancedFeatures() {
 
 // Load API configuration from localStorage
 function loadApiConfiguration() {
-    const savedConfig = JSON.parse(localStorage.getItem('notificationApiConfig') || '{}');
-
-    // Hardcoded defaults — always apply unless user has overridden via config modal
-    const defaults = {
+    // ── MASTER CREDENTIALS (source of truth) ──────────────────────────────
+    // These are always applied. localStorage can only override SMS settings.
+    const MASTER = {
         emailServiceId:  'service_lsvcr99',
         emailTemplateId: 'template_1x9it4q',
         emailPublicKey:  'AkOxQ1p_UcC3AvL1N'
     };
 
-    // Force-reset any stale/wrong template IDs cached in localStorage
-    if (!savedConfig.emailTemplateId ||
-        savedConfig.emailTemplateId === 'template_1s9it4q' ||
-        savedConfig.emailTemplateId === 'template_qiurj0u' ||
-        savedConfig.emailTemplateId === 'TEMPLATE_ID_PENDING') {
-        savedConfig.emailTemplateId = defaults.emailTemplateId;
-        savedConfig.emailServiceId  = defaults.emailServiceId;
-        savedConfig.emailPublicKey  = defaults.emailPublicKey;
-        localStorage.setItem('notificationApiConfig', JSON.stringify(savedConfig));
-        console.log('✅ EmailJS config reset to correct values:', defaults);
-    }
+    // Always apply master email credentials to runtime config
+    EMAIL_API_CONFIG.serviceId  = MASTER.emailServiceId;
+    EMAIL_API_CONFIG.templateId = MASTER.emailTemplateId;
+    EMAIL_API_CONFIG.publicKey  = MASTER.emailPublicKey;
 
-    // Seed localStorage with defaults if not yet saved
-    let needsSave = false;
-    if (!savedConfig.emailServiceId)  { savedConfig.emailServiceId  = defaults.emailServiceId;  needsSave = true; }
-    if (!savedConfig.emailTemplateId) { savedConfig.emailTemplateId = defaults.emailTemplateId; needsSave = true; }
-    if (!savedConfig.emailPublicKey)  { savedConfig.emailPublicKey  = defaults.emailPublicKey;  needsSave = true; }
-    if (needsSave) localStorage.setItem('notificationApiConfig', JSON.stringify(savedConfig));
+    // Always keep localStorage in sync with master credentials
+    const savedConfig = JSON.parse(localStorage.getItem('notificationApiConfig') || '{}');
+    savedConfig.emailServiceId  = MASTER.emailServiceId;
+    savedConfig.emailTemplateId = MASTER.emailTemplateId;
+    savedConfig.emailPublicKey  = MASTER.emailPublicKey;
+    localStorage.setItem('notificationApiConfig', JSON.stringify(savedConfig));
 
-    // Apply to runtime config — always use defaults as fallback
-    EMAIL_API_CONFIG.serviceId  = savedConfig.emailServiceId  || defaults.emailServiceId;
-    EMAIL_API_CONFIG.templateId = savedConfig.emailTemplateId || defaults.emailTemplateId;
-    EMAIL_API_CONFIG.publicKey  = savedConfig.emailPublicKey  || defaults.emailPublicKey;
-
+    // SMS settings — these come from localStorage (user configured)
     if (savedConfig.smsAccountSid) SMS_API_CONFIG.accountSid = savedConfig.smsAccountSid;
     if (savedConfig.smsAuthToken)  SMS_API_CONFIG.authToken  = savedConfig.smsAuthToken;
     if (savedConfig.smsFromNumber) SMS_API_CONFIG.fromNumber = savedConfig.smsFromNumber;
+
+    console.log('✅ EmailJS config loaded → Service:', MASTER.emailServiceId,
+                '| Template:', MASTER.emailTemplateId,
+                '| Key:', MASTER.emailPublicKey.slice(0,8) + '...');
 }
 
 // --- GLOBAL CONSTANTS AND DATA ---
@@ -6560,12 +6562,11 @@ const SMS_API_CONFIG = {
 };
 
 let initialOperators = JSON.parse(localStorage.getItem(INITIAL_OPERATORS_DATA_KEY)) || [
-    // UPDATED INITIAL OPERATOR LIST WITH NEW EMAILS
-    { name: "ABRAHAM CHALA", mobile: "0913564114", email: "abrishc101@gmail.com" },
-    { name: "BERISO SHIBIRU", mobile: "0902911411", email: "bariidanse2012@gmail.com" },
-    { name: "HAMBISA ADAMU", mobile: "0913456466", email: "adamuhambisa033@gmail.com" } ,
-    { name: "DAME TERFASSA", mobile: "0911117524", email: "maldame@gmail.com" },
-    { name: "TSION GIRMA", mobile: "0946700418", email: "tsion22girma@gmail.com" }
+    { name: "ABRAHAM CHALA",  mobile: "0913564114", email: "abraham.chala@oromiabank.com" },
+    { name: "BERISO SHIBIRU", mobile: "0902911411", email: "bariso.s@orointbank.com" },
+    { name: "HAMBISA ADAMU",  mobile: "0913456466", email: "hambisa.adamu@oromiabank.com" },
+    { name: "DAME TERFASSA",  mobile: "0911117524", email: "dame.terfassa@oromiabank.com" },
+    { name: "TSION GIRMA",    mobile: "0946700418", email: "tsion.g@orointbank.com" }
 ];
 
 let operators = JSON.parse(localStorage.getItem('operators') || '[]');
@@ -8932,7 +8933,42 @@ function init() {
     
     // Migrate old cyber security username if exists
     migrateCyberSecurityUsername();
-    
+
+    // ── Migrate operator emails to official addresses ──────────────────────
+    // Replaces any old Gmail addresses with the correct official emails
+    const officialEmails = {
+        'ABRAHAM CHALA':  'abraham.chala@oromiabank.com',
+        'BERISO SHIBIRU': 'bariso.s@orointbank.com',
+        'HAMBISA ADAMU':  'hambisa.adamu@oromiabank.com',
+        'DAME TERFASSA':  'dame.terfassa@oromiabank.com',
+        'TSION GIRMA':    'tsion.g@orointbank.com'
+    };
+    let emailsMigrated = false;
+    initialOperators = initialOperators.map(op => {
+        const correctEmail = officialEmails[op.name.toUpperCase()];
+        if (correctEmail && op.email !== correctEmail) {
+            op.email = correctEmail;
+            emailsMigrated = true;
+        }
+        return op;
+    });
+    if (emailsMigrated) {
+        localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
+        // Also update emails in scheduled shifts
+        let shiftUpdated = false;
+        operators = operators.map(op => {
+            const correctEmail = officialEmails[op.name.toUpperCase()];
+            if (correctEmail && op.email !== correctEmail) {
+                op.email = correctEmail;
+                shiftUpdated = true;
+            }
+            return op;
+        });
+        if (shiftUpdated) localStorage.setItem('operators', JSON.stringify(operators));
+        console.log('✅ Operator emails migrated to official addresses');
+    }
+    // ── End email migration ────────────────────────────────────────────────
+
     // Set initial body class for login state
     document.body.classList.add('login-active');
     
@@ -9526,12 +9562,12 @@ function resetAll() {
         localStorage.removeItem(NOTIFICATION_LOG_KEY); // NEW
         localStorage.removeItem(NOTIFICATION_SETTINGS_KEY); // NEW
 
-        initialOperators = [ // Reset to initial state with emails
-            { name: "ABRAHAM CHALA", mobile: "0913564114", email: "abrishc101@gmail.com" },
-            { name: "BERISO SHIBIRU", mobile: "0902911411", email: "bariidanse2012@gmail.com" },
-            { name: "HAMBISA ADAMU", mobile: "0913456466", email: "adamuhambisa033@gmail.com" } ,
-            { name: "DAME TERFASSA", mobile: "0911117524", email: "maldame@gmail.com" },
-            { name: "TSION GIRMA", mobile: "0946700418", email: "tsion22girma@gmail.com" }
+        initialOperators = [ // Reset to initial state with correct official emails
+            { name: "ABRAHAM CHALA",  mobile: "0913564114", email: "abraham.chala@oromiabank.com" },
+            { name: "BERISO SHIBIRU", mobile: "0902911411", email: "bariso.s@orointbank.com" },
+            { name: "HAMBISA ADAMU",  mobile: "0913456466", email: "hambisa.adamu@oromiabank.com" },
+            { name: "DAME TERFASSA",  mobile: "0911117524", email: "dame.terfassa@oromiabank.com" },
+            { name: "TSION GIRMA",    mobile: "0946700418", email: "tsion.g@orointbank.com" }
         ];
         localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
 

@@ -3635,9 +3635,396 @@ body {
 /* ========================================
    END PLATFORM-SPECIFIC OPTIMIZATIONS
    ======================================== */
+
+/* ===== ADVANCED ENHANCEMENT STYLES ===== */
+
+/* === STICKY TOPBAR === */
+.sticky-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 500;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: white;
+    padding: 10px 20px;
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    gap: 15px;
+    flex-wrap: wrap;
+}
+.sticky-topbar.visible {
+    display: flex;
+}
+.topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 800;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+}
+.topbar-brand img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid #94C83D;
+}
+.topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.topbar-btn {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.1);
+    color: white;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+.topbar-btn:hover {
+    background: rgba(148,200,61,0.8);
+    border-color: #94C83D;
+    transform: translateY(-1px);
+}
+.topbar-btn.active {
+    background: rgba(148,200,61,0.9);
+    border-color: #94C83D;
+}
+.topbar-clock {
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0.9;
+    background: rgba(255,255,255,0.1);
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.2);
+    min-width: 80px;
+    text-align: center;
+}
+
+/* === KPI SUMMARY CARDS === */
+.kpi-bar {
+    display: none;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin: 0 auto 20px auto;
+    max-width: 1000px;
+    padding: 0 5px;
+}
+.kpi-bar.visible {
+    display: grid;
+}
+.kpi-card {
+    background: white;
+    border-radius: 12px;
+    padding: 14px 16px;
+    text-align: center;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    border-top: 4px solid #94C83D;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: default;
+}
+.kpi-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+}
+.kpi-card.kpi-blue { border-top-color: #007bff; }
+.kpi-card.kpi-green { border-top-color: #28a745; }
+.kpi-card.kpi-orange { border-top-color: #fd7e14; }
+.kpi-card.kpi-purple { border-top-color: #6f42c1; }
+.kpi-card.kpi-red { border-top-color: #dc3545; }
+.kpi-card.kpi-teal { border-top-color: #17a2b8; }
+.kpi-icon {
+    font-size: 24px;
+    margin-bottom: 6px;
+    display: block;
+}
+.kpi-value {
+    font-size: 22px;
+    font-weight: 800;
+    color: #333;
+    line-height: 1;
+    margin-bottom: 4px;
+}
+.kpi-label {
+    font-size: 11px;
+    color: #888;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* === IMPROVED NOTIFICATION BANNER === */
+#notificationBanner {
+    display: none;
+    margin: 10px auto 15px auto;
+    max-width: 1000px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(255,160,0,0.3);
+    border: none;
+    padding: 0;
+}
+.banner-inner {
+    background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+    border-left: 6px solid #ffc107;
+    padding: 15px 20px;
+    position: relative;
+}
+.banner-inner::before {
+    content: '🔔';
+    position: absolute;
+    left: -2px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+}
+.banner-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: #856404;
+    margin-bottom: 5px;
+    padding-left: 20px;
+}
+.banner-detail {
+    font-size: 13px;
+    color: #533f03;
+    padding-left: 20px;
+    margin: 3px 0;
+}
+.banner-detail strong {
+    color: #cc0000;
+}
+
+/* === IMPROVED CONTROLS PANEL === */
+.controls {
+    max-width: 1000px;
+    margin: 15px auto;
+}
+.controls-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+.controls h3 {
+    font-size: 14px;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #94C83D;
+    padding-bottom: 5px;
+    margin: 15px 0 10px;
+}
+
+/* === IMPROVED TABLE STYLING === */
+#scheduleTable thead th {
+    position: sticky;
+    top: 0;
+    background: linear-gradient(135deg, #94C83D, #7DAE2F) !important;
+    color: white !important;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 12px 10px;
+    white-space: nowrap;
+    z-index: 2;
+}
+#scheduleTable tbody tr {
+    transition: background-color 0.15s;
+}
+#scheduleTable tbody tr:hover:not(.highlight-today):not(.highlight-next):not(.highlight-finished) {
+    background-color: #e8f5d8 !important;
+    box-shadow: inset 3px 0 0 #94C83D;
+}
+
+/* === STATUS BADGES === */
+.status-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+.badge-active {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+.badge-finished {
+    background: #e2e3e5;
+    color: #383d41;
+    border: 1px solid #d6d8db;
+}
+.badge-today {
+    background: linear-gradient(135deg, #ffc107, #e0a800);
+    color: #333;
+    border: none;
+    box-shadow: 0 2px 6px rgba(255,193,7,0.4);
+    animation: badgePulse 2s ease-in-out infinite;
+}
+@keyframes badgePulse {
+    0%, 100% { box-shadow: 0 2px 6px rgba(255,193,7,0.4); }
+    50% { box-shadow: 0 4px 12px rgba(255,193,7,0.7); }
+}
+.badge-next {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    border: none;
+    box-shadow: 0 2px 6px rgba(40,167,69,0.3);
+}
+
+/* === ROW HIGHLIGHTS IMPROVED === */
+.highlight-today {
+    background: linear-gradient(90deg, rgba(255,234,0,0.4), rgba(255,234,0,0.15)) !important;
+    border-left: 4px solid #ffc107 !important;
+}
+.highlight-next {
+    background: linear-gradient(90deg, rgba(200,255,200,0.5), rgba(200,255,200,0.2)) !important;
+    border-left: 4px solid #28a745 !important;
+}
+
+/* === COPY BUTTON === */
+.copy-btn {
+    padding: 2px 7px;
+    background: #e9ecef;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 11px;
+    transition: all 0.2s;
+    color: #495057;
+    margin-left: 4px;
+    vertical-align: middle;
+}
+.copy-btn:hover {
+    background: #94C83D;
+    color: white;
+    border-color: #7DAE2F;
+}
+
+/* === SCROLL TO TOP BUTTON === */
+#scrollTopBtn {
+    position: fixed;
+    bottom: 30px;
+    right: 25px;
+    background: linear-gradient(135deg, #94C83D, #7DAE2F);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(148,200,61,0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+    z-index: 9999;
+}
+#scrollTopBtn:hover {
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 8px 25px rgba(148,200,61,0.6);
+}
+#scrollTopBtn.show {
+    display: flex;
+}
+
+/* === ENHANCED FOOTER === */
+.enhanced-footer {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%) !important;
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.2), 0 5px 15px rgba(0,0,0,0.1) !important;
+}
+.footer-text { font-size: 13px; }
+.footer-developer-credit { font-size: 12px; }
+.developer-highlight {
+    color: #94C83D !important;
+}
+
+/* === PRINT IMPROVEMENTS === */
+@media print {
+    .sticky-topbar, .kpi-bar, #scrollTopBtn { display: none !important; }
+}
+
+/* === RESPONSIVE TOPBAR === */
+@media (max-width: 600px) {
+    .sticky-topbar { padding: 8px 12px; gap: 8px; }
+    .topbar-brand { font-size: 13px; }
+    .topbar-clock { font-size: 11px; padding: 4px 8px; }
+    .topbar-btn { padding: 5px 10px; font-size: 11px; }
+    .kpi-bar { gap: 8px; }
+    .kpi-card { padding: 10px 12px; }
+    .kpi-value { font-size: 18px; }
+    .kpi-label { font-size: 10px; }
+    .kpi-icon { font-size: 20px; }
+}
+/* ===== END ADVANCED ENHANCEMENT STYLES ===== */
 </style>
 </head>
 <body>
+<!-- Sticky Topbar (shown after login) -->
+<div class="sticky-topbar" id="stickyTopbar">
+    <div class="topbar-brand">
+        <img src="images/oroo logo.png" alt="Oromia Bank">
+        <span>Oromia Bank — Backup Schedule</span>
+    </div>
+    <div class="topbar-actions" id="topbarActions">
+        <span class="topbar-clock" id="topbarClock">--:--</span>
+        <button class="topbar-btn" onclick="toggleAnalytics()" id="topbarAnalyticsBtn">📊 Analytics</button>
+        <button class="topbar-btn" onclick="toggleAdvancedSearch()" id="topbarSearchBtn">🔍 Search</button>
+        <button class="topbar-btn" onclick="exportToExcel()" id="topbarExportBtn">📥 Export</button>
+        <button class="topbar-btn" onclick="downloadPdf()" id="topbarPdfBtn">🖨️ PDF</button>
+        <button class="topbar-btn" onclick="openLogoutConfirmModal()" id="topbarLogoutBtn" style="border-color: #dc3545; color: #ff6b6b;">🚪 Logout</button>
+    </div>
+</div>
+
+<!-- KPI Summary Cards -->
+<div class="kpi-bar" id="kpiBar">
+    <div class="kpi-card kpi-green">
+        <span class="kpi-icon">🟢</span>
+        <div class="kpi-value" id="kpiActiveShifts">0</div>
+        <div class="kpi-label">Active Shifts</div>
+    </div>
+    <div class="kpi-card kpi-blue">
+        <span class="kpi-icon">📅</span>
+        <div class="kpi-value" id="kpiTodayOp">—</div>
+        <div class="kpi-label">Today's Operator</div>
+    </div>
+    <div class="kpi-card kpi-orange">
+        <span class="kpi-icon">⏭️</span>
+        <div class="kpi-value" id="kpiNextOp">—</div>
+        <div class="kpi-label">Next Operator</div>
+    </div>
+    <div class="kpi-card kpi-purple">
+        <span class="kpi-icon">👥</span>
+        <div class="kpi-value" id="kpiTotalOps">0</div>
+        <div class="kpi-label">Total Operators</div>
+    </div>
+    <div class="kpi-card kpi-teal">
+        <span class="kpi-icon">✅</span>
+        <div class="kpi-value" id="kpiCompletedShifts">0</div>
+        <div class="kpi-label">Completed Shifts</div>
+    </div>
+    <div class="kpi-card kpi-red">
+        <span class="kpi-icon">⏳</span>
+        <div class="kpi-value" id="kpiDaysLeft">0</div>
+        <div class="kpi-label">Days Remaining</div>
+    </div>
+</div>
+
 <div class="logo-container">
     <img src="images/oroo logo.png" alt="Oromia Bank">
 </div>
@@ -7918,6 +8305,8 @@ function setupUserInterface() {
     
     // Initialize session activity listeners
     initSessionActivityListeners();
+    showStickyTopbar();
+    updateKpiBar();
 }
 
 // --- ENHANCED AUTHENTICATION FUNCTION ---
@@ -8085,6 +8474,8 @@ function authenticate() {
                 }
                 
                 showToast(`Welcome back, ${loggedInUser}!`, 'success');
+                showStickyTopbar();
+                updateKpiBar();
             }, 500);
         }, 1000);
     }
@@ -8092,6 +8483,7 @@ function authenticate() {
 
 function logout() {
     logAuditAction('LOGOUT', `User ${loggedInUser} logged out.`);
+    hideStickyTopbar();
     isAdmin = false;
     isRestrictedAdmin = false;
     isCyberSecurity = false;
@@ -8318,6 +8710,9 @@ function checkAndRenderNotification(isInitialAdminLogin = false) {
                 </div>
             `;
             banner.innerHTML = bannerContent;
+            banner.style.padding = '0';
+            banner.style.background = 'transparent';
+            banner.style.border = 'none';
             banner.style.display = 'block';
 
             // --- NEW ADMIN MONITORING ACTION ---
@@ -8524,7 +8919,7 @@ function renderTable() {
             <td>${op.checkedBy}</td>
             <td>${op.mobile}</td>
             <td>${formatDate(op.start)} - ${formatDate(op.end)}</td>
-            <td>${addStatusIndicator(op.status)}${op.status}</td>
+            <td>${addStatusIndicator(op.status)}<span class="status-badge badge-${op.status === 'Active' ? 'active' : 'finished'}">${op.status}</span></td>
             <td>${actionHtml}</td>
         `;
         tbody.appendChild(tr);
@@ -8534,6 +8929,8 @@ function renderTable() {
     populateFilter();
     renderNextShifts();
     checkAndRenderNotification();
+    // Update KPI bar after table renders
+    if (loggedInUser) { try { updateKpiBar(); } catch(e) {} }
 }
 
 function renderNextShifts() {
@@ -9398,6 +9795,88 @@ ${smsMessage}
     
     document.body.appendChild(previewModal);
 }
+
+// === KPI BAR & TOPBAR ENHANCEMENTS ===
+
+function updateKpiBar() {
+    try {
+        const activeShifts = operators.filter(op => op.status === 'Active').length;
+        const completedShifts = operators.filter(op => op.status === 'Finished').length;
+        const totalOps = initialOperators.length;
+
+        // Find today's operator
+        const todayOp = operators.find(op => {
+            const s = getCleanDate(op.start), e = getCleanDate(op.end);
+            return today.getTime() >= s.getTime() && today.getTime() <= e.getTime() && op.status === 'Active';
+        });
+
+        // Find next operator
+        const nextOp = operators.find(op => {
+            const s = getCleanDate(op.start);
+            return s.getTime() > today.getTime() && op.status === 'Active';
+        });
+
+        // Days remaining in current shift
+        let daysLeft = '—';
+        if (todayOp) {
+            daysLeft = daysBetween(today, getCleanDate(todayOp.end));
+        }
+
+        const kpiBar = document.getElementById('kpiBar');
+        if (kpiBar) kpiBar.classList.add('visible');
+
+        const el = id => document.getElementById(id);
+        if (el('kpiActiveShifts')) el('kpiActiveShifts').textContent = activeShifts;
+        if (el('kpiTodayOp')) el('kpiTodayOp').textContent = todayOp ? todayOp.name.split(' ')[0] : '—';
+        if (el('kpiNextOp')) el('kpiNextOp').textContent = nextOp ? nextOp.name.split(' ')[0] : '—';
+        if (el('kpiTotalOps')) el('kpiTotalOps').textContent = totalOps;
+        if (el('kpiCompletedShifts')) el('kpiCompletedShifts').textContent = completedShifts;
+        if (el('kpiDaysLeft')) el('kpiDaysLeft').textContent = daysLeft;
+    } catch(e) { console.warn('KPI update failed:', e); }
+}
+
+function showStickyTopbar() {
+    const tb = document.getElementById('stickyTopbar');
+    if (tb) tb.classList.add('visible');
+    startTopbarClock();
+}
+
+function hideStickyTopbar() {
+    const tb = document.getElementById('stickyTopbar');
+    if (tb) tb.classList.remove('visible');
+    const kpi = document.getElementById('kpiBar');
+    if (kpi) kpi.classList.remove('visible');
+    stopTopbarClock();
+}
+
+let clockInterval = null;
+function startTopbarClock() {
+    if (clockInterval) clearInterval(clockInterval);
+    const tick = () => {
+        const el = document.getElementById('topbarClock');
+        if (el) {
+            const now = new Date();
+            el.textContent = now.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:true});
+        }
+    };
+    tick();
+    clockInterval = setInterval(tick, 1000);
+}
+
+function stopTopbarClock() {
+    if (clockInterval) { clearInterval(clockInterval); clockInterval = null; }
+}
+
+// Scroll to top button
+window.addEventListener('scroll', function() {
+    const btn = document.getElementById('scrollTopBtn');
+    if (btn) {
+        if (window.scrollY > 300) btn.classList.add('show');
+        else btn.classList.remove('show');
+    }
+});
 </script>
+<!-- Scroll to Top Button -->
+<button id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
 </body>
 </html>

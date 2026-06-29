@@ -9396,11 +9396,17 @@ function renderTable() {
 
         let actionHtml = '';
         if (isAdmin) {
+            // Get master operator details for WhatsApp
+            const masterOp = initialOperators.find(io => io.name === op.name) || op;
             actionHtml = `
                 <button class="swap-btn" onclick="event.stopPropagation(); openSwapModal(${globalIndex})">Swap</button>
                 <button class="rename-btn" onclick="event.stopPropagation(); openRenameModal(${globalIndex})">Rename</button>
                 <button class="delete-btn" onclick="event.stopPropagation(); deleteOperatorShift(${globalIndex})">Delete</button>
                 ${op.status === 'Finished' ? `<button class="reset-status-btn" onclick="event.stopPropagation(); resetShiftStatus(${globalIndex})">Reset Status</button>` : ''}
+                <button onclick="event.stopPropagation(); sendWhatsAppNotification({name:'${op.name.replace(/'/g,"\\'")}',mobile:'${masterOp.mobile}',email:'${masterOp.email}'},{start:'${op.start}',end:'${op.end}'},'reminder')"
+                        style="padding:4px 8px; border:none; border-radius:4px; cursor:pointer; margin:2px; font-size:12px; background:linear-gradient(135deg,#25D366,#128C7E); color:white; font-weight:600;">
+                    💬 WhatsApp
+                </button>
             `;
         } else if (isOperator && op.name.toUpperCase() === loggedInUser && op.status === 'Active') {
             // Get current backup status for today
@@ -9453,6 +9459,15 @@ function renderTable() {
                     </div>
                 `;
             }
+        } else if (isManager) {
+            // Manager can send WhatsApp to any operator
+            const masterOp = initialOperators.find(io => io.name === op.name) || op;
+            actionHtml = `
+                <button onclick="event.stopPropagation(); sendWhatsAppNotification({name:'${op.name.replace(/'/g,"\\'")}',mobile:'${masterOp.mobile}',email:'${masterOp.email}'},{start:'${op.start}',end:'${op.end}'},'reminder')"
+                        style="padding:5px 10px; border:none; border-radius:6px; cursor:pointer; font-size:12px; background:linear-gradient(135deg,#25D366,#128C7E); color:white; font-weight:700;">
+                    💬 WhatsApp
+                </button>
+            `;
         } else {
             actionHtml = `&nbsp;`;
         }

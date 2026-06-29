@@ -8771,6 +8771,8 @@ function setupUserInterface() {
     initSessionActivityListeners();
     showStickyTopbar();
     updateKpiBar();
+    // Initialize new advanced features
+    setTimeout(() => initNewFeatures(), 700);
 }
 
 // --- ENHANCED AUTHENTICATION FUNCTION ---
@@ -8967,6 +8969,12 @@ function authenticate() {
 function logout() {
     logAuditAction('LOGOUT', `User ${loggedInUser} logged out.`);
     hideStickyTopbar();
+    // Clean up new features
+    stopCountdownTimer();
+    const _cs1 = document.getElementById('completionChartSection');
+    const _cs2 = document.getElementById('calendarSection');
+    if (_cs1) _cs1.style.display = 'none';
+    if (_cs2) _cs2.style.display = 'none';
     isAdmin = false;
     isRestrictedAdmin = false;
     isCyberSecurity = false;
@@ -9467,6 +9475,8 @@ function renderTable() {
     checkAndRenderNotification();
     // Update KPI bar after table renders
     if (loggedInUser) { try { updateKpiBar(); } catch(e) {} }
+    // Refresh new features
+    if (loggedInUser) { try { refreshNewFeatures(); } catch(e) {} }
 }
 
 function renderNextShifts() {
@@ -10926,36 +10936,19 @@ function stopCountdownTimer() {
 // ================================================================
 // HOOK ALL NEW FEATURES INTO EXISTING FLOW
 // ================================================================
-// Called after login is complete
-const _origSetupUI = setupUserInterface;
-function setupUserInterface() {
-    _origSetupUI.call(this);
-    setTimeout(() => {
-        initPushNotifications();
-        detectShiftConflicts();
-        startCountdownTimer();
-    }, 600);
+// These are called directly from the existing functions via
+// initNewFeatures() — no function overrides needed.
+
+function initNewFeatures() {
+    initPushNotifications();
+    detectShiftConflicts();
+    startCountdownTimer();
 }
 
-// Called after renderTable to refresh conflict detection & countdown
-const _origRenderTable = renderTable;
-function renderTable() {
-    _origRenderTable.call(this);
-    if (loggedInUser) {
-        detectShiftConflicts();
-        if (countdownInterval) startCountdownTimer(); // refresh
-    }
-}
-
-// Called after logout
-const _origLogout = logout;
-function logout() {
-    stopCountdownTimer();
-    const sec1 = document.getElementById('completionChartSection');
-    const sec2 = document.getElementById('calendarSection');
-    if (sec1) sec1.style.display = 'none';
-    if (sec2) sec2.style.display = 'none';
-    _origLogout.call(this);
+function refreshNewFeatures() {
+    if (!loggedInUser) return;
+    detectShiftConflicts();
+    startCountdownTimer();
 }
 // ================================================================
 // END NEW FEATURES

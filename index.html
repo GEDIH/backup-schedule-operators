@@ -4552,7 +4552,7 @@ body {
         <div id="adminMonitoringStatus"></div>
 
         <!-- ── Section 1: Schedule Generation ── -->
-        <div class="admin-section">
+        <div class="admin-section" data-section="schedule">
             <div class="admin-section-title">
                 <span class="section-icon icon-green">📅</span>
                 Schedule Generation &amp; Utilities
@@ -4566,10 +4566,10 @@ body {
             </div>
         </div>
 
-        <div class="admin-divider"></div>
+        <div class="admin-divider" data-divider="schedule"></div>
 
         <!-- ── Section 2: Send Notifications ── -->
-        <div class="admin-section">
+        <div class="admin-section" data-section="notifications">
             <div class="admin-section-title">
                 <span class="section-icon icon-purple">📨</span>
                 Send Notifications to Operators
@@ -4581,9 +4581,9 @@ body {
             </div>
         </div>
 
-        <div class="admin-divider"></div>
-        <!-- ── Section 3: Send Notifications ── -->
-        <div class="admin-section">
+        <div class="admin-divider" data-divider="notifications"></div>
+        <!-- ── Section 3: Auto Notifications ── -->
+        <div class="admin-section" data-section="autonotify">
             <div class="admin-section-title">
                 <span class="section-icon icon-blue">📤</span>
                 Send Notifications
@@ -9102,37 +9102,19 @@ function scrollToAdminActions() {
 
 // ── MANAGER: hide buttons that are admin-only inside the shared panel ──────
 function hideManagerRestrictedButtons() {
-    // Buttons the Manager should NOT see (schedule generation & data management)
-    const adminOnlySelectors = [
-        'button[onclick="generateScheduleButton()"]',
-        'button[onclick="resetAll()"]',
-        'button[onclick="openAuditLogView()"]',
-        'button[onclick="createSampleBackupData()"]',
-        'button[onclick="debugBackupData()"]',
-        'button[onclick="openNotificationConfigModal()"]'
-    ];
-    adminOnlySelectors.forEach(sel => {
-        const btn = document.querySelector(sel);
-        if (btn) btn.style.display = 'none';
-    });
+    // Hide Section 1 (Schedule Generation) and its divider — Manager doesn't need these
+    const scheduleSection = document.querySelector('[data-section="schedule"]');
+    const scheduleDivider = document.querySelector('[data-divider="schedule"]');
+    if (scheduleSection) scheduleSection.style.display = 'none';
+    if (scheduleDivider) scheduleDivider.style.display = 'none';
+
+    // Hide "Configure APIs" button — only admin should change API keys
+    const configBtn = document.querySelector('button[onclick="openNotificationConfigModal()"]');
+    if (configBtn) configBtn.style.display = 'none';
 
     // Update the panel header subtitle for manager context
     const subtitle = document.querySelector('.admin-panel-header p');
     if (subtitle) subtitle.textContent = `Notification Manager: ${MANAGER_NAME}`;
-
-    // Hide the "Schedule Generation" section title row
-    const sections = document.querySelectorAll('.admin-section-title');
-    sections.forEach(sec => {
-        if (sec.textContent.includes('Schedule Generation')) {
-            sec.closest('.admin-section').style.display = 'none';
-        }
-        if (sec.textContent.includes('Notification API') || 
-            sec.textContent.includes('Send Notifications to Operators')) {
-            // Keep visible — manager needs this section
-            sec.querySelector('span:last-child') &&
-            (sec.querySelector('span:last-child').textContent = 'Send Notifications to Operators');
-        }
-    });
 }
 
 // --- Schedule Render and Highlight ---

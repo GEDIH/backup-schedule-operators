@@ -4568,21 +4568,20 @@ body {
 
         <div class="admin-divider"></div>
 
-        <!-- ── Section 2: Notification APIs ── -->
+        <!-- ── Section 2: Send Notifications ── -->
         <div class="admin-section">
             <div class="admin-section-title">
-                <span class="section-icon icon-purple">⚙️</span>
-                Notification API &amp; Testing
+                <span class="section-icon icon-purple">📨</span>
+                Send Notifications to Operators
             </div>
             <div class="admin-btn-grid">
                 <button class="admin-btn btn-gray"   onclick="openNotificationConfigModal()">⚙️ Configure APIs</button>
-                <button class="admin-btn btn-purple" onclick="testNotificationSystem()">🧪 Test Notification</button>
-                <button class="admin-btn btn-pink"   onclick="testNotificationToAllOperators()">📧 Test All Operators</button>
+                <button class="admin-btn btn-purple" onclick="testNotificationSystem()">📨 Send Notification</button>
+                <button class="admin-btn btn-pink"   onclick="testNotificationToAllOperators()">📧 Send to All Operators</button>
             </div>
         </div>
 
         <div class="admin-divider"></div>
-
         <!-- ── Section 3: Send Notifications ── -->
         <div class="admin-section">
             <div class="admin-section-title">
@@ -9127,10 +9126,11 @@ function hideManagerRestrictedButtons() {
         if (sec.textContent.includes('Schedule Generation')) {
             sec.closest('.admin-section').style.display = 'none';
         }
-        if (sec.textContent.includes('Notification API')) {
-            // Keep visible but rename for manager
-            sec.querySelector('span:last-child') && 
-            (sec.querySelector('span:last-child').textContent = 'Notification Testing');
+        if (sec.textContent.includes('Notification API') || 
+            sec.textContent.includes('Send Notifications to Operators')) {
+            // Keep visible — manager needs this section
+            sec.querySelector('span:last-child') &&
+            (sec.querySelector('span:last-child').textContent = 'Send Notifications to Operators');
         }
     });
 }

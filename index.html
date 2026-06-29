@@ -7509,7 +7509,7 @@ function selectUserType(type) {
         case 'manager':
             usernameInput.placeholder = 'Enter manager username';
             usernameInput.value = 'manager';
-            passwordInput.placeholder = 'Enter manager password';
+            passwordInput.placeholder = `Password for ${MANAGER_NAME}`;
             break;
     }
     
@@ -8849,8 +8849,9 @@ function authenticate() {
 
                 renderTable();
                 if (isAdmin) renderOperatorManagementTable();
-                checkAndRenderNotification(true); // Pass flag to check for initial admin alert
-                logAuditAction('LOGIN', `User ${loggedInUser} logged in successfully.`);
+                checkAndRenderNotification(true);
+                const displayName = isManager ? MANAGER_NAME : loggedInUser;
+                logAuditAction('LOGIN', `User ${displayName} logged in successfully.`);
                 
                 // Start advanced features
                 startAutoSave();
@@ -9118,7 +9119,7 @@ function hideManagerRestrictedButtons() {
 
     // Update the panel header subtitle for manager context
     const subtitle = document.querySelector('.admin-panel-header p');
-    if (subtitle) subtitle.textContent = 'Notification management & operator monitoring';
+    if (subtitle) subtitle.textContent = `Notification Manager: ${MANAGER_NAME}`;
 
     // Hide the "Schedule Generation" section title row
     const sections = document.querySelectorAll('.admin-section-title');
@@ -10311,6 +10312,11 @@ function updateKpiBar() {
 function showStickyTopbar() {
     const tb = document.getElementById('stickyTopbar');
     if (tb) tb.classList.add('visible');
+    // Show real name in topbar brand for Manager
+    if (isManager) {
+        const brand = document.querySelector('.topbar-brand span');
+        if (brand) brand.textContent = `Oromia Bank — ${MANAGER_NAME} (Manager)`;
+    }
     startTopbarClock();
 }
 

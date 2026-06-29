@@ -4152,6 +4152,9 @@ body {
                 <button type="button" class="user-type-btn" onclick="selectUserType('viewer')">
                     👁️ Viewer
                 </button>
+                <button type="button" class="user-type-btn" onclick="selectUserType('manager')">
+                    📋 Manager
+                </button>
                 <button type="button" class="user-type-btn" onclick="selectUserType('cybersecurity')">
                     🔒 Cyber Security
                 </button>
@@ -6334,7 +6337,7 @@ function closeHelpModal() {
 
 // --- TEST NOTIFICATION SYSTEM ---
 async function testNotificationSystem() {
-    if (!isAdmin) return;
+    if (!isAdmin && !isManager) return;
     
     // Prompt for test email address
     const testEmail = prompt('Enter your Gmail address to receive the test notification:', 'your.email@gmail.com');
@@ -6399,7 +6402,7 @@ async function testNotificationSystem() {
 
 // --- TEST NOTIFICATION TO ALL OPERATORS ---
 async function testNotificationToAllOperators() {
-    if (!isAdmin) return;
+    if (!isAdmin && !isManager) return;
     
     // List of all operator emails
     const operatorEmails = [
@@ -6577,6 +6580,7 @@ let notificationSettings = JSON.parse(localStorage.getItem(NOTIFICATION_SETTINGS
 let isAdmin = false;    
 let isRestrictedAdmin = false;
 let isCyberSecurity = false;
+let isManager = false;       // ✅ NEW: Manager role
 let isOperator = false;
 let loggedInUser = null;    
 let renameTargetGlobalIndex = null;
@@ -6591,6 +6595,12 @@ const CYBER_SECURITY_PWD = 'CyberSec@2025!';
 
 const RESTRICTED_ADMIN_PWD = 'view123';    
 const RESTRICTED_ADMIN_USER = 'view'; 
+
+// ✅ Manager role — notification control only, not an operator
+const MANAGER_USER = 'manager';
+const MANAGER_PWD  = 'Manager@2025!';
+const MANAGER_NAME = 'Ketema Gudeta';   // display name
+
 const DEFAULT_OPERATOR_PWD = 'op123';    
 
 const SHIFT_LENGTH = 10; 
@@ -7140,7 +7150,7 @@ async function sendNotificationToOperator(operatorData, shiftData, notificationT
 }
 
 function saveNotificationSettings() {
-    if (!isAdmin) return;
+    if (!isAdmin && !isManager) return;
     const days = parseInt(document.getElementById('notifyDays').value);
     if (isNaN(days) || days < 1 || days > 30) {
         alert('Please enter a valid number of days (1-30).');
@@ -7183,16 +7193,16 @@ function startAutomaticNotifications() {
     
     // Check for notifications every hour (3600000 ms) for more reliable delivery
     window.notificationInterval = setInterval(() => {
-        if (isAdmin || isRestrictedAdmin) {
+        if (isAdmin || isRestrictedAdmin || isManager) {
             console.log('[Automatic Check] Running scheduled notification check...');
             checkAndSendNotifications(false);
-            updateNextCheckTime(); // Update next check time after each check
+            updateNextCheckTime();
         }
-    }, 3600000); // 1 hour
-    
+    }, 3600000);
+
     // Also check immediately when starting
     setTimeout(() => {
-        if (isAdmin || isRestrictedAdmin) {
+        if (isAdmin || isRestrictedAdmin || isManager) {
             console.log('[Initial Check] Running initial notification check...');
             checkAndSendNotifications(false);
         }
@@ -7243,7 +7253,7 @@ function renderNotificationLog() {
 }
 
 function openNotificationLogView() {
-    if (!isAdmin) return;
+    if (!isAdmin && !isManager) return;
     renderNotificationLog();
     document.getElementById('notificationLogModal').style.display = 'block';
 }
@@ -7253,7 +7263,7 @@ function closeNotificationLogView() {
 }
 
 function clearNotificationLog() {
-    if (!isAdmin) return;
+    if (!isAdmin && !isManager) return;
     if (confirm("WARNING: This will permanently clear the entire Notification Log.")) {
         notificationLog = [];
         localStorage.removeItem(NOTIFICATION_LOG_KEY);
@@ -7495,6 +7505,11 @@ function selectUserType(type) {
             usernameInput.placeholder = 'Enter cyber security username';
             usernameInput.value = 'A-0891@oib.com';
             passwordInput.placeholder = 'Enter cyber security password';
+            break;
+        case 'manager':
+            usernameInput.placeholder = 'Enter manager username';
+            usernameInput.value = 'manager';
+            passwordInput.placeholder = 'Enter manager password';
             break;
     }
     
@@ -8448,6 +8463,7 @@ function saveSessionState() {
         isAdmin: isAdmin,
         isRestrictedAdmin: isRestrictedAdmin,
         isCyberSecurity: isCyberSecurity,
+        isManager: isManager,
         isOperator: isOperator,
         loggedInUser: loggedInUser,
         loginTime: new Date().toISOString()
@@ -8478,6 +8494,7 @@ function restoreSessionState() {
                 isAdmin = session.isAdmin || false;
                 isRestrictedAdmin = session.isRestrictedAdmin || false;
                 isCyberSecurity = session.isCyberSecurity || false;
+                isManager = session.isManager || false;
                 isOperator = session.isOperator || false;
                 loggedInUser = session.loggedInUser;
                 
@@ -8568,10 +8585,22 @@ function setupUserInterface() {
         document.getElementById('operatorManagementView').style.display = 'block';
         document.getElementById('adminActionsBtn').style.display = 'inline-block';
         document.getElementById('auditLogView').style.display = 'none';
-        
-        // Show filter for admin
         document.getElementById('filterLabel').style.display = 'inline-block';
         document.getElementById('operatorFilter').style.display = 'inline-block';
+
+    } else if (isManager) {
+        // MANAGER: See schedule + full notification controls, no admin data management
+        document.getElementById('adminControls').style.display = 'block';  // show panel
+        document.getElementById('operatorManagementView').style.display = 'none';
+        document.getElementById('adminActionsBtn').style.display = 'none';
+        document.getElementById('analyticsBtn').style.display = 'inline-block';
+        document.getElementById('advancedSearchBtn').style.display = 'inline-block';
+        document.getElementById('exportExcelBtn').style.display = 'inline-block';
+        document.getElementById('helpBtn').style.display = 'inline-block';
+        document.getElementById('filterLabel').style.display = 'inline-block';
+        document.getElementById('operatorFilter').style.display = 'inline-block';
+        // Hide schedule generation & data buttons — manager only controls notifications
+        setTimeout(() => hideManagerRestrictedButtons(), 100);
     } else if (isCyberSecurity) {
         // CYBER SECURITY: Hide admin controls, only show export
         document.getElementById('adminControls').style.display = 'none';
@@ -8614,7 +8643,7 @@ function setupUserInterface() {
         }
         cyberResetBtn.style.display = 'inline-block';
     } else if (isRestrictedAdmin) {
-        // RESTRICTED ADMIN (VIEWER): Hide admin controls
+        // RESTRICTED ADMIN (VIEWER): read-only schedule view
         document.getElementById('adminControls').style.display = 'none';
         document.getElementById('operatorManagementView').style.display = 'none';
         document.getElementById('adminActionsBtn').style.display = 'none';
@@ -8622,8 +8651,6 @@ function setupUserInterface() {
         document.getElementById('advancedSearchBtn').style.display = 'inline-block';
         document.getElementById('exportExcelBtn').style.display = 'inline-block';
         document.getElementById('helpBtn').style.display = 'inline-block';
-        
-        // Show filter for restricted admin
         document.getElementById('filterLabel').style.display = 'inline-block';
         document.getElementById('operatorFilter').style.display = 'inline-block';
     } else if (isOperator) {
@@ -8676,6 +8703,7 @@ function authenticate() {
     isAdmin = false;
     isRestrictedAdmin = false;
     isCyberSecurity = false;
+    isManager = false;
     isOperator = false;
     loggedInUser = null;
 
@@ -8718,10 +8746,17 @@ function authenticate() {
     else if (lowerUsername === RESTRICTED_ADMIN_USER && password === RESTRICTED_ADMIN_PWD) {
         isRestrictedAdmin = true;
         loggedInUser = RESTRICTED_ADMIN_USER;
-        saveSessionState(); // Save session
+        saveSessionState();
         showLoginSuccess('Welcome Viewer! Redirecting...');
     }
-    // 4. Check Regular Operator
+    // 4. Check Manager
+    else if (lowerUsername === MANAGER_USER && password === MANAGER_PWD) {
+        isManager = true;
+        loggedInUser = MANAGER_USER;
+        saveSessionState();
+        showLoginSuccess(`Welcome, ${MANAGER_NAME}! Redirecting...`);
+    }
+    // 5. Check Regular Operator
     else if (operatorPasswords[normalizedUsername] && operatorPasswords[normalizedUsername] === password) {
         isOperator = true;
         loggedInUser = normalizedUsername;
@@ -8754,48 +8789,54 @@ function authenticate() {
                     document.getElementById('downloadPdfBtn').style.display = 'none';
                     document.getElementById('filterLabel').style.display = 'inline-block';
                     document.getElementById('operatorFilter').style.display = 'inline-block';
-                    document.getElementById('changePwdBtn').style.display = 'inline-block'; // Allow cyber security to change password
+                    document.getElementById('changePwdBtn').style.display = 'inline-block';
                     document.getElementById('resetMyPwdBtn').style.display = 'none';
-                    
-                    // Show only Excel export for cyber security with custom styling
                     document.getElementById('analyticsBtn').style.display = 'none';
                     document.getElementById('advancedSearchBtn').style.display = 'none';
                     document.getElementById('exportExcelBtn').style.display = 'inline-block';
                     document.getElementById('exportExcelBtn').innerHTML = '🔒 Export by Date Range';
-                    document.getElementById('exportExcelBtn').style.backgroundColor = '#dc3545'; // Red color for cyber security
+                    document.getElementById('exportExcelBtn').style.backgroundColor = '#dc3545';
                     document.getElementById('helpBtn').style.display = 'none';
-                    
-                    // Hide admin controls
                     document.getElementById('adminControls').style.display = 'none';
                     document.getElementById('operatorManagementView').style.display = 'none';
                     document.getElementById('adminActionsBtn').style.display = 'none';
                     document.getElementById('auditLogView').style.display = 'none';
-                }
-                // Full access for other users
-                else {
+
+                // Manager - Notification control only
+                } else if (isManager) {
+                    document.getElementById('downloadPdfBtn').style.display = 'inline-block';
+                    document.getElementById('filterLabel').style.display = 'inline-block';
+                    document.getElementById('operatorFilter').style.display = 'inline-block';
+                    document.getElementById('changePwdBtn').style.display = 'inline-block';
+                    document.getElementById('resetMyPwdBtn').style.display = 'none';
+                    document.getElementById('analyticsBtn').style.display = 'inline-block';
+                    document.getElementById('advancedSearchBtn').style.display = 'inline-block';
+                    document.getElementById('exportExcelBtn').style.display = 'inline-block';
+                    document.getElementById('helpBtn').style.display = 'inline-block';
+                    // Show admin panel (notifications only — restricted buttons hidden by hideManagerRestrictedButtons)
+                    document.getElementById('adminControls').style.display = 'block';
+                    document.getElementById('operatorManagementView').style.display = 'none';
+                    document.getElementById('adminActionsBtn').style.display = 'none';
+                    document.getElementById('auditLogView').style.display = 'none';
+                    setTimeout(() => hideManagerRestrictedButtons(), 150);
+
+                // Full access for Admin / Viewer / Operator
+                } else {
                     document.getElementById('downloadPdfBtn').style.display = 'inline-block';
                     document.getElementById('filterLabel').style.display = 'inline-block';
                     document.getElementById('operatorFilter').style.display = 'inline-block';
                     document.getElementById('changePwdBtn').style.display = 'inline-block';
                     document.getElementById('resetMyPwdBtn').style.display = isOperator ? 'inline-block' : 'none';
-                    
-                    // Hide cyber security reset button for other users
                     const cyberResetBtn = document.getElementById('cyberSecResetBtn');
-                    if (cyberResetBtn) {
-                        cyberResetBtn.style.display = 'none';
-                    }
-                    
-                    // Show advanced feature buttons
+                    if (cyberResetBtn) cyberResetBtn.style.display = 'none';
                     document.getElementById('analyticsBtn').style.display = 'inline-block';
                     document.getElementById('advancedSearchBtn').style.display = 'inline-block';
                     document.getElementById('exportExcelBtn').style.display = 'inline-block';
                     document.getElementById('helpBtn').style.display = 'inline-block';
-
-                    // Admin Controls
                     document.getElementById('adminControls').style.display = isAdmin ? 'block' : 'none';
                     document.getElementById('operatorManagementView').style.display = isAdmin ? 'block' : 'none';
                     document.getElementById('adminActionsBtn').style.display = isAdmin ? 'inline-block' : 'none';
-                    document.getElementById('auditLogView').style.display = 'none'; // Ensure log is hidden on login
+                    document.getElementById('auditLogView').style.display = 'none';
                 }
 
                 if (isOperator) {
@@ -8813,7 +8854,7 @@ function authenticate() {
                 
                 // Start advanced features
                 startAutoSave();
-                if (isAdmin) {
+                if (isAdmin || isManager) {
                     startAutomaticNotifications();
                     
                     // Auto-configure 3-day notifications if not already set
@@ -8829,6 +8870,10 @@ function authenticate() {
                     setTimeout(() => {
                         showUpcomingNotificationsSummary();
                     }, 2000);
+
+                    if (isManager) {
+                        showToast(`👋 Welcome, ${MANAGER_NAME}! Notification controls are ready.`, 'success');
+                    }
                 }
                 
                 showToast(`Welcome back, ${loggedInUser}!`, 'success');
@@ -8845,6 +8890,7 @@ function logout() {
     isAdmin = false;
     isRestrictedAdmin = false;
     isCyberSecurity = false;
+    isManager = false;
     isOperator = false;
     loggedInUser = null;
     
@@ -9052,6 +9098,40 @@ window.addEventListener('click', function(event) {
 
 function scrollToAdminActions() {
     document.getElementById('adminControls').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ── MANAGER: hide buttons that are admin-only inside the shared panel ──────
+function hideManagerRestrictedButtons() {
+    // Buttons the Manager should NOT see (schedule generation & data management)
+    const adminOnlySelectors = [
+        'button[onclick="generateScheduleButton()"]',
+        'button[onclick="resetAll()"]',
+        'button[onclick="openAuditLogView()"]',
+        'button[onclick="createSampleBackupData()"]',
+        'button[onclick="debugBackupData()"]',
+        'button[onclick="openNotificationConfigModal()"]'
+    ];
+    adminOnlySelectors.forEach(sel => {
+        const btn = document.querySelector(sel);
+        if (btn) btn.style.display = 'none';
+    });
+
+    // Update the panel header subtitle for manager context
+    const subtitle = document.querySelector('.admin-panel-header p');
+    if (subtitle) subtitle.textContent = 'Notification management & operator monitoring';
+
+    // Hide the "Schedule Generation" section title row
+    const sections = document.querySelectorAll('.admin-section-title');
+    sections.forEach(sec => {
+        if (sec.textContent.includes('Schedule Generation')) {
+            sec.closest('.admin-section').style.display = 'none';
+        }
+        if (sec.textContent.includes('Notification API')) {
+            // Keep visible but rename for manager
+            sec.querySelector('span:last-child') && 
+            (sec.querySelector('span:last-child').textContent = 'Notification Testing');
+        }
+    });
 }
 
 // --- Schedule Render and Highlight ---

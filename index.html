@@ -5048,7 +5048,16 @@ body {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.1/jspdf.plugin.autotable.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+    // Auto-initialize EmailJS as soon as the library loads
+    (function(){
+        if (typeof emailjs !== 'undefined') {
+            emailjs.init({ publicKey: 'AkOxQ1p_UcC3AvL1N' });
+            console.log('✅ EmailJS initialized with public key');
+        }
+    })();
+</script>
 
 <script>
 // --- ADVANCED FEATURES GLOBAL VARIABLES ---
@@ -6517,13 +6526,28 @@ function initAdvancedFeatures() {
 // Load API configuration from localStorage
 function loadApiConfiguration() {
     const savedConfig = JSON.parse(localStorage.getItem('notificationApiConfig') || '{}');
-    
-    if (savedConfig.emailServiceId) EMAIL_API_CONFIG.serviceId = savedConfig.emailServiceId;
-    if (savedConfig.emailTemplateId) EMAIL_API_CONFIG.templateId = savedConfig.emailTemplateId;
-    if (savedConfig.emailPublicKey) EMAIL_API_CONFIG.publicKey = savedConfig.emailPublicKey;
-    
+
+    // Hardcoded defaults — always apply unless user has overridden via config modal
+    const defaults = {
+        emailServiceId:  'service_lsvcr99',
+        emailTemplateId: 'template_1s9it4q',
+        emailPublicKey:  'AkOxQ1p_UcC3AvL1N'
+    };
+
+    // Seed localStorage with defaults if not yet saved
+    let needsSave = false;
+    if (!savedConfig.emailServiceId)  { savedConfig.emailServiceId  = defaults.emailServiceId;  needsSave = true; }
+    if (!savedConfig.emailTemplateId) { savedConfig.emailTemplateId = defaults.emailTemplateId; needsSave = true; }
+    if (!savedConfig.emailPublicKey)  { savedConfig.emailPublicKey  = defaults.emailPublicKey;  needsSave = true; }
+    if (needsSave) localStorage.setItem('notificationApiConfig', JSON.stringify(savedConfig));
+
+    // Apply to runtime config
+    EMAIL_API_CONFIG.serviceId  = savedConfig.emailServiceId  || defaults.emailServiceId;
+    EMAIL_API_CONFIG.templateId = savedConfig.emailTemplateId || defaults.emailTemplateId;
+    EMAIL_API_CONFIG.publicKey  = savedConfig.emailPublicKey  || defaults.emailPublicKey;
+
     if (savedConfig.smsAccountSid) SMS_API_CONFIG.accountSid = savedConfig.smsAccountSid;
-    if (savedConfig.smsAuthToken) SMS_API_CONFIG.authToken = savedConfig.smsAuthToken;
+    if (savedConfig.smsAuthToken)  SMS_API_CONFIG.authToken  = savedConfig.smsAuthToken;
     if (savedConfig.smsFromNumber) SMS_API_CONFIG.fromNumber = savedConfig.smsFromNumber;
 }
 
@@ -6534,11 +6558,12 @@ const NOTIFICATION_LOG_KEY = 'notificationLog'; // NEW
 const NOTIFICATION_SETTINGS_KEY = 'notificationSettings'; // NEW
 
 // Email and SMS API Configuration
+// ✅ EmailJS credentials — fully configured
 const EMAIL_API_CONFIG = {
-    service: 'emailjs', // Using EmailJS for client-side email sending
-    serviceId: '', // Will be loaded from localStorage or configuration modal
-    templateId: '', // Will be loaded from localStorage or configuration modal
-    publicKey: '' // Will be loaded from localStorage or configuration modal
+    service:    'emailjs',
+    serviceId:  'service_lsvcr99',       // ✅ Gmail service
+    templateId: 'template_1s9it4q',      // ✅ "Contact Us" template
+    publicKey:  'AkOxQ1p_UcC3AvL1N'     // ✅ public key
 };
 
 const SMS_API_CONFIG = {
@@ -6717,17 +6742,17 @@ function clearAuditLog() {
 
 // --- ENHANCED NOTIFICATION MODULE FUNCTIONS ---
 
-// Initialize EmailJS
+// Initialize EmailJS (v4 API)
 function initializeEmailJS() {
     if (typeof emailjs !== 'undefined') {
         if (EMAIL_API_CONFIG.publicKey && EMAIL_API_CONFIG.publicKey !== '') {
-            emailjs.init(EMAIL_API_CONFIG.publicKey);
-            console.log('EmailJS initialized successfully');
+            emailjs.init({ publicKey: EMAIL_API_CONFIG.publicKey });
+            console.log('✅ EmailJS re-initialized with key:', EMAIL_API_CONFIG.publicKey);
         } else {
-            console.warn('EmailJS public key not configured. Email notifications will not work.');
+            console.warn('⚠️ EmailJS public key not set.');
         }
     } else {
-        console.warn('EmailJS library not loaded. Email notifications will not work.');
+        console.warn('⚠️ EmailJS library not loaded.');
     }
 }
 
@@ -6738,31 +6763,28 @@ async function sendEmailNotification(operatorData, shiftData, notificationType =
         return { success: false, error: 'EmailJS library not loaded' };
     }
 
-    // Check if email configuration is properly set
-    if (!EMAIL_API_CONFIG.serviceId || !EMAIL_API_CONFIG.templateId || !EMAIL_API_CONFIG.publicKey) {
-        console.error('Email configuration incomplete');
-        
-        // For testing purposes, simulate successful email sending
-        if (notificationType === 'test') {
-            console.log('Test mode: Simulating successful email send');
-            return { 
-                success: true, 
-                response: { 
-                    status: 200, 
-                    text: 'Test email simulated successfully' 
-                } 
-            };
-        }
-        
-        return { success: false, error: 'Email configuration not set. Please configure EmailJS credentials in Admin settings.' };
+    // Ensure config is loaded (in case called before initAdvancedFeatures)
+    if (!EMAIL_API_CONFIG.serviceId)  EMAIL_API_CONFIG.serviceId  = 'service_lsvcr99';
+    if (!EMAIL_API_CONFIG.templateId) EMAIL_API_CONFIG.templateId = 'template_1s9it4q';
+    if (!EMAIL_API_CONFIG.publicKey)  EMAIL_API_CONFIG.publicKey  = 'AkOxQ1p_UcC3AvL1N';
+
+    // Re-init EmailJS just in case
+    if (typeof emailjs !== 'undefined') {
+        emailjs.init({ publicKey: EMAIL_API_CONFIG.publicKey });
+    }
+
+    // Validate recipient email
+    if (!operatorData.email || operatorData.email === 'N/A') {
+        console.warn('⚠️ No email address for operator:', operatorData.name);
+        return { success: false, error: `No email address on file for ${operatorData.name}` };
     }
 
     const daysUntil = daysBetween(getCleanDate(new Date()), getCleanDate(shiftData.start));
-    
+
     // Create email subject and message based on notification type
     let emailSubject = '';
     let emailMessage = '';
-    
+
     switch (notificationType) {
         case 'reminder':
             emailSubject = `Oromia Bank - Backup Schedule Notification (${daysUntil} days advance notice)`;
@@ -6847,18 +6869,22 @@ Backup Operations Management System`;
     }
 
     const templateParams = {
-        to_name: operatorData.name,
-        to_email: operatorData.email,
-        subject: emailSubject,
-        message: emailMessage,
-        operator_name: operatorData.name,
+        // Variables matching your EmailJS template fields
+        name:             operatorData.name,       // {{name}}  → From Name
+        email:            operatorData.email,       // {{email}} → Reply To
+        to_email:         operatorData.email,       // in case To Email uses {{to_email}}
+        to_name:          operatorData.name,
+        subject:          emailSubject,             // {{subject}}
+        message:          emailMessage,             // {{message}}
+        // Extra context variables
+        operator_name:    operatorData.name,
         shift_start_date: formatDate(shiftData.start),
-        shift_end_date: formatDate(shiftData.end),
-        mobile_number: operatorData.mobile,
+        shift_end_date:   formatDate(shiftData.end),
+        mobile_number:    operatorData.mobile,
         notification_type: notificationType,
         days_until_shift: daysUntil,
-        bank_name: 'Oromia Bank',
-        system_name: 'Backup Operations Management System'
+        bank_name:        'Oromia Bank',
+        system_name:      'Backup Operations Management System'
     };
 
     try {

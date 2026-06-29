@@ -4242,79 +4242,412 @@ body {
     </div>
 </div>
 
-<div class="controls" id="adminControls" style="display:none;">
-    <div id="adminMonitoringStatus"></div> 
-    
-    <h3>Schedule Generation & Utilities</h3>
-    <button onclick="generateScheduleButton()">Generate Full Schedule</button>
-    <button onclick="resetAll()" style="background-color: #cc0000;">Clear ALL Data</button>
-    <button onclick="openAuditLogView()" style="background-color: #343a40;">View Audit Log</button>
-    <button onclick="createSampleBackupData()" style="background-color: #17a2b8;">🧪 Create Sample Backup Data</button>
-    <button onclick="debugBackupData()" style="background-color: #6f42c1;">🔍 Debug Backup Data</button>
-    <button onclick="openNotificationConfigModal()" style="background-color: #6c757d;">⚙️ Configure Notification APIs</button>
-    <button onclick="testNotificationSystem()" style="background-color: #6f42c1; color: white;">🧪 Test Notification System</button>
-    <button onclick="testNotificationToAllOperators()" style="background-color: #e83e8c; color: white;">📧 Test All Operators</button>
-    
-    <h3>📤 Send Notifications</h3>
-    <div style="margin-bottom: 15px; padding: 15px; background-color: #e8f4fd; border-radius: 8px; border-left: 4px solid #007bff;">
-        <div style="margin-bottom: 10px; padding: 10px; background-color: #d4edda; border-radius: 4px; border-left: 3px solid #28a745;">
-            <p style="margin: 0; font-size: 14px; color: #155724;"><strong>🔄 Auto-Notifications Active:</strong> System automatically notifies operators <strong>3 days</strong> before their shift starts (checks every hour)</p>
-        </div>
-        <div style="margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;">
-            <label for="notifyDays" style="font-weight: normal; margin: 0;">📅 Notify operators this many days before shift start:</label>
-            <input type="number" id="notifyDays" value="3" min="1" max="30" style="width: 80px; margin: 0;">
-            <button onclick="saveNotificationSettings()" style="background-color: #28a745; margin: 0;">💾 Save & Start Auto-Notifications</button>
-            <button onclick="checkAndSendNotifications(true)" style="background-color: #FF5733; margin: 0;">📤 Send Reminders Now</button>
-            <button onclick="check3DayNotifications()" style="background-color: #28a745; margin: 0;">🎯 Check 3-Day Notifications</button>
-        </div>
-        <div style="text-align: center;">
-            <button onclick="openNotificationLogView()" style="background-color: #4D8BCA;">📋 View Notification Log</button>
-            <button onclick="previewNotificationMessage()" style="background-color: #17a2b8; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; margin: 5px;">👁️ Preview Message</button>
-            <button onclick="debugNotificationSystem()" style="background-color: #fd7e14; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; margin: 5px;">🔍 Debug Notifications</button>
-        </div>
-        <div id="notificationStatus" style="margin-top: 10px; padding: 8px; background-color: #f8f9fa; border-radius: 4px; text-align: center; font-size: 12px; color: #6c757d;">
-            🕐 Next automatic check: <span id="nextCheckTime">--</span>
-        </div>
-    </div>
+<style>
+/* ===== ADMIN PANEL REDESIGN ===== */
+.admin-panel {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0;
+}
 
-    <div id="shiftCalculator">
-        <h3>Shift Range Calculator (10 Working Days, No Sundays)</h3>
-        <label for="calcStartDate">Enter Shift Start Date:</label>
-        <input type="date" id="calcStartDate" onchange="calculateShiftRange()">
-        <div class="result">Shift End Date: <span id="calcEndDate">--</span></div>
-        <div class="result">Total Working Days: <span id="calcWorkingDays">--</span></div>
-    </div>
-    
-    <!-- NOTIFICATION SECTION HIDDEN
-    <h3>📧📱 Automatic Email & SMS Notifications</h3>
-    <div style="margin-bottom: 15px; padding: 15px; background-color: #e8f4fd; border-radius: 8px; border-left: 4px solid #007bff;">
-        <h4 style="margin: 0 0 10px 0; color: #007bff;">🔄 Professional Notification System</h4>
-        <p style="margin: 5px 0; font-size: 14px;">✅ Professional email and SMS notifications sent automatically</p>
-        <p style="margin: 5px 0; font-size: 14px;">🕐 System checks every 6 hours for upcoming shifts</p>
-        <p style="margin: 5px 0; font-size: 14px;">📧 Emails with formal Oromia Bank letterhead</p>
-        <p style="margin: 5px 0; font-size: 14px;">📱 SMS with professional backup operator messaging</p>
-        <div style="margin-top: 10px; padding: 10px; background-color: #fff3cd; border-radius: 4px; border-left: 3px solid #ffc107;">
-            <p style="margin: 0; font-size: 13px; color: #856404;"><strong>⚠️ Email Configuration Required:</strong></p>
-            <p style="margin: 5px 0; font-size: 12px; color: #856404;">To enable email notifications, click "⚙️ Configure Notification APIs" and set up your EmailJS credentials. SMS notifications work automatically.</p>
+.admin-panel-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 22px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+    border-radius: 14px 14px 0 0;
+    color: white;
+    margin-bottom: 0;
+}
+.admin-panel-header .admin-avatar {
+    width: 42px;
+    height: 42px;
+    background: linear-gradient(135deg, #94C83D, #7DAE2F);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(148,200,61,0.4);
+}
+.admin-panel-header h2 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 800;
+    color: white;
+    text-align: left;
+    letter-spacing: 0.3px;
+}
+.admin-panel-header p {
+    margin: 2px 0 0 0;
+    font-size: 11px;
+    color: rgba(255,255,255,0.65);
+    font-weight: 400;
+}
+
+/* Monitoring status inside panel */
+#adminMonitoringStatus {
+    margin: 0;
+    border-radius: 0;
+    font-size: 13px;
+    padding: 10px 18px;
+    border: none;
+    font-weight: 600;
+}
+#adminMonitoringStatus:empty { display: none; }
+
+/* Card sections */
+.admin-section {
+    background: #fff;
+    border: 1px solid #e9ecef;
+    border-top: none;
+    padding: 20px 22px;
+}
+.admin-section:last-child {
+    border-radius: 0 0 14px 14px;
+}
+.admin-section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #666;
+    margin: 0 0 14px 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #f0f0f0;
+}
+.admin-section-title .section-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+}
+.icon-green  { background: #d4edda; }
+.icon-red    { background: #f8d7da; }
+.icon-blue   { background: #cce5ff; }
+.icon-purple { background: #e2d9f3; }
+.icon-orange { background: #ffe5d0; }
+.icon-teal   { background: #d1ecf1; }
+
+/* Button grid */
+.admin-btn-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.admin-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    line-height: 1;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+.admin-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+}
+.admin-btn:active { transform: translateY(0); }
+
+.btn-green   { background: linear-gradient(135deg,#28a745,#20c997); color:#fff; }
+.btn-red     { background: linear-gradient(135deg,#dc3545,#c82333); color:#fff; }
+.btn-dark    { background: linear-gradient(135deg,#343a40,#23272b); color:#fff; }
+.btn-teal    { background: linear-gradient(135deg,#17a2b8,#138496); color:#fff; }
+.btn-purple  { background: linear-gradient(135deg,#6f42c1,#5a32a3); color:#fff; }
+.btn-gray    { background: linear-gradient(135deg,#6c757d,#545b62); color:#fff; }
+.btn-pink    { background: linear-gradient(135deg,#e83e8c,#c82076); color:#fff; }
+.btn-orange  { background: linear-gradient(135deg,#fd7e14,#e06b00); color:#fff; }
+.btn-blue    { background: linear-gradient(135deg,#007bff,#0056b3); color:#fff; }
+.btn-indigo  { background: linear-gradient(135deg,#4D8BCA,#2e6da4); color:#fff; }
+.btn-lime    { background: linear-gradient(135deg,#94C83D,#7DAE2F); color:#fff; }
+
+/* Auto-notification status pill */
+.notif-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg,#d4edda,#c3e6cb);
+    color: #155724;
+    border: 1px solid #b1dfbb;
+    border-radius: 20px;
+    padding: 7px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 14px;
+    width: 100%;
+    box-sizing: border-box;
+}
+.notif-status-pill .pulse-dot {
+    width: 8px;
+    height: 8px;
+    background: #28a745;
+    border-radius: 50%;
+    animation: kpiPulse 1.5s ease-in-out infinite;
+    flex-shrink: 0;
+}
+@keyframes kpiPulse {
+    0%,100% { opacity:1; transform:scale(1); }
+    50%      { opacity:0.5; transform:scale(1.3); }
+}
+
+/* Notify-days row */
+.notif-days-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    padding: 12px 14px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border: 1px solid #e9ecef;
+}
+.notif-days-row label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #495057;
+    margin: 0;
+}
+.notif-days-input {
+    width: 64px;
+    padding: 6px 10px;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    color: #333;
+    transition: border-color 0.2s;
+}
+.notif-days-input:focus {
+    border-color: #94C83D;
+    outline: none;
+}
+
+/* Next check badge */
+.next-check-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 12px;
+    color: #6c757d;
+    margin-top: 10px;
+}
+
+/* Shift calculator card */
+.shift-calc-card {
+    background: linear-gradient(135deg,#e8f4fd,#d6eaf8);
+    border: 1px solid #bee3f8;
+    border-radius: 12px;
+    padding: 16px 18px;
+}
+.shift-calc-card h4 {
+    margin: 0 0 12px 0;
+    font-size: 13px;
+    font-weight: 700;
+    color: #1a5276;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.shift-calc-grid {
+    display: grid;
+    grid-template-columns: auto 1fr auto 1fr;
+    gap: 10px;
+    align-items: center;
+}
+.shift-calc-grid label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #2e86c1;
+    white-space: nowrap;
+}
+.shift-calc-grid input[type="date"] {
+    padding: 7px 10px;
+    border: 2px solid #bee3f8;
+    border-radius: 8px;
+    font-size: 13px;
+    background: white;
+    color: #333;
+    transition: border-color 0.2s;
+}
+.shift-calc-grid input[type="date"]:focus {
+    border-color: #2980b9;
+    outline: none;
+}
+.shift-calc-result {
+    display: flex;
+    gap: 16px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+.calc-result-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: white;
+    border: 1px solid #bee3f8;
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 13px;
+    color: #1a5276;
+}
+.calc-result-chip strong {
+    color: #2980b9;
+    font-weight: 800;
+}
+
+/* Section divider */
+.admin-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #e9ecef 20%, #e9ecef 80%, transparent);
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    .shift-calc-grid { grid-template-columns: 1fr; }
+    .admin-btn-grid { gap: 6px; }
+    .admin-btn { font-size: 12px; padding: 8px 12px; }
+    .notif-days-row { flex-direction: column; align-items: flex-start; }
+}
+/* ===== END ADMIN PANEL REDESIGN ===== */
+</style>
+
+<div class="controls" id="adminControls" style="display:none; padding:0; background:transparent; box-shadow:none; border-radius:14px; overflow:hidden;">
+    <div class="admin-panel">
+
+        <!-- Panel Header -->
+        <div class="admin-panel-header">
+            <div class="admin-avatar">🛡️</div>
+            <div>
+                <h2>Admin Control Panel</h2>
+                <p>Schedule management, notifications & system utilities</p>
+            </div>
         </div>
-        <div style="margin-top: 10px; padding: 10px; background-color: #f8f9fa; border-radius: 4px; border-left: 3px solid #28a745;">
-            <p style="margin: 0; font-size: 13px; color: #495057;"><strong>Sample Message:</strong></p>
-            <p style="margin: 5px 0; font-size: 12px; font-style: italic; color: #6c757d;">"Dear OB Backup Operator, This is an advance notification that your backup schedule will begin in 3 days. You are advised to review and confirm readiness of all backup systems to ensure a smooth operation."</p>
+
+        <!-- Monitoring Status -->
+        <div id="adminMonitoringStatus"></div>
+
+        <!-- ── Section 1: Schedule Generation ── -->
+        <div class="admin-section">
+            <div class="admin-section-title">
+                <span class="section-icon icon-green">📅</span>
+                Schedule Generation &amp; Utilities
+            </div>
+            <div class="admin-btn-grid">
+                <button class="admin-btn btn-lime"    onclick="generateScheduleButton()">📅 Generate Full Schedule</button>
+                <button class="admin-btn btn-red"     onclick="resetAll()">🗑️ Clear ALL Data</button>
+                <button class="admin-btn btn-dark"    onclick="openAuditLogView()">📋 View Audit Log</button>
+                <button class="admin-btn btn-teal"    onclick="createSampleBackupData()">🧪 Sample Backup Data</button>
+                <button class="admin-btn btn-purple"  onclick="debugBackupData()">🔍 Debug Backup Data</button>
+            </div>
         </div>
-    </div>
-    <div style="margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;">
-        <label for="notifyDays" style="font-weight: normal; margin: 0;">📅 Notify operators this many days before shift start:</label>
-        <input type="number" id="notifyDays" value="7" min="1" max="30" style="width: 80px; margin: 0;">
-        <button onclick="saveNotificationSettings()" style="background-color: #28a745; margin: 0;">💾 Save & Start Auto-Notifications</button>
-        <button onclick="checkAndSendNotifications(true)" style="background-color: #FF5733; margin: 0;">📤 Send Reminders Now</button>
-    </div>
-    <div style="text-align: center; margin-bottom: 15px;">
-        <button onclick="testNotificationSystem()" style="background-color: #6f42c1; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; margin: 5px;">🧪 Test Notification System</button>
-        <button onclick="openNotificationLogView()" style="background-color: #4D8BCA;">📋 View Notification Log</button>
-        <button onclick="previewNotificationMessage()" style="background-color: #17a2b8; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; margin: 5px;">👁️ Preview Message</button>
-    </div>
-    END NOTIFICATION SECTION HIDDEN -->
-    </div>
+
+        <div class="admin-divider"></div>
+
+        <!-- ── Section 2: Notification APIs ── -->
+        <div class="admin-section">
+            <div class="admin-section-title">
+                <span class="section-icon icon-purple">⚙️</span>
+                Notification API &amp; Testing
+            </div>
+            <div class="admin-btn-grid">
+                <button class="admin-btn btn-gray"   onclick="openNotificationConfigModal()">⚙️ Configure APIs</button>
+                <button class="admin-btn btn-purple" onclick="testNotificationSystem()">🧪 Test Notification</button>
+                <button class="admin-btn btn-pink"   onclick="testNotificationToAllOperators()">📧 Test All Operators</button>
+            </div>
+        </div>
+
+        <div class="admin-divider"></div>
+
+        <!-- ── Section 3: Send Notifications ── -->
+        <div class="admin-section">
+            <div class="admin-section-title">
+                <span class="section-icon icon-blue">📤</span>
+                Send Notifications
+            </div>
+
+            <!-- Auto-active pill -->
+            <div class="notif-status-pill">
+                <span class="pulse-dot"></span>
+                <span><strong>Auto-Notifications Active</strong> — operators are notified <strong id="notifyDaysDisplay">3</strong> day(s) before their shift starts (checks every hour)</span>
+            </div>
+
+            <!-- Days input row -->
+            <div class="notif-days-row">
+                <span style="font-size:16px;">📅</span>
+                <label for="notifyDays">Notify operators this many days before shift start:</label>
+                <input class="notif-days-input" type="number" id="notifyDays" value="3" min="1" max="30"
+                       oninput="document.getElementById('notifyDaysDisplay').textContent=this.value">
+                <button class="admin-btn btn-green" onclick="saveNotificationSettings()" style="margin:0;">
+                    💾 Save &amp; Start
+                </button>
+                <button class="admin-btn btn-orange" onclick="checkAndSendNotifications(true)" style="margin:0;">
+                    📤 Send Now
+                </button>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="admin-btn-grid">
+                <button class="admin-btn btn-lime"   onclick="check3DayNotifications()">🎯 Check 3-Day Notifications</button>
+                <button class="admin-btn btn-indigo" onclick="openNotificationLogView()">📋 View Notification Log</button>
+                <button class="admin-btn btn-teal"   onclick="previewNotificationMessage()">👁️ Preview Message</button>
+                <button class="admin-btn btn-orange" onclick="debugNotificationSystem()">🔍 Debug Notifications</button>
+            </div>
+
+            <!-- Next check time -->
+            <div id="notificationStatus" style="margin-top:12px;">
+                <span class="next-check-badge">
+                    🕐 Next automatic check: <strong id="nextCheckTime">--</strong>
+                </span>
+            </div>
+        </div>
+
+        <div class="admin-divider"></div>
+
+        <!-- ── Section 4: Shift Calculator ── -->
+        <div class="admin-section" id="shiftCalculator" style="padding-bottom:22px;">
+            <div class="admin-section-title">
+                <span class="section-icon icon-teal">🔢</span>
+                Shift Range Calculator
+            </div>
+            <div class="shift-calc-card">
+                <h4>⏱️ 10 Working Days Calculator (Sundays excluded)</h4>
+                <div class="shift-calc-grid">
+                    <label for="calcStartDate">Start Date:</label>
+                    <input type="date" id="calcStartDate" onchange="calculateShiftRange()">
+                    <label style="visibility:hidden;">End:</label>
+                    <div></div>
+                </div>
+                <div class="shift-calc-result">
+                    <span class="calc-result-chip">📅 End Date: <strong id="calcEndDate">--</strong></span>
+                    <span class="calc-result-chip">✅ Working Days: <strong id="calcWorkingDays">--</strong></span>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- end .admin-panel -->
+</div>
 
 <!-- Daily Backup Status Tracking Section -->
 <div class="controls backup-tracking-section" id="backupTrackingSection" style="display:none;">

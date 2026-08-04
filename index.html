@@ -10385,11 +10385,11 @@ function resetAll() {
         localStorage.removeItem(NOTIFICATION_SETTINGS_KEY); // NEW
 
         initialOperators = [ // Reset to initial state with correct official emails
-            { name: "ABRAHAM CHALA",  mobile: "0913564114", email: "abraham.chala@oromiabank.com" },
-            { name: "BERISO SHIBIRU", mobile: "0902911411", email: "bariso.s@orointbank.com" },
-            { name: "HAMBISA ADAMU",  mobile: "0913456466", email: "hambisa.adamu@oromiabank.com" },
-            { name: "DAME TERFASSA",  mobile: "0911117524", email: "dame.terfassa@oromiabank.com" },
-            { name: "TSION GIRMA",    mobile: "0946700418", email: "tsion.g@orointbank.com" }
+            { name: "ABRAHAM CHALA",  mobile: "0913564114", email: "abraham.chala@oromiabank.com",  status: "Active" },
+            { name: "BERISO SHIBIRU", mobile: "0902911411", email: "bariso.s@orointbank.com",        status: "Active" },
+            { name: "HAMBISA ADAMU",  mobile: "0913456466", email: "hambisa.adamu@oromiabank.com",  status: "Active" },
+            { name: "DAME TERFASSA",  mobile: "0911117524", email: "dame.terfassa@oromiabank.com",  status: "Active" },
+            { name: "TSION GIRMA",    mobile: "0946700418", email: "tsion.g@orointbank.com",         status: "Active" }
         ];
         localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
 

@@ -3956,8 +3956,236 @@ body {
 
 /* === PRINT IMPROVEMENTS === */
 @media print {
-    .sticky-topbar, .kpi-bar, #scrollTopBtn { display: none !important; }
+    .sticky-topbar, .kpi-bar, #scrollTopBtn,
+    .controls, #adminControls, #operatorManagementView,
+    #auditLogView, .top-section, .advanced-search,
+    .analytics-dashboard, #nextShiftsWrapper,
+    #backupTrackingSection, .modal, #notificationBanner,
+    .toast-notification, #countdownBanner, #conflictBanner,
+    #completionChartSection, #calendarSection,
+    .backup-action-btn, .finish-btn, .reset-status-btn,
+    .rename-btn, .reset-btn, .delete-btn, .swap-btn,
+    .admin-btn, #actionsHeader, td:last-child { display: none !important; }
+
+    body { margin: 10px; background: white !important; }
+    .table-container { box-shadow: none !important; }
+    table { font-size: 11px; }
+    th, td { padding: 6px 8px !important; }
+    .highlight-today { background-color: #ffff99 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .highlight-next  { background-color: #ccffcc !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .enhanced-footer { border-radius: 0 !important; }
+    h2 { font-size: 16px; }
 }
+
+/* === DARK MODE TOGGLE === */
+body.dark-mode {
+    background-color: #1a1a2e !important;
+    color: #e0e0e0 !important;
+}
+body.dark-mode .table-container,
+body.dark-mode .controls,
+body.dark-mode #adminControls,
+body.dark-mode #operatorManagementView {
+    background-color: #16213e !important;
+    color: #e0e0e0 !important;
+}
+body.dark-mode table { background: #16213e; }
+body.dark-mode th { background: linear-gradient(135deg,#0f3460,#16213e) !important; }
+body.dark-mode tr:not(.highlight-today):not(.highlight-next):not(.highlight-finished):nth-child(even) {
+    background-color: #0f3460 !important;
+}
+body.dark-mode tr:not(.highlight-today):not(.highlight-next):not(.highlight-finished):nth-child(odd) {
+    background-color: #16213e !important;
+}
+body.dark-mode td, body.dark-mode th { border-color: #0f3460 !important; color: #e0e0e0 !important; }
+body.dark-mode .kpi-card { background: #16213e !important; color: #e0e0e0 !important; }
+body.dark-mode .kpi-value { color: #e0e0e0 !important; }
+body.dark-mode h2 { color: #e0e0e0 !important; }
+body.dark-mode .shift-card { background-color: #16213e !important; color: #e0e0e0 !important; }
+body.dark-mode .shift-card p, body.dark-mode .shift-card-header { color: #ccc !important; }
+body.dark-mode .admin-section { background: #16213e !important; border-color: #0f3460 !important; }
+body.dark-mode .admin-section-title { color: #aaa !important; border-bottom-color: #0f3460 !important; }
+body.dark-mode .advanced-search { background: #16213e !important; border-color: #0f3460 !important; }
+body.dark-mode .search-input { background: #0f3460 !important; color: #e0e0e0 !important; border-color: #1a4a8a !important; }
+body.dark-mode .modal-content { background: #16213e !important; color: #e0e0e0 !important; }
+body.dark-mode .modal-content input, body.dark-mode .modal-content select,
+body.dark-mode .modal-content textarea { background: #0f3460 !important; color: #e0e0e0 !important; border-color: #1a4a8a !important; }
+
+/* === SESSION TIMEOUT MODAL === */
+#sessionTimeoutOverlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 99999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+#sessionTimeoutOverlay.show { display: flex; }
+.session-timeout-box {
+    background: white;
+    border-radius: 20px;
+    padding: 40px 35px;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    animation: slideUp 0.4s ease;
+}
+body.dark-mode .session-timeout-box { background: #16213e; color: #e0e0e0; }
+.session-timeout-box .timeout-icon { font-size: 60px; margin-bottom: 15px; animation: pulse 1s infinite; }
+.session-timeout-box h3 { font-size: 22px; margin: 0 0 10px; color: #dc3545; }
+.session-timeout-box p { color: #666; font-size: 14px; line-height: 1.6; margin: 0 0 20px; }
+body.dark-mode .session-timeout-box p { color: #aaa; }
+.session-countdown-ring {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: conic-gradient(#dc3545 0%, #e9ecef 0%);
+    margin: 0 auto 20px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; font-weight: 900; color: #dc3545;
+    box-shadow: 0 0 0 6px rgba(220,53,69,0.15);
+    transition: background 1s linear;
+}
+.session-timeout-btns { display: flex; gap: 12px; justify-content: center; }
+.btn-stay-logged-in {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white; border: none; padding: 12px 28px;
+    border-radius: 25px; cursor: pointer; font-size: 15px; font-weight: 700;
+    transition: all 0.3s;
+}
+.btn-stay-logged-in:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(40,167,69,0.4); }
+.btn-logout-now {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white; border: none; padding: 12px 22px;
+    border-radius: 25px; cursor: pointer; font-size: 14px; font-weight: 600;
+    transition: all 0.3s;
+}
+.btn-logout-now:hover { transform: translateY(-2px); }
+
+/* === BACKUP STATUS OVERVIEW PANEL === */
+#backupOverviewPanel {
+    display: none;
+    max-width: 1000px;
+    margin: 0 auto 20px auto;
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+body.dark-mode #backupOverviewPanel { background: #16213e; }
+.backup-overview-header {
+    background: linear-gradient(135deg, #1a1a2e, #0f3460);
+    padding: 14px 20px;
+    display: flex; align-items: center; justify-content: space-between; color: white;
+}
+.backup-overview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+    padding: 16px;
+}
+.backup-overview-card {
+    border-radius: 10px;
+    padding: 12px 14px;
+    border-left: 4px solid #ddd;
+    background: #f8f9fa;
+    font-size: 13px;
+}
+body.dark-mode .backup-overview-card { background: #0f3460; }
+.backup-overview-card.status-completed { border-left-color: #28a745; background: #d4edda; }
+.backup-overview-card.status-failed    { border-left-color: #dc3545; background: #f8d7da; }
+.backup-overview-card.status-holiday   { border-left-color: #6f42c1; background: #e2d9f3; }
+.backup-overview-card.status-weekend   { border-left-color: #6c757d; background: #e9ecef; }
+.backup-overview-card.status-pending   { border-left-color: #ffc107; background: #fff3cd; }
+body.dark-mode .backup-overview-card.status-completed { background: #1e4d2b; }
+body.dark-mode .backup-overview-card.status-failed    { background: #4d1e22; }
+.backup-ov-op   { font-weight: 700; color: #333; margin-bottom: 4px; }
+body.dark-mode .backup-ov-op { color: #e0e0e0; }
+.backup-ov-status { font-size: 12px; font-weight: 600; }
+.backup-ov-time   { font-size: 11px; color: #666; margin-top: 3px; }
+body.dark-mode .backup-ov-time { color: #aaa; }
+
+/* === SHIFT PROGRESS BAR IN TABLE === */
+.shift-progress-wrap {
+    margin-top: 5px;
+    background: #e9ecef;
+    border-radius: 4px;
+    height: 5px;
+    overflow: hidden;
+    min-width: 60px;
+}
+body.dark-mode .shift-progress-wrap { background: #0f3460; }
+.shift-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #94C83D, #7DAE2F);
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+.shift-days-badge {
+    font-size: 10px;
+    color: #888;
+    display: block;
+    margin-top: 2px;
+}
+
+/* === MOBILE BOTTOM NAV (operators) === */
+#mobileBottomNav {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(135deg, #1a1a2e, #0f3460);
+    padding: 8px 5px env(safe-area-inset-bottom, 8px);
+    z-index: 900;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+    justify-content: space-around;
+    align-items: center;
+}
+@media (max-width: 767px) {
+    #mobileBottomNav { display: flex; }
+    body { padding-bottom: 70px; }
+}
+.mob-nav-btn {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 3px; color: rgba(255,255,255,0.7); background: none; border: none;
+    cursor: pointer; padding: 5px 10px; border-radius: 10px;
+    transition: all 0.2s; font-size: 11px; font-weight: 600; min-width: 55px;
+}
+.mob-nav-btn .mob-nav-icon { font-size: 22px; line-height: 1; }
+.mob-nav-btn:hover, .mob-nav-btn.active {
+    color: #94C83D;
+    background: rgba(148,200,61,0.15);
+}
+
+/* === SEARCH HIGHLIGHT === */
+.search-highlight {
+    background: linear-gradient(135deg, #fff3cd, #ffe880);
+    border-radius: 3px;
+    padding: 1px 2px;
+    font-weight: 700;
+}
+
+/* === TOPBAR TODAY BADGE === */
+.topbar-today-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(148,200,61,0.2);
+    border: 1px solid rgba(148,200,61,0.4);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 12px;
+    color: #94C83D;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* === COPY PHONE BTN STYLE === */
+.copy-phone-btn {
+    background: none; border: none; cursor: pointer;
+    font-size: 13px; padding: 2px 4px; opacity: 0.6;
+    transition: opacity 0.2s; vertical-align: middle;
+}
+.copy-phone-btn:hover { opacity: 1; }
 
 /* === RESPONSIVE TOPBAR === */
 @media (max-width: 600px) {
@@ -5062,6 +5290,10 @@ body {
         <ul>
             <li><strong>Ctrl/Cmd + K:</strong> Toggle Advanced Search</li>
             <li><strong>Ctrl/Cmd + D:</strong> Toggle Analytics Dashboard</li>
+            <li><strong>Ctrl/Cmd + P:</strong> Download PDF</li>
+            <li><strong>Ctrl/Cmd + E:</strong> Export Excel</li>
+            <li><strong>Ctrl/Cmd + M:</strong> Toggle Dark Mode</li>
+            <li><strong>Ctrl/Cmd + B:</strong> Backup Overview (Admin)</li>
             <li><strong>Escape:</strong> Close any open modal</li>
         </ul>
         
@@ -10971,5 +11203,477 @@ function refreshNewFeatures() {
 </script>
 <!-- Scroll to Top Button -->
 <button id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
+
+<!-- Session Timeout Warning Overlay -->
+<div id="sessionTimeoutOverlay">
+    <div class="session-timeout-box">
+        <div class="timeout-icon">⏰</div>
+        <h3>Session Expiring Soon</h3>
+        <p>Your session will expire in <strong>2 minutes</strong> due to inactivity. Please save your work and click "Stay Logged In" to continue.</p>
+        <div class="session-countdown-ring" id="sessionCountdownRing">120</div>
+        <div class="session-timeout-btns">
+            <button class="btn-stay-logged-in" onclick="extendSession()">✅ Stay Logged In</button>
+            <button class="btn-logout-now" onclick="openLogoutConfirmModal()">🚪 Logout Now</button>
+        </div>
+    </div>
+</div>
+
+<!-- Backup Overview Panel (Admin) -->
+<div id="backupOverviewPanel">
+    <div class="backup-overview-header">
+        <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:20px;">📊</span>
+            <div>
+                <div style="font-weight:800;font-size:15px;">Daily Backup Overview</div>
+                <div style="font-size:11px;opacity:0.65;" id="backupOverviewDate">Today</div>
+            </div>
+        </div>
+        <button onclick="document.getElementById('backupOverviewPanel').style.display='none'"
+                style="background:rgba(255,255,255,0.15);border:none;color:white;border-radius:8px;padding:6px 12px;cursor:pointer;font-size:12px;">✕ Close</button>
+    </div>
+    <div class="backup-overview-grid" id="backupOverviewGrid"></div>
+    <div style="padding:12px 16px;border-top:1px solid #e9ecef;text-align:right;">
+        <button onclick="renderBackupOverview()" style="background:linear-gradient(135deg,#94C83D,#7DAE2F);color:white;border:none;padding:7px 18px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;">🔄 Refresh</button>
+    </div>
+</div>
+
+<!-- Mobile Bottom Navigation (for operators on mobile) -->
+<div id="mobileBottomNav">
+    <button class="mob-nav-btn active" id="mobNavSchedule" onclick="mobileSwitchTab('schedule')">
+        <span class="mob-nav-icon">📅</span>
+        <span>Schedule</span>
+    </button>
+    <button class="mob-nav-btn" id="mobNavBackup" onclick="mobileSwitchTab('backup')">
+        <span class="mob-nav-icon">💾</span>
+        <span>Backup</span>
+    </button>
+    <button class="mob-nav-btn" id="mobNavSearch" onclick="mobileSwitchTab('search')">
+        <span class="mob-nav-icon">🔍</span>
+        <span>Search</span>
+    </button>
+    <button class="mob-nav-btn" id="mobNavLogout" onclick="openLogoutConfirmModal()">
+        <span class="mob-nav-icon">🚪</span>
+        <span>Logout</span>
+    </button>
+</div>
+
+<script>
+// ================================================================
+// ADVANCED ENHANCEMENT #1: SESSION TIMEOUT WARNING
+// ================================================================
+let sessionTimeoutWarningTimer = null;
+let sessionCountdownTimer = null;
+let sessionTimeoutSeconds = 120; // 2 minutes warning
+
+function startSessionTimeoutWatcher() {
+    clearTimeout(sessionTimeoutWarningTimer);
+    // 24h session = 86400s. Show warning 2min before. So trigger at (24*60-2)*60 = 86280s
+    const warnAt = (23 * 60 + 58) * 60 * 1000; // 23h 58m
+
+    sessionTimeoutWarningTimer = setTimeout(() => {
+        if (loggedInUser) showSessionTimeoutWarning();
+    }, warnAt);
+}
+
+function showSessionTimeoutWarning() {
+    const overlay = document.getElementById('sessionTimeoutOverlay');
+    overlay.classList.add('show');
+    sessionTimeoutSeconds = 120;
+    updateSessionCountdownRing(120, 120);
+
+    sessionCountdownTimer = setInterval(() => {
+        sessionTimeoutSeconds--;
+        updateSessionCountdownRing(sessionTimeoutSeconds, 120);
+        document.getElementById('sessionCountdownRing').textContent = sessionTimeoutSeconds;
+        if (sessionTimeoutSeconds <= 0) {
+            clearInterval(sessionCountdownTimer);
+            overlay.classList.remove('show');
+            // Force logout
+            if (loggedInUser) {
+                showToast('Session expired. Logging out...', 'warning');
+                setTimeout(() => { openLogoutConfirmModal(); }, 1000);
+            }
+        }
+    }, 1000);
+}
+
+function updateSessionCountdownRing(current, total) {
+    const pct = (current / total) * 100;
+    const color = pct > 50 ? '#ffc107' : pct > 25 ? '#fd7e14' : '#dc3545';
+    const ring = document.getElementById('sessionCountdownRing');
+    if (ring) {
+        ring.style.background = `conic-gradient(${color} ${pct}%, #e9ecef ${pct}%)`;
+        ring.style.color = color;
+    }
+}
+
+function extendSession() {
+    clearInterval(sessionCountdownTimer);
+    document.getElementById('sessionTimeoutOverlay').classList.remove('show');
+    refreshSessionState();
+    startSessionTimeoutWatcher();
+    showToast('✅ Session extended for 24 hours!', 'success');
+}
+
+// ================================================================
+// ADVANCED ENHANCEMENT #2: DARK MODE TOGGLE
+// ================================================================
+function toggleDarkMode() {
+    const isDark = document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', isDark ? '1' : '0');
+    const btn = document.getElementById('darkModeBtn');
+    if (btn) {
+        btn.textContent = isDark ? '☀️ Light' : '🌙 Dark';
+        btn.classList.toggle('active', isDark);
+    }
+    showToast(isDark ? '🌙 Dark mode enabled' : '☀️ Light mode enabled', 'info');
+}
+
+function initDarkMode() {
+    const saved = localStorage.getItem('darkMode');
+    if (saved === '1' || (saved === null && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.body.classList.add('dark-mode');
+        const btn = document.getElementById('darkModeBtn');
+        if (btn) { btn.textContent = '☀️ Light'; btn.classList.add('active'); }
+    }
+}
+
+// ================================================================
+// ADVANCED ENHANCEMENT #3: BACKUP OVERVIEW PANEL
+// ================================================================
+function showBackupOverview() {
+    const panel = document.getElementById('backupOverviewPanel');
+    panel.style.display = 'block';
+    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    renderBackupOverview();
+}
+
+function renderBackupOverview() {
+    const dateEl = document.getElementById('backupOverviewDate');
+    const grid   = document.getElementById('backupOverviewGrid');
+    const todayObj = new Date();
+    dateEl.textContent = 'Overview for: ' + todayObj.toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+    grid.innerHTML = '';
+
+    // Find all operators active today or in their shift
+    const relevantOps = operators.filter(op => {
+        const s = getCleanDate(op.start), e = getCleanDate(op.end);
+        return getCleanDate(todayObj) >= s && getCleanDate(todayObj) <= e && op.status === 'Active';
+    });
+
+    if (relevantOps.length === 0) {
+        // Show all operators with their last recorded backup
+        initialOperators.slice(0, 8).forEach(op => {
+            let lastData = null;
+            let lastDate = null;
+            for (let k = localStorage.length - 1; k >= 0; k--) {
+                const key = localStorage.key(k);
+                if (key && key.startsWith(`backup_${op.name}_`)) {
+                    const d = JSON.parse(localStorage.getItem(key) || '{}');
+                    if (!lastData) { lastData = d; lastDate = key.replace(`backup_${op.name}_`,''); }
+                }
+            }
+            renderOverviewCard(grid, op.name, lastData, lastDate ? `Last: ${lastDate}` : 'No records');
+        });
+        return;
+    }
+
+    relevantOps.forEach(op => {
+        const bData = getBackupData(op.name, todayObj);
+        renderOverviewCard(grid, op.name, bData, 'Today');
+    });
+}
+
+function renderOverviewCard(grid, opName, bData, label) {
+    const card = document.createElement('div');
+    const status = bData ? bData.status : 'Pending';
+    const statusClass = !bData ? 'status-pending' :
+        (status.toLowerCase().includes('completely') ? 'status-completed' :
+         status.toLowerCase().includes('issue')      ? 'status-failed' :
+         status.toLowerCase().includes('holiday')    ? 'status-holiday' :
+         status.toLowerCase().includes('weekend')    ? 'status-weekend' : 'status-pending');
+
+    const statusIcon = statusClass === 'status-completed' ? '✅' :
+                       statusClass === 'status-failed'    ? '⚠️' :
+                       statusClass === 'status-holiday'   ? '🏖️' :
+                       statusClass === 'status-weekend'   ? '📅' : '⏳';
+
+    const timeInfo = bData && bData.startTime ? `🕐 ${bData.startTime}${bData.endTime ? ' – ' + bData.endTime : ''}` : '';
+    const confirmed = bData && bData.confirmed ? '✔ Confirmed' : '';
+
+    card.className = `backup-overview-card ${statusClass}`;
+    card.innerHTML = `
+        <div class="backup-ov-op">${statusIcon} ${opName.split(' ')[0]}</div>
+        <div class="backup-ov-status">${status || 'Pending'}</div>
+        ${timeInfo ? `<div class="backup-ov-time">${timeInfo}</div>` : ''}
+        ${confirmed ? `<div class="backup-ov-time" style="color:#28a745;">${confirmed}</div>` : ''}
+        <div class="backup-ov-time" style="font-size:10px;opacity:0.7;">${label}</div>
+    `;
+    grid.appendChild(card);
+}
+
+// ================================================================
+// ADVANCED ENHANCEMENT #4: SEARCH TEXT HIGHLIGHTING
+// ================================================================
+function highlightSearchText(text, searchTerm) {
+    if (!searchTerm || searchTerm.length < 2) return text;
+    const regex = new RegExp(`(${searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+    return String(text).replace(regex, '<span class="search-highlight">$1</span>');
+}
+
+// ================================================================
+// ADVANCED ENHANCEMENT #5: SHIFT PROGRESS BAR IN TABLE
+// ================================================================
+function buildShiftProgressBar(op) {
+    if (op.status === 'Finished') return '';
+    const start = getCleanDate(op.start);
+    const end   = getCleanDate(op.end);
+    const now   = getCleanDate(new Date());
+    const total = daysBetween(start, end) + 1;
+    const elapsed = Math.max(0, daysBetween(start, now));
+    const pct = total > 0 ? Math.min(100, Math.round((elapsed / total) * 100)) : 0;
+    const daysLeft = Math.max(0, daysBetween(now, end));
+
+    return `<div class="shift-progress-wrap" title="${elapsed} of ${total} days elapsed (${pct}%)">
+        <div class="shift-progress-fill" style="width:${pct}%"></div>
+    </div>
+    <span class="shift-days-badge">${daysLeft}d left (${pct}%)</span>`;
+}
+
+// ================================================================
+// ADVANCED ENHANCEMENT #6: COPY PHONE NUMBER
+// ================================================================
+function copyPhoneNumber(phone, btn) {
+    navigator.clipboard.writeText(phone).then(() => {
+        btn.textContent = '✅';
+        showToast(`📋 Copied: ${phone}`, 'success');
+        setTimeout(() => { btn.textContent = '📋'; }, 2000);
+    }).catch(() => {
+        showToast('Copy failed — use manual copy', 'error');
+    });
+}
+
+// ================================================================
+// ADVANCED ENHANCEMENT #7: KEYBOARD SHORTCUTS EXTENSION
+// ================================================================
+document.addEventListener('keydown', function(e) {
+    if (!loggedInUser) return;
+    // Ctrl/Cmd + P → Download PDF
+    if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+        e.preventDefault();
+        downloadPdf();
+    }
+    // Ctrl/Cmd + E → Export Excel
+    if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
+        e.preventDefault();
+        exportToExcel();
+    }
+    // Ctrl/Cmd + B → Toggle backup overview (admin)
+    if ((e.ctrlKey || e.metaKey) && e.key === 'b' && isAdmin) {
+        e.preventDefault();
+        showBackupOverview();
+    }
+    // Ctrl/Cmd + M → Toggle dark mode
+    if ((e.ctrlKey || e.metaKey) && e.key === 'm') {
+        e.preventDefault();
+        toggleDarkMode();
+    }
+});
+
+// ================================================================
+// ADVANCED ENHANCEMENT #8: MOBILE BOTTOM NAV
+// ================================================================
+function mobileSwitchTab(tab) {
+    // Update active state
+    ['schedule','backup','search','logout'].forEach(t => {
+        const btn = document.getElementById('mobNav' + t.charAt(0).toUpperCase() + t.slice(1));
+        if (btn) btn.classList.toggle('active', t === tab);
+    });
+
+    if (tab === 'schedule') {
+        document.getElementById('scheduleView').scrollIntoView({ behavior: 'smooth' });
+    } else if (tab === 'backup') {
+        const bSection = document.getElementById('backupTrackingSection');
+        if (bSection && bSection.style.display !== 'none') {
+            bSection.scrollIntoView({ behavior: 'smooth' });
+        } else {
+            showBackupTracking();
+            setTimeout(() => bSection.scrollIntoView({ behavior: 'smooth' }), 200);
+        }
+    } else if (tab === 'search') {
+        toggleAdvancedSearch();
+        setTimeout(() => {
+            const s = document.getElementById('advancedSearch');
+            if (s && s.style.display !== 'none') s.scrollIntoView({ behavior: 'smooth' });
+        }, 200);
+    }
+}
+
+function showMobileBottomNav() {
+    const nav = document.getElementById('mobileBottomNav');
+    if (nav && isOperator) nav.style.display = 'flex';
+    else if (nav) nav.style.display = 'none';
+}
+
+function hideMobileBottomNav() {
+    const nav = document.getElementById('mobileBottomNav');
+    if (nav) nav.style.display = 'none';
+}
+
+// ================================================================
+// ADVANCED ENHANCEMENT #9: TOPBAR TODAY BADGE
+// ================================================================
+function updateTopbarTodayBadge() {
+    let badge = document.getElementById('topbarTodayBadge');
+    if (!badge) {
+        badge = document.createElement('div');
+        badge.id = 'topbarTodayBadge';
+        badge.className = 'topbar-today-badge';
+        const actions = document.getElementById('topbarActions');
+        if (actions) actions.insertBefore(badge, actions.firstChild);
+    }
+    const todayOp = operators.find(op => {
+        const s = getCleanDate(op.start), e = getCleanDate(op.end);
+        return today.getTime() >= s.getTime() && today.getTime() <= e.getTime() && op.status === 'Active';
+    });
+    const dateStr = today.toLocaleDateString('en-US', { month:'short', day:'numeric' });
+    badge.textContent = todayOp ? `📅 ${dateStr} · ${todayOp.name.split(' ')[0]}` : `📅 ${dateStr}`;
+}
+
+// ================================================================
+// HOOK INTO EXISTING FLOW — inject into setupUserInterface
+// ================================================================
+const _origSetupUI = typeof setupUserInterface === 'function' ? setupUserInterface : null;
+
+// Patch showStickyTopbar to also add dark mode button and today badge
+const _origShowStickyTopbar = showStickyTopbar;
+showStickyTopbar = function() {
+    _origShowStickyTopbar();
+    // Add dark mode button if missing
+    let dmBtn = document.getElementById('darkModeBtn');
+    if (!dmBtn) {
+        dmBtn = document.createElement('button');
+        dmBtn.id = 'darkModeBtn';
+        dmBtn.className = 'topbar-btn';
+        dmBtn.onclick = toggleDarkMode;
+        const isDark = document.body.classList.contains('dark-mode');
+        dmBtn.textContent = isDark ? '☀️ Light' : '🌙 Dark';
+        if (isDark) dmBtn.classList.add('active');
+        const actions = document.getElementById('topbarActions');
+        if (actions) {
+            const logoutBtn = document.getElementById('topbarLogoutBtn');
+            actions.insertBefore(dmBtn, logoutBtn || null);
+        }
+    }
+
+    // Add backup overview button for admin
+    if (isAdmin && !document.getElementById('topbarOverviewBtn')) {
+        const ovBtn = document.createElement('button');
+        ovBtn.id = 'topbarOverviewBtn';
+        ovBtn.className = 'topbar-btn';
+        ovBtn.textContent = '📋 Overview';
+        ovBtn.onclick = showBackupOverview;
+        const actions = document.getElementById('topbarActions');
+        if (actions) {
+            const logoutBtn = document.getElementById('topbarLogoutBtn');
+            actions.insertBefore(ovBtn, logoutBtn || null);
+        }
+    }
+
+    updateTopbarTodayBadge();
+    startSessionTimeoutWatcher();
+    showMobileBottomNav();
+};
+
+// Override hideStickyTopbar to also clean up
+const _origHideStickyTopbar = hideStickyTopbar;
+hideStickyTopbar = function() {
+    _origHideStickyTopbar();
+    hideMobileBottomNav();
+    clearTimeout(sessionTimeoutWarningTimer);
+    clearInterval(sessionCountdownTimer);
+};
+
+// Override renderTable to add progress bars and copy buttons
+const _origRenderTable = renderTable;
+renderTable = function() {
+    _origRenderTable();
+
+    // Post-process: add shift progress bars
+    const tbody = document.querySelector('#scheduleTable tbody');
+    if (!tbody || !loggedInUser) return;
+
+    const searchTerm = (document.getElementById('searchOperatorName') ? document.getElementById('searchOperatorName').value : '').toLowerCase();
+
+    tbody.querySelectorAll('tr').forEach((tr, idx) => {
+        const cells = tr.querySelectorAll('td');
+        if (cells.length < 5) return;
+
+        // Cell index 4 is Date Range — add progress bar after it
+        const dateCell = cells[4];
+        if (dateCell && !dateCell.querySelector('.shift-progress-wrap')) {
+            // Find matching operator
+            const nameCell = cells[1];
+            if (nameCell) {
+                const opName = nameCell.textContent.trim();
+                const op = operators.find(o => o.name === opName);
+                if (op) {
+                    const progressHTML = buildShiftProgressBar(op);
+                    dateCell.insertAdjacentHTML('beforeend', progressHTML);
+                }
+            }
+        }
+
+        // Highlight search term in operator name cell
+        if (searchTerm && searchTerm.length >= 2 && cells[1]) {
+            const original = cells[1].textContent;
+            if (original.toLowerCase().includes(searchTerm)) {
+                cells[1].innerHTML = highlightSearchText(original, searchTerm);
+            }
+        }
+    });
+};
+
+// Override renderNextShifts to add copy-phone buttons in shift cards
+const _origRenderNextShifts = renderNextShifts;
+renderNextShifts = function() {
+    _origRenderNextShifts();
+
+    document.querySelectorAll('.shift-card').forEach(card => {
+        const pEls = card.querySelectorAll('p');
+        pEls.forEach(p => {
+            if (p.textContent.includes('Mobile:') && !p.querySelector('.copy-phone-btn')) {
+                const match = p.textContent.match(/Mobile:\s*(\S+)/);
+                if (match) {
+                    const phone = match[1];
+                    const btn = document.createElement('button');
+                    btn.className = 'copy-phone-btn';
+                    btn.title = 'Copy phone number';
+                    btn.textContent = '📋';
+                    btn.onclick = (e) => { e.stopPropagation(); copyPhoneNumber(phone, btn); };
+                    p.appendChild(btn);
+                }
+            }
+        });
+    });
+};
+
+// Initialize dark mode on page load
+document.addEventListener('DOMContentLoaded', function() {
+    initDarkMode();
+});
+
+// Also run dark mode init immediately (before DOMContentLoaded fires)
+initDarkMode();
+
+// Update topbar badge periodically
+setInterval(() => {
+    if (loggedInUser) {
+        updateTopbarTodayBadge();
+        updateKpiBar();
+    }
+}, 60000); // every minute
+</script>
 </body>
 </html>

@@ -4200,6 +4200,85 @@ body.dark-mode .shift-progress-wrap { background: #0f3460; }
     .kpi-icon { font-size: 20px; }
 }
 /* ===== END ADVANCED ENHANCEMENT STYLES ===== */
+
+/* === DAILY CHECK VIEW === */
+.daily-check-container { max-width: 800px; margin: 0 auto; }
+.daily-check-header {
+    display: flex; align-items: center; justify-content: space-between;
+    background: linear-gradient(135deg, #1a1a2e, #0f3460);
+    color: white; padding: 14px 20px; border-radius: 12px 12px 0 0;
+}
+.daily-check-header span { font-weight: 800; font-size: 15px; }
+.daily-check-header button {
+    background: rgba(255,255,255,0.15); border: none; color: white;
+    border-radius: 8px; padding: 6px 12px; cursor: pointer; font-size: 12px;
+}
+.daily-check-header button:hover { background: rgba(255,255,255,0.25); }
+.daily-check-date-row {
+    display: flex; align-items: center; gap: 12px; padding: 14px 18px;
+    background: #f8f9fa; border: 1px solid #e9ecef; border-top: none; flex-wrap: wrap;
+}
+.daily-check-date-row label { font-weight: 700; color: #555; font-size: 14px; }
+.daily-check-date-row input[type="date"] {
+    padding: 7px 10px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 14px;
+    transition: border-color 0.2s;
+}
+.daily-check-date-row input[type="date"]:focus { border-color: #94C83D; outline: none; }
+.daily-check-today-btn {
+    background: linear-gradient(135deg, #94C83D, #7DAE2F); color: white;
+    border: none; padding: 7px 16px; border-radius: 8px; cursor: pointer;
+    font-weight: 600; font-size: 13px; transition: all 0.2s;
+}
+.daily-check-today-btn:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(148,200,61,0.3); }
+.daily-check-result-card {
+    border-radius: 0 0 12px 12px; padding: 20px;
+    background: white; border: 1px solid #e9ecef; border-top: none;
+}
+.daily-check-result-card.is-today {
+    border-top: 4px solid #94C83D !important;
+    background: linear-gradient(180deg, #f0fff0, white);
+}
+.daily-check-result-card.is-sunday,
+.daily-check-result-card.is-holiday { background: #f8f9fa; }
+.daily-check-field {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 0; border-bottom: 1px solid #f0f0f0; font-size: 14px;
+}
+.daily-check-field:last-child { border-bottom: none; }
+.daily-check-field-label { font-weight: 700; color: #555; min-width: 175px; flex-shrink: 0; }
+.daily-check-no-op {
+    font-style: italic; color: #888; font-size: 14px; padding: 16px 0;
+}
+.daily-check-today-badge {
+    display: inline-block; background: linear-gradient(135deg,#94C83D,#7DAE2F);
+    color: white; font-size: 11px; font-weight: 700; padding: 2px 9px;
+    border-radius: 20px; margin-left: 8px; vertical-align: middle;
+}
+/* Status chips */
+.status-chip {
+    display: inline-block; padding: 3px 12px; border-radius: 12px;
+    font-size: 12px; font-weight: 700; color: white;
+}
+.chip-active    { background: #28a745; }
+.chip-finished  { background: #6c757d; }
+.chip-unknown   { background: #ffc107; color: #333; }
+.chip-completed { background: #28a745; }
+.chip-failed    { background: #dc3545; }
+.chip-holiday   { background: #6f42c1; }
+.chip-weekend   { background: #6c757d; }
+.chip-pending   { background: #ffc107; color: #333; }
+.chip-other     { background: #fd7e14; }
+.chip-confirmed     { background: #28a745; }
+.chip-notconfirmed  { background: #dc3545; }
+.chip-na            { background: #adb5bd; }
+
+/* Dark mode */
+body.dark-mode .daily-check-result-card { background: #16213e; border-color: #0f3460; }
+body.dark-mode .daily-check-result-card.is-today { background: linear-gradient(180deg,#1a3a1a,#16213e); }
+body.dark-mode .daily-check-date-row { background: #0f3460; border-color: #1a4a8a; }
+body.dark-mode .daily-check-field { border-bottom-color: #0f3460; }
+body.dark-mode .daily-check-field-label { color: #aaa; }
+/* === END DAILY CHECK VIEW === */
 </style>
 </head>
 <body>
@@ -4217,6 +4296,7 @@ body.dark-mode .shift-progress-wrap { background: #0f3460; }
         <button class="topbar-btn" onclick="toggleAdvancedSearch()" id="topbarSearchBtn">🔍 Search</button>
         <button class="topbar-btn" onclick="exportToExcel()" id="topbarExportBtn">📥 Export</button>
         <button class="topbar-btn" onclick="downloadPdf()" id="topbarPdfBtn">🖨️ PDF</button>
+        <button class="topbar-btn" onclick="openDailyCheckView()" id="topbarDailyCheckBtn">📋 Daily Check</button>
         <button class="topbar-btn" onclick="openLogoutConfirmModal()" id="topbarLogoutBtn" style="border-color: #dc3545; color: #ff6b6b;">🚪 Logout</button>
     </div>
 </div>
@@ -4798,6 +4878,7 @@ body.dark-mode .shift-progress-wrap { background: #0f3460; }
                 <button class="admin-btn btn-orange"  onclick="detectShiftConflicts()">⚠️ Check Conflicts</button>
                 <button class="admin-btn btn-lime"    onclick="toggleCompletionChart()">📊 Completion Chart</button>
                 <button class="admin-btn btn-indigo"  onclick="toggleCalendar()">📅 Calendar View</button>
+                <button class="admin-btn btn-teal"    onclick="openDailyCheckView()">📋 Daily Check View</button>
             </div>
         </div>
 
@@ -4829,15 +4910,15 @@ body.dark-mode .shift-progress-wrap { background: #0f3460; }
             <!-- Auto-active pill -->
             <div class="notif-status-pill">
                 <span class="pulse-dot"></span>
-                <span><strong>Auto-Notifications Active</strong> — operators are notified <strong id="notifyDaysDisplay">3</strong> day(s) before their shift starts (checks every hour)</span>
+                <span><strong>Auto-Notifications Active</strong> — operators are automatically notified <strong>2 days</strong> before their shift starts (checks every hour)</span>
             </div>
 
             <!-- Days input row -->
             <div class="notif-days-row">
                 <span style="font-size:16px;">📅</span>
-                <label for="notifyDays">Notify operators this many days before shift start:</label>
-                <input class="notif-days-input" type="number" id="notifyDays" value="3" min="1" max="30"
-                       oninput="document.getElementById('notifyDaysDisplay').textContent=this.value">
+                <label for="notifyDays">Manual "Send Now" window (days before shift):</label>
+                <input class="notif-days-input" type="number" id="notifyDays" value="2" min="0" max="30"
+                       oninput="document.getElementById('notifyDays').value=this.value">
                 <button class="admin-btn btn-green" onclick="saveNotificationSettings()" style="margin:0;">
                     💾 Save &amp; Start
                 </button>
@@ -4848,7 +4929,7 @@ body.dark-mode .shift-progress-wrap { background: #0f3460; }
 
             <!-- Action buttons -->
             <div class="admin-btn-grid">
-                <button class="admin-btn btn-lime"   onclick="check3DayNotifications()">🎯 Check 3-Day Notifications</button>
+                <button class="admin-btn btn-lime"   onclick="check3DayNotifications()">🎯 Check 2-Day Notifications</button>
                 <button class="admin-btn btn-indigo" onclick="openNotificationLogView()">📋 View Notification Log</button>
                 <button class="admin-btn btn-teal"   onclick="previewNotificationMessage()">👁️ Preview Message</button>
                 <button class="admin-btn btn-orange" onclick="debugNotificationSystem()">🔍 Debug Notifications</button>
@@ -5057,6 +5138,26 @@ body.dark-mode .shift-progress-wrap { background: #0f3460; }
 <div class="note">Oromia Bank Backup Operators Schedule</div>
 
 <!-- ============================================================
+     DAILY OPERATOR CHECK VIEW
+     ============================================================ -->
+<div class="controls" id="dailyCheckSection" style="display:none; padding:0; background:transparent; box-shadow:none; border-radius:12px; overflow:hidden; max-width:800px; margin:0 auto 20px auto;">
+    <div class="daily-check-container">
+        <div class="daily-check-header">
+            <span>📋 Daily Operator Check</span>
+            <button onclick="closeDailyCheckView()">✕ Close</button>
+        </div>
+        <div class="daily-check-date-row">
+            <label for="dailyCheckDate">Select Date:</label>
+            <input type="date" id="dailyCheckDate" onchange="renderDailyCheckView(this.value)">
+            <button class="daily-check-today-btn" onclick="setDailyCheckToday()">📅 Today</button>
+        </div>
+        <div class="daily-check-result-card" id="dailyCheckResult">
+            <p class="daily-check-no-op">Select a date to view the assigned operator.</p>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================
      FEATURE 1: SHIFT COMPLETION RATE CHART
      ============================================================ -->
 <div id="completionChartSection" style="display:none; max-width:1000px; margin:0 auto 20px auto;">
@@ -5248,6 +5349,11 @@ body.dark-mode .shift-progress-wrap { background: #0f3460; }
         <span class="close" onclick="closeNotificationLogView()">&times;</span>
         <h3>📧📱 Real-Time Notification Log (Email & SMS)</h3>
         <p>This log tracks all email and SMS notifications sent to operators with delivery status.</p>
+        <div style="margin: 10px 0 5px 0;">
+            <input type="text" id="notifLogSearch" placeholder="🔍 Search by operator name, email or type..."
+                style="width:100%; padding:8px 12px; border:2px solid #dee2e6; border-radius:8px; font-size:14px; box-sizing:border-box;"
+                oninput="filterNotificationLog(this.value)">
+        </div>
         <div class="table-container" style="padding: 5px; margin-top: 10px; max-height: 400px; overflow-y: scroll;">
             <table id="notificationLogTable" style="min-width: 100%;">
                 <thead>
@@ -6328,45 +6434,55 @@ function getConvertedStatus(operatorStatus) {
 
 // Helper functions for backup tracking
 function getDayType(date) {
-    const dayOfWeek = date.getDay(); // 0=Sunday, 1=Monday, ..., 6=Saturday
-    const dateStr = formatExcelDateShort(date);
-    
-    // Check if it's Sunday (weekend day in Ethiopia)
-    if (dayOfWeek === 0) { // Sunday is weekend in Ethiopia
-        return 'Weekend';
-    }
-    
-    // Check if it's a predefined holiday
-    if (isHoliday(date)) {
-        return 'Holiday';
-    }
-    
-    // All other days (Monday, Tuesday, Wednesday, Thursday, Friday, Saturday) are working days
+    // Use isWorkingDay for consistent Sunday + holiday detection
+    if (date.getDay() === 0) return 'Weekend';      // Sunday
+    if (isHoliday(date))     return 'Holiday';
     return 'Working Day';
 }
 
+/** Returns true if date is a configured holiday (fixed or custom). */
 function isHoliday(date) {
-    // Define Ethiopian holidays and international holidays
-    // Note: Ethiopian work week is Monday-Saturday (Sunday is weekend)
-    const holidays = [
+    const FIXED_HOLIDAYS = [
         '01-01', // New Year (January 1)
         '01-07', // Ethiopian Christmas (Genna)
         '01-19', // Ethiopian Epiphany (Timkat)
         '03-02', // Victory of Adwa
-        '04-27', // Good Friday (varies yearly - approximate)
-        '04-29', // Easter Sunday (varies yearly - approximate)
+        '04-27', // Good Friday (approximate)
+        '04-29', // Easter Sunday (approximate)
         '05-01', // International Labor Day
         '05-05', // Patriots Day (Arbegnoch Qen)
         '05-28', // Downfall of Derg Regime
         '09-11', // Ethiopian New Year (Enkutatash)
         '09-27', // Meskel (Finding of the True Cross)
         '12-25', // Christmas Day (International)
-        // Add more Ethiopian holidays as needed
-        // Note: Islamic holidays vary by lunar calendar and should be updated annually
     ];
-    
-    const monthDay = `${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
-    return holidays.includes(monthDay);
+
+    // Merge with admin-configured custom holidays stored in localStorage
+    let custom = [];
+    try {
+        const raw = localStorage.getItem('customHolidays');
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) {
+            // Validate MM-DD format; cap at 50 entries; silently ignore bad entries
+            custom = parsed
+                .filter(e => typeof e === 'string' && /^\d{2}-\d{2}$/.test(e))
+                .slice(0, 50);
+        }
+    } catch (_) { /* fall back to fixed list silently */ }
+
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    const key = `${mm}-${dd}`;
+    return FIXED_HOLIDAYS.includes(key) || custom.includes(key);
+}
+
+/**
+ * Returns true if date is a valid working day:
+ * not Sunday (getDay() !== 0) AND not a configured holiday.
+ */
+function isWorkingDay(date) {
+    const d = (date instanceof Date) ? date : getCleanDate(date);
+    return d.getDay() !== 0 && !isHoliday(d);
 }
 
 function getBackupStatus(operatorName, date) {
@@ -6950,35 +7066,53 @@ function daysBetween(date1, date2) {
     return Math.round((getCleanDate(date2).getTime() - getCleanDate(date1).getTime()) / oneDay);
 }
 
-/** Calculates the end date by counting exactly 10 working days (excluding Sundays), starting from the provided startDate (inclusive). */
+/** Calculates the end date by counting exactly SHIFT_LENGTH working days
+ *  (Mon–Sat, excluding holidays), starting from startDate inclusive.
+ *  Safety cap of 365 iterations prevents infinite loops. */
 function calculateEndDate(startDate) {
     let workingDays = 0;
     let current = getCleanDate(startDate);
-    
-    while (workingDays < SHIFT_LENGTH) {
-        if (current.getDay() !== 0) { // 0 = Sunday
-            workingDays++;    
-        }
-        
-        if (workingDays < SHIFT_LENGTH) {    
+    let safety = 0;
+
+    while (workingDays < SHIFT_LENGTH && safety < 365) {
+        if (isWorkingDay(current)) workingDays++;
+        if (workingDays < SHIFT_LENGTH) {
+            current = new Date(current);
             current.setDate(current.getDate() + 1);
         }
+        safety++;
+    }
+    if (safety >= 365) {
+        console.warn('[calculateEndDate] Safety cap reached — check holiday config.');
     }
     return current;
 }
 
+/** Counts working days (Mon–Sat, excluding holidays) between two dates inclusive. */
 function countWorkingDays(startDate, endDate) {
     let count = 0;
     let current = getCleanDate(startDate);
     const end = getCleanDate(endDate);
-    
+
     while (current.getTime() <= end.getTime()) {
-        if (current.getDay() !== 0) { // 0 = Sunday
-            count++;
-        }
+        if (isWorkingDay(current)) count++;
+        current = new Date(current);
         current.setDate(current.getDate() + 1);
     }
     return count;
+}
+
+/**
+ * Returns the shift record that covers `date`, or null if none found.
+ * A shift covers a date when shift.start <= date <= shift.end.
+ */
+function getOperatorForDate(date) {
+    const d = getCleanDate(date);
+    return operators.find(op => {
+        const s = getCleanDate(op.start);
+        const e = getCleanDate(op.end);
+        return d.getTime() >= s.getTime() && d.getTime() <= e.getTime();
+    }) || null;
 }
 
 
@@ -7081,9 +7215,29 @@ async function sendEmailNotification(operatorData, shiftData, notificationType =
         emailjs.init({ publicKey: EMAIL_API_CONFIG.publicKey });
     }
 
-    // Validate recipient email
+    // Validate recipient email — log a Failure entry if missing
     if (!operatorData.email || operatorData.email === 'N/A') {
         console.warn('⚠️ No email address for operator:', operatorData.name);
+        // Write a failure log entry so the gap is visible in the audit trail
+        try {
+            const failId    = `${shiftData.start}-${operatorData.name.toUpperCase()}`;
+            const failEntry = {
+                id:           failId,
+                timestamp:    new Date().toISOString(),
+                operatorName: operatorData.name,
+                email:        operatorData.email || '',
+                mobile:       operatorData.mobile || '',
+                shiftStart:   shiftData.start,
+                type:         notificationType,
+                emailStatus:  'Failure',
+                smsStatus:    'N/A',
+                error:        'No valid email address on file'
+            };
+            const log = JSON.parse(localStorage.getItem(NOTIFICATION_LOG_KEY) || '[]');
+            if (log.length >= 500) log.pop();
+            log.unshift(failEntry);
+            localStorage.setItem(NOTIFICATION_LOG_KEY, JSON.stringify(log));
+        } catch (_) { /* silent */ }
         return { success: false, error: `No email address on file for ${operatorData.name}` };
     }
 
@@ -7519,7 +7673,7 @@ function startAutomaticNotifications() {
         }
     }, 5000); // 5 seconds after login
     
-    console.log('✅ Automatic notifications started - checking every hour for 3-day advance notifications');
+    console.log('✅ Automatic notifications started — sends exactly 2 days before each shift start (checks every hour)');
 }
 
 // Stop automatic notification checking
@@ -7544,11 +7698,10 @@ function renderNotificationLog() {
     notificationLog.forEach(entry => {
         const tr = document.createElement('tr');
         
-        // Create status indicators for email and SMS
         const emailStatus = entry.emailStatus || 'Unknown';
-        const smsStatus = entry.smsStatus || 'Unknown';
-        const emailIcon = emailStatus === 'Success' ? '✅📧' : '❌📧';
-        const smsIcon = smsStatus === 'Success' ? '✅📱' : '❌📱';
+        const smsStatus   = entry.smsStatus   || 'Unknown';
+        const emailIcon   = emailStatus === 'Success' ? '✅📧' : '❌📧';
+        const smsIcon     = smsStatus   === 'Success' ? '✅📱' : (smsStatus === 'N/A' ? '—' : '❌📱');
         
         tr.innerHTML = `
             <td>${formatTimestamp(entry.timestamp)}</td>
@@ -7561,6 +7714,12 @@ function renderNotificationLog() {
         `;
         tbody.appendChild(tr);
     });
+
+    // Re-apply any active search term
+    const searchEl = document.getElementById('notifLogSearch');
+    if (searchEl && searchEl.value.trim()) {
+        filterNotificationLog(searchEl.value);
+    }
 }
 
 function openNotificationLogView() {
@@ -7584,94 +7743,127 @@ function clearNotificationLog() {
     }
 }
 
-function checkAndSendNotifications(manualTrigger = false) {
-    const notifyDays = notificationSettings.notifyDays || 3;
+async function checkAndSendNotifications(manualTrigger = false) {
+    // Always reload log fresh so deduplication works across sessions
+    notificationLog = JSON.parse(localStorage.getItem(NOTIFICATION_LOG_KEY) || '[]');
+
     let notificationsSent = 0;
     const now = getCleanDate(new Date());
-    
-    console.log(`[Notification Check] Starting check. Notify days: ${notifyDays}, Manual: ${manualTrigger}`);
-    console.log(`[Notification Check] Current date: ${now.toISOString().split('T')[0]}`);
-    console.log(`[Notification Check] Total operators: ${operators.length}`);
-    
-    // Only process for active shifts that start in the future
-    operators.forEach(async (op, index) => {
-        if (op.status !== 'Active') {
-            console.log(`[Notification Check] Skipping ${op.name} - Status: ${op.status}`);
-            return;
-        }
-        
-        const shiftStart = getCleanDate(op.start);
-        const daysUntilStart = daysBetween(now, shiftStart);
-        
-        console.log(`[Notification Check] ${op.name}: Shift starts ${op.start}, Days until: ${daysUntilStart}`);
-        
-        // Check if shift is upcoming and within the notification window
-        if (daysUntilStart >= 1 && daysUntilStart <= notifyDays) {
-            
-            // Generate a unique ID for this notification instance
-            const notificationID = `${op.start}-${op.name.toUpperCase()}`;
-            
-            // Check if this notification has already been sent/logged
-            const alreadySent = notificationLog.some(log => log.id === notificationID);
-            
-            console.log(`[Notification Check] ${op.name}: In notification window (${daysUntilStart} days), Already sent: ${alreadySent}`);
 
-            if (!alreadySent || manualTrigger) {
-                // Get the most current operator details from master list
-                const masterOp = initialOperators.find(iOp => iOp.name === op.name);
-                const operatorData = masterOp || op;
-                
-                console.log(`[Notification Check] Sending notification to ${operatorData.name} (${operatorData.email})`);
-                
-                // Determine notification type based on days until shift
-                let notificationType = 'reminder';
-                if (daysUntilStart === 1) {
-                    notificationType = 'urgent';
-                } else if (daysUntilStart === 0) {
-                    notificationType = 'today';
-                }
-                
-                // Send actual notifications (email + SMS)
-                try {
-                    const results = await sendNotificationToOperator(operatorData, op, notificationType);
-                    
-                    if (results.email.success || results.sms.success) {
-                        notificationsSent++;
-                        
-                        if (manualTrigger) {
-                            const successMsg = `✅ Notification sent to ${operatorData.name}:\n` +
-                                             `📧 Email: ${results.email.success ? 'Sent' : 'Failed'}\n` +
-                                             `📱 SMS: ${results.sms.success ? 'Sent' : 'Failed'}`;
-                            console.log(successMsg);
-                        }
-                    }
-                } catch (error) {
-                    console.error(`Failed to send notification to ${operatorData.name}:`, error);
-                    if (manualTrigger) {
-                        showToast(`Failed to send notification to ${operatorData.name}`, 'error');
-                    }
-                }
-            }
-        } else {
-            console.log(`[Notification Check] ${op.name}: Outside notification window (${daysUntilStart} days)`);
+    console.log(`[Notification Check] Date: ${now.toISOString().split('T')[0]} | Manual: ${manualTrigger}`);
+
+    for (const op of operators) {
+        if (op.status !== 'Active') continue;
+
+        const shiftStart    = getCleanDate(op.start);
+        const daysUntilStart = daysBetween(now, shiftStart);
+
+        // AUTO: fire ONLY when exactly 2 days away
+        // MANUAL: fire for 0–2 days window
+        const inWindow = manualTrigger
+            ? (daysUntilStart >= 0 && daysUntilStart <= 2)
+            : (daysUntilStart === 2);
+
+        if (!inWindow) continue;
+
+        const notificationID = `${op.start}-${op.name.toUpperCase()}`;
+
+        // Duplicate prevention — skip if already logged (auto only)
+        if (!manualTrigger && notificationLog.some(l => l.id === notificationID)) {
+            console.log(`[Notification Check] Duplicate skipped: ${op.name}`);
+            continue;
         }
-    });
+
+        const masterOp     = initialOperators.find(io => io.name === op.name) || op;
+        const operatorData = masterOp;
+
+        // Guard: no email
+        if (!operatorData.email || operatorData.email === 'N/A') {
+            const failEntry = {
+                id: notificationID,
+                timestamp:    new Date().toISOString(),
+                operatorName: operatorData.name,
+                email:        operatorData.email || '',
+                mobile:       operatorData.mobile || '',
+                shiftStart:   op.start,
+                type:         'reminder',
+                emailStatus:  'Failure',
+                smsStatus:    'N/A',
+                error:        'No valid email address'
+            };
+            // Cap at 500
+            if (notificationLog.length >= 500) notificationLog.pop();
+            notificationLog.unshift(failEntry);
+            try {
+                localStorage.setItem(NOTIFICATION_LOG_KEY, JSON.stringify(notificationLog));
+            } catch (e) {
+                showToast('Notification log could not be saved', 'error');
+            }
+            showToast(`⚠️ No email for ${operatorData.name}`, 'warning');
+            continue;
+        }
+
+        // Determine type (always 'reminder' for 2-day; 'urgent'=1 day; 'today'=0 days)
+        const notifType = daysUntilStart === 0 ? 'today'
+                        : daysUntilStart === 1 ? 'urgent'
+                        : 'reminder';
+
+        try {
+            const results = await sendNotificationToOperator(operatorData, op, notifType);
+            const emailOK = results.email.success;
+
+            // Build log entry
+            const logEntry = {
+                id:           notificationID,
+                timestamp:    new Date().toISOString(),
+                operatorName: operatorData.name,
+                email:        operatorData.email,
+                mobile:       operatorData.mobile || '',
+                shiftStart:   op.start,
+                type:         notifType,
+                emailStatus:  emailOK ? 'Success' : 'Failure',
+                smsStatus:    'N/A'
+            };
+            if (!emailOK && results.email.error) logEntry.error = results.email.error;
+
+            // Cap at 500
+            if (notificationLog.length >= 500) notificationLog.pop();
+            notificationLog.unshift(logEntry);
+
+            try {
+                localStorage.setItem(NOTIFICATION_LOG_KEY, JSON.stringify(notificationLog));
+            } catch (e) {
+                showToast('Notification log could not be saved', 'error');
+            }
+
+            if (emailOK) {
+                notificationsSent++;
+                console.log(`[Notification Check] ✅ Sent to ${operatorData.name}`);
+            } else {
+                // Always surface failure — not just for manual runs
+                showToast(`❌ Email failed for ${operatorData.name}: ${results.email.error || 'Unknown error'}`, 'error');
+                console.warn(`[Notification Check] ❌ Failed: ${operatorData.name}`, results.email.error);
+            }
+
+        } catch (err) {
+            console.error(`[Notification Check] Exception for ${operatorData.name}:`, err);
+            showToast(`❌ Notification error for ${operatorData.name}`, 'error');
+        }
+    }
 
     if (manualTrigger) {
         setTimeout(() => {
             if (notificationsSent > 0) {
-                showToast(`✅ ${notificationsSent} notifications sent successfully!`, 'success');
-                alert(`Manual notification check complete.\n\n${notificationsSent} notifications sent via email and SMS.\n\nCheck the Notification Log for details.`);
+                showToast(`✅ ${notificationsSent} notification(s) sent!`, 'success');
+                alert(`Manual check complete.\n\n${notificationsSent} notification(s) sent.\n\nCheck the Notification Log for details.`);
             } else {
-                showToast('No new notifications needed based on current settings.', 'info');
-                alert('Manual notification check complete.\n\nNo new reminders needed based on current settings and notification history.');
+                showToast('No notifications sent — check log for details.', 'info');
+                alert('Manual check complete.\n\nNo notifications sent. This may be because:\n• No shifts start in exactly 2 days\n• Notifications already sent (check log)\n• Email addresses missing');
             }
-        }, 2000);
-    }
-    
-    if (notificationsSent > 0 && !manualTrigger) {
-        console.log(`[Automatic Check] ${notificationsSent} notifications sent.`);
-        showToast(`${notificationsSent} automatic reminders sent`, 'success');
+        }, 1500);
+    } else if (notificationsSent > 0) {
+        showToast(`📧 ${notificationsSent} automatic 2-day reminder(s) sent`, 'success');
+        console.log(`[Automatic Check] ${notificationsSent} notification(s) sent.`);
     }
 }
 
@@ -9170,16 +9362,7 @@ function authenticate() {
                 startAutoSave();
                 if (isAdmin || isManager) {
                     startAutomaticNotifications();
-                    
-                    // Auto-configure 3-day notifications if not already set
-                    if (notificationSettings.notifyDays !== 3) {
-                        notificationSettings.notifyDays = 3;
-                        localStorage.setItem(NOTIFICATION_SETTINGS_KEY, JSON.stringify(notificationSettings));
-                        document.getElementById('notifyDays').value = 3;
-                        console.log('✅ Auto-configured notifications for 3 days before shift start');
-                        showToast('✅ Auto-configured: 3-day advance notifications enabled', 'success');
-                    }
-                    
+
                     // Show upcoming notifications summary
                     setTimeout(() => {
                         showUpcomingNotificationsSummary();
@@ -10368,12 +10551,13 @@ function setDemoMode() {
 function debugNotificationSystem() {
     if (!isAdmin) return;
     
-    const notifyDays = notificationSettings.notifyDays || 3;
+    const notifyDays = notificationSettings.notifyDays || 2;
     const now = getCleanDate(new Date());
     
     let debugInfo = `🔍 Notification System Debug Report\n\n`;
     debugInfo += `📅 Current Date: ${now.toISOString().split('T')[0]}\n`;
-    debugInfo += `⚙️ Notification Days Setting: ${notifyDays}\n`;
+    debugInfo += `⚙️ Auto-Send Trigger: exactly 2 days before shift start\n`;
+    debugInfo += `⚙️ Manual Send Window: 0–${notifyDays} days before shift start\n`;
     debugInfo += `📊 Total Operators: ${operators.length}\n`;
     debugInfo += `📧 Email Config: ${EMAIL_API_CONFIG.serviceId || 'Not set'}\n`;
     debugInfo += `📱 SMS Config: ${SMS_API_CONFIG.accountSid || 'Not set'}\n\n`;
@@ -10394,12 +10578,12 @@ function debugNotificationSystem() {
         debugInfo += `   Status: ${op.status}\n`;
         debugInfo += `   Shift Start: ${op.start}\n`;
         debugInfo += `   Days Until: ${daysUntilStart}\n`;
-        debugInfo += `   In Window (1-${notifyDays} days): ${daysUntilStart >= 1 && daysUntilStart <= notifyDays ? 'YES' : 'NO'}\n`;
+        debugInfo += `   Auto-trigger (exactly 2 days): ${daysUntilStart === 2 ? 'YES' : 'NO'}\n`;
         debugInfo += `   Already Sent: ${alreadySent ? 'YES' : 'NO'}\n`;
-        debugInfo += `   Will Send: ${op.status === 'Active' && daysUntilStart >= 1 && daysUntilStart <= notifyDays && !alreadySent ? 'YES' : 'NO'}\n`;
+        debugInfo += `   Will Auto-Send: ${op.status === 'Active' && daysUntilStart === 2 && !alreadySent ? 'YES' : 'NO'}\n`;
         
         if (op.status === 'Active' && daysUntilStart >= 1) upcomingCount++;
-        if (op.status === 'Active' && daysUntilStart >= 1 && daysUntilStart <= notifyDays) inWindowCount++;
+        if (op.status === 'Active' && daysUntilStart === 2) inWindowCount++;
         if (alreadySent) alreadySentCount++;
     });
     
@@ -10417,10 +10601,10 @@ function debugNotificationSystem() {
 function check3DayNotifications() {
     if (!isAdmin) return;
     
-    showToast('Checking for 3-day notifications...', 'info');
+    showToast('Checking for 2-day notifications...', 'info');
     
     const now = getCleanDate(new Date());
-    const threeDayNotifications = [];
+    const twoDayNotifications = [];
     
     operators.forEach(op => {
         if (op.status !== 'Active') return;
@@ -10428,12 +10612,12 @@ function check3DayNotifications() {
         const shiftStart = getCleanDate(op.start);
         const daysUntilStart = daysBetween(now, shiftStart);
         
-        // Check specifically for 3-day notifications
-        if (daysUntilStart === 3) {
+        // Check specifically for 2-day notifications (matching the auto-send engine)
+        if (daysUntilStart === 2) {
             const notificationID = `${op.start}-${op.name.toUpperCase()}`;
             const alreadySent = notificationLog.some(log => log.id === notificationID);
             
-            threeDayNotifications.push({
+            twoDayNotifications.push({
                 name: op.name,
                 email: op.email,
                 mobile: op.mobile,
@@ -10443,25 +10627,26 @@ function check3DayNotifications() {
         }
     });
     
-    let message = '🎯 3-Day Notification Check Results:\n\n';
+    let message = '🎯 2-Day Notification Check Results:\n\n';
     
-    if (threeDayNotifications.length === 0) {
-        message += 'No operators have shifts starting in exactly 3 days.';
+    if (twoDayNotifications.length === 0) {
+        message += 'No operators have shifts starting in exactly 2 days.\n\n';
+        message += 'The auto-engine will send notifications automatically when a shift is 2 days away.';
     } else {
-        message += `Found ${threeDayNotifications.length} operator(s) with shifts starting in 3 days:\n\n`;
+        message += `Found ${twoDayNotifications.length} operator(s) with shifts starting in 2 days:\n\n`;
         
-        threeDayNotifications.forEach(op => {
-            const status = op.alreadySent ? '✅ Already notified' : '📤 Ready to notify';
-            message += `• ${op.name} (${formatDate(op.shiftStart)}) - ${status}\n`;
+        twoDayNotifications.forEach(op => {
+            const status = op.alreadySent ? '✅ Already notified' : '📤 Will be notified automatically';
+            message += `• ${op.name} (${formatDate(op.shiftStart)}) — ${status}\n`;
         });
         
-        const readyToNotify = threeDayNotifications.filter(op => !op.alreadySent).length;
+        const readyToNotify = twoDayNotifications.filter(op => !op.alreadySent).length;
         
         if (readyToNotify > 0) {
-            message += `\n🔔 ${readyToNotify} operator(s) will be notified automatically.`;
-            message += '\n\nClick "📤 Send Reminders Now" to send notifications immediately.';
+            message += `\n🔔 ${readyToNotify} operator(s) will be notified automatically within the hour.`;
+            message += '\n\nClick "📤 Send Now" to send immediately.';
         } else {
-            message += '\n✅ All 3-day notifications have already been sent.';
+            message += '\n✅ All 2-day notifications have already been sent.';
         }
     }
     
@@ -10491,7 +10676,7 @@ function showUpcomingNotificationsSummary() {
                 name: op.name,
                 shiftStart: op.start,
                 daysUntil: daysUntilStart,
-                willNotify: daysUntilStart <= 3 && !alreadySent,
+                willNotify: daysUntilStart === 2 && !alreadySent,
                 alreadySent: alreadySent
             });
         }
@@ -10504,25 +10689,24 @@ function showUpcomingNotificationsSummary() {
         
         upcomingNotifications.forEach(notif => {
             const status = notif.alreadySent ? '✅ Sent' : 
-                          notif.willNotify ? '📤 Will notify' : 
-                          '⏳ Outside 3-day window';
+                          notif.willNotify ? '📤 Will notify (2-day trigger)' : 
+                          '⏳ Not yet in 2-day window';
             
-            summary += `• ${notif.name}: ${notif.daysUntil} days (${formatDate(notif.shiftStart)}) - ${status}\n`;
+            summary += `• ${notif.name}: ${notif.daysUntil} day(s) away (${formatDate(notif.shiftStart)}) — ${status}\n`;
         });
         
         const willNotifyCount = upcomingNotifications.filter(n => n.willNotify).length;
         
         if (willNotifyCount > 0) {
-            summary += `\n🔔 ${willNotifyCount} operators will be notified automatically within 3 days.`;
+            summary += `\n🔔 ${willNotifyCount} operator(s) will be notified automatically (2-day trigger).`;
         } else {
-            summary += '\n✅ All upcoming notifications have been sent or are outside the 3-day window.';
+            summary += '\n✅ All upcoming 2-day notifications have been sent, or no shifts are 2 days away yet.';
         }
         
         console.log(summary);
         
-        // Show as a toast notification instead of alert for less intrusion
         if (willNotifyCount > 0) {
-            showToast(`🔔 ${willNotifyCount} operators will be notified automatically within 3 days`, 'info');
+            showToast(`🔔 ${willNotifyCount} operator(s) will be auto-notified in 2-day window`, 'info');
         }
     }
 }
@@ -11197,6 +11381,199 @@ function refreshNewFeatures() {
     detectShiftConflicts();
     startCountdownTimer();
 }
+
+// ================================================================
+// DAILY CHECK VIEW — Tasks 8 & 9
+// ================================================================
+
+/** Opens the Daily Check panel and renders today's data. */
+function openDailyCheckView() {
+    const section = document.getElementById('dailyCheckSection');
+    if (!section) return;
+    const picker   = document.getElementById('dailyCheckDate');
+    const todayStr = getCleanDate(new Date()).toISOString().split('T')[0];
+    picker.value   = todayStr;
+    section.style.display = 'block';
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    renderDailyCheckView(todayStr);
+}
+
+/** Closes the Daily Check panel. */
+function closeDailyCheckView() {
+    const section = document.getElementById('dailyCheckSection');
+    if (section) section.style.display = 'none';
+}
+
+/** Resets date picker to today and re-renders. */
+function setDailyCheckToday() {
+    const todayStr = getCleanDate(new Date()).toISOString().split('T')[0];
+    const picker   = document.getElementById('dailyCheckDate');
+    if (picker) picker.value = todayStr;
+    renderDailyCheckView(todayStr);
+}
+
+/**
+ * Renders the Daily Check result card for the given YYYY-MM-DD string.
+ * Determines day type, looks up shift + backup data, builds HTML.
+ */
+function renderDailyCheckView(dateStr) {
+    const container = document.getElementById('dailyCheckResult');
+    if (!container) return;
+
+    if (!dateStr) {
+        container.innerHTML = '<p class="daily-check-no-op">Please select a date.</p>';
+        return;
+    }
+
+    const d = getCleanDate(new Date(dateStr));
+    // Use a fresh "today" each render so the page doesn't drift if left open overnight
+    const liveToday = getCleanDate(new Date());
+    const todayStr  = liveToday.toISOString().split('T')[0];
+    const isToday   = dateStr === todayStr;
+
+    // Full day-of-week name
+    const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const dayName  = dayNames[d.getDay()];
+
+    // Formatted date: DD Mon YYYY
+    const months   = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const fmtDate  = `${String(d.getDate()).padStart(2,'0')} ${months[d.getMonth()]} ${d.getFullYear()}`;
+
+    // Determine day type
+    const isSun  = d.getDay() === 0;
+    const isHol  = !isSun && isHoliday(d);
+    const op     = (!isSun && !isHol) ? getOperatorForDate(d) : null;
+    const isGap  = !isSun && !isHol && !op;
+
+    // Apply card class
+    const cardClass = isToday ? 'is-today' : isSun ? 'is-sunday' : isHol ? 'is-holiday' : '';
+    container.className = `daily-check-result-card ${cardClass}`;
+
+    // Build header row
+    let html = `
+        <div class="daily-check-field">
+            <span class="daily-check-field-label">📅 Date</span>
+            <span>${fmtDate} — <strong>${dayName}</strong>
+                ${isToday ? '<span class="daily-check-today-badge">TODAY</span>' : ''}
+            </span>
+        </div>`;
+
+    // No-operator cases
+    if (isSun) {
+        html += `<p class="daily-check-no-op">📅 No operator assigned — Weekend (Sunday)</p>`;
+        container.innerHTML = html;
+        return;
+    }
+    if (isHol) {
+        html += `<p class="daily-check-no-op">🏖️ No operator assigned — Holiday</p>`;
+        container.innerHTML = html;
+        return;
+    }
+    if (isGap) {
+        html += `<p class="daily-check-no-op">⚠️ No operator assigned for this date</p>`;
+        container.innerHTML = html;
+        return;
+    }
+
+    // Shift found — gather status data
+    const masterOp    = initialOperators.find(io => io.name === op.name) || op;
+    const opStatus    = op.status || 'Unknown';
+    const backupSt    = getBackupStatus(op.name, d);
+    const verifSt     = getOperatorConfirmation(op.name, d);
+    const bData       = getBackupData(op.name, d);
+    const startTime   = bData && bData.startTime  ? bData.startTime  : '—';
+    const endTime     = bData && bData.endTime    ? bData.endTime    : '—';
+    const notes       = bData && bData.notes      ? bData.notes      : '—';
+    const workDays    = countWorkingDays(getCleanDate(op.start), getCleanDate(op.end));
+
+    // Status chip helpers
+    function opChip(s) {
+        if (s === 'Active')   return '<span class="status-chip chip-active">Active</span>';
+        if (s === 'Finished') return '<span class="status-chip chip-finished">Finished</span>';
+        return `<span class="status-chip chip-unknown">${s}</span>`;
+    }
+    function backupChip(s) {
+        const map = {
+            'Completed': 'chip-completed', 'Failed': 'chip-failed',
+            'Holiday':   'chip-holiday',   'Weekend': 'chip-weekend',
+            'Pending':   'chip-pending'
+        };
+        const cls = map[s] || 'chip-other';
+        const icons = { Completed:'✅', Failed:'⚠️', Holiday:'🏖️', Weekend:'📅', Pending:'⏳' };
+        return `<span class="status-chip ${cls}">${icons[s] || ''}  ${s}</span>`;
+    }
+    function verifChip(s) {
+        if (s === 'Confirmed')     return '<span class="status-chip chip-confirmed">✔ Confirmed</span>';
+        if (s === 'Not Confirmed') return '<span class="status-chip chip-notconfirmed">✗ Not Confirmed</span>';
+        return `<span class="status-chip chip-na">${s}</span>`;
+    }
+
+    // Highlight card when: isToday + working day + active shift + all fields present
+    if (isToday && isWorkingDay(d) && op && opStatus && backupSt && verifSt) {
+        container.style.boxShadow = '0 0 0 3px #94C83D';
+    } else {
+        container.style.boxShadow = '';
+    }
+
+    html += `
+        <div class="daily-check-field">
+            <span class="daily-check-field-label">👤 Assigned Operator</span>
+            <strong>${op.name}</strong>
+        </div>
+        <div class="daily-check-field">
+            <span class="daily-check-field-label">📱 Mobile</span>
+            <span>${masterOp.mobile || '—'}
+                <button class="copy-phone-btn" onclick="copyPhoneNumber('${masterOp.mobile}',this)" title="Copy">📋</button>
+            </span>
+        </div>
+        <div class="daily-check-field">
+            <span class="daily-check-field-label">📧 Email</span>
+            <span>${masterOp.email || '—'}</span>
+        </div>
+        <div class="daily-check-field">
+            <span class="daily-check-field-label">🔄 Operator Status</span>
+            <span>${opChip(opStatus)}</span>
+        </div>
+        <div class="daily-check-field">
+            <span class="daily-check-field-label">📅 Shift Period</span>
+            <span>${formatDate(op.start)} → ${formatDate(op.end)}
+                <small style="color:#888;"> (${workDays} working days)</small>
+            </span>
+        </div>
+        <div class="daily-check-field">
+            <span class="daily-check-field-label">💾 Backup Status</span>
+            <span>${backupChip(backupSt)}</span>
+        </div>
+        <div class="daily-check-field">
+            <span class="daily-check-field-label">⏰ Backup Times</span>
+            <span>Start: <strong>${startTime}</strong> &nbsp;|&nbsp; End: <strong>${endTime}</strong></span>
+        </div>
+        <div class="daily-check-field">
+            <span class="daily-check-field-label">✅ Verification Status</span>
+            <span>${verifChip(verifSt)}</span>
+        </div>
+        <div class="daily-check-field">
+            <span class="daily-check-field-label">📝 Notes</span>
+            <span style="font-style:italic;color:#666;">${notes}</span>
+        </div>`;
+
+    container.innerHTML = html;
+}
+
+// ================================================================
+// NOTIFICATION LOG SEARCH — Task 15
+// ================================================================
+
+/** Filters the notification log table rows by search term (case-insensitive). */
+function filterNotificationLog(term) {
+    const t = (term || '').toLowerCase().trim();
+    const rows = document.querySelectorAll('#notificationLogTable tbody tr');
+    rows.forEach(tr => {
+        const text = tr.textContent.toLowerCase();
+        tr.style.display = (!t || text.includes(t)) ? '' : 'none';
+    });
+}
+
 // ================================================================
 // END NEW FEATURES
 // ================================================================

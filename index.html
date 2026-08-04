@@ -5360,12 +5360,13 @@ body.dark-mode .daily-check-field-label { color: #aaa; }
             <table id="notificationLogTable" style="min-width: 100%;">
                 <thead>
                     <tr>
-                        <th>Date Sent</th>
+                        <th>Timestamp</th>
                         <th>Operator</th>
-                        <th>Shift Start</th>
-                        <th>Notification Type</th>
-                        <th>Email Address</th>
-                        <th>Mobile Number</th>
+                        <th>Duty Date</th>
+                        <th>Schedule Ref</th>
+                        <th>Type</th>
+                        <th>Email</th>
+                        <th>Sent Date / Time</th>
                         <th>Status</th>
                     </tr>
                 </thead>
@@ -7121,21 +7122,30 @@ function getOperatorForDate(date) {
 
 // --- Audit Log Module Functions ---
 
-function logAuditAction(actionType, description) {
+/**
+ * Logs an audit action with optional structured metadata (SRS §18).
+ * @param {string} actionType  - e.g. 'SCHEDULE_GEN', 'MASTER_OP_EDIT'
+ * @param {string} description - Human-readable narrative
+ * @param {object} [meta]      - Optional: { referenceId, oldValue, newValue }
+ */
+function logAuditAction(actionType, description, meta = {}) {
     const log = JSON.parse(localStorage.getItem(AUDIT_LOG_KEY) || '[]');
     const user = loggedInUser || 'SYSTEM';
 
     const newEntry = {
-        timestamp: new Date().toISOString(),
-        user: user,
-        actionType: actionType,
-        description: description
+        timestamp:   new Date().toISOString(),
+        user:        user,
+        actionType:  actionType,
+        description: description,
+        referenceId: meta.referenceId || null,   // SRS §18: FK to affected record
+        oldValue:    meta.oldValue    || null,   // SRS §18: before value
+        newValue:    meta.newValue    || null    // SRS §18: after value
     };
 
-    log.unshift(newEntry); // Add to the front
-    
-    // Keep log limited to last 100 entries for performance
-    while (log.length > 100) {
+    log.unshift(newEntry);
+
+    // SRS §18: increased cap from 100 → 1000 entries for audit compliance
+    while (log.length > 1000) {
         log.pop();
     }
 
@@ -7149,11 +7159,18 @@ function renderAuditLog() {
 
     log.forEach(entry => {
         const tr = document.createElement('tr');
+        // Show oldValue → newValue if present
+        const changeInfo = (entry.oldValue || entry.newValue)
+            ? `<br><small style="color:#888;">Before: <em>${entry.oldValue || '—'}</em> → After: <em>${entry.newValue || '—'}</em></small>`
+            : '';
+        const refInfo = entry.referenceId
+            ? `<br><small style="color:#999;">Ref: ${entry.referenceId}</small>`
+            : '';
         tr.innerHTML = `
             <td>${formatTimestamp(entry.timestamp)}</td>
             <td>${entry.user}</td>
             <td><strong>${entry.actionType}</strong></td>
-            <td>${entry.description}</td>
+            <td>${entry.description}${changeInfo}${refInfo}</td>
         `;
         tbody.appendChild(tr);
     });
@@ -7715,20 +7732,29 @@ function renderNotificationLog() {
         const cfg = statusConfig[emailStatus] || { bg: '#e9ecef', color: '#495057', icon: '❓' };
         const statusBadge = `<span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;background:${cfg.bg};color:${cfg.color};">${cfg.icon} ${emailStatus}</span>`;
 
+        const retryBadge = (entry.retryCount && entry.retryCount > 0)
+            ? `<span style="font-size:10px;background:#e9ecef;color:#495057;border-radius:8px;padding:1px 6px;margin-left:4px;">retry #${entry.retryCount}</span>`
+            : '';
+
         const smsIcon = smsStatus === 'Success' ? '✅📱' : (smsStatus === 'N/A' ? '' : '❌📱');
 
         // Row tinting
         if (emailStatus === 'Failure') tr.style.background = '#fff5f5';
         else if (emailStatus === 'Skipped') tr.style.background = '#fffdf0';
 
+        const sentDateTime = entry.sentDate
+            ? `${entry.sentDate}<br><small>${entry.sentTime || ''}</small>`
+            : '—';
+
         tr.innerHTML = `
-            <td>${formatTimestamp(entry.timestamp)}</td>
+            <td><small>${formatTimestamp(entry.timestamp)}</small></td>
             <td><strong>${entry.operatorName}</strong></td>
-            <td>${formatDate(entry.shiftStart)}</td>
+            <td>${formatDate(entry.dutyDate || entry.shiftStart)}</td>
+            <td><small style="font-family:monospace;color:#666;">${entry.scheduleId || '—'}</small></td>
             <td><small>${entry.type || '—'}</small></td>
             <td><small>${entry.email || 'N/A'}</small></td>
-            <td><small>${entry.mobile || 'N/A'}</small></td>
-            <td>${statusBadge} ${smsIcon}${entry.error ? `<br><small style="color:#888;">${entry.error}</small>` : ''}</td>
+            <td><small>${sentDateTime}</small></td>
+            <td>${statusBadge}${retryBadge} ${smsIcon}${entry.error ? `<br><small style="color:#888;">${entry.error}</small>` : ''}</td>
         `;
         tbody.appendChild(tr);
     });
@@ -7762,157 +7788,177 @@ function clearNotificationLog() {
 }
 
 async function checkAndSendNotifications(manualTrigger = false) {
-    // Always reload log fresh so deduplication works across sessions
+    // ── Reload log fresh every run — handles multi-tab / app-restart scenarios ──
     notificationLog = JSON.parse(localStorage.getItem(NOTIFICATION_LOG_KEY) || '[]');
 
     let notificationsSent = 0;
-    const now = getCleanDate(new Date());
+    const now    = getCleanDate(new Date());
+    const nowStr = now.toISOString().split('T')[0];
 
-    console.log(`[Notification Check] Date: ${now.toISOString().split('T')[0]} | Manual: ${manualTrigger}`);
+    console.log(`[NotifEngine] Run at ${nowStr} | manual=${manualTrigger}`);
 
     for (const op of operators) {
+        // ── Only process Active shift slots ──────────────────────────────────────
         if (op.status !== 'Active') continue;
 
-        // Skip if the master operator is now Inactive (BR-11)
-        const masterOpCheck = initialOperators.find(io => io.name === op.name);
-        if (masterOpCheck && (masterOpCheck.status || 'Active') === 'Inactive') {
-            console.log(`[Notification Check] Skipping inactive operator: ${op.name}`);
+        // ── BR-11: Skip if master operator is Inactive ───────────────────────────
+        const masterOp = initialOperators.find(io => io.name === op.name) || op;
+        if ((masterOp.status || 'Active') === 'Inactive') {
+            console.log(`[NotifEngine] Inactive — skip: ${op.name}`);
             continue;
         }
 
-        const shiftStart    = getCleanDate(op.start);
+        const shiftStart     = getCleanDate(op.start);
         const daysUntilStart = daysBetween(now, shiftStart);
 
-        // AUTO: fire ONLY when exactly 2 days away
-        // MANUAL: fire for 0–2 days window
+        // ── Window: AUTO = exactly 2 days | MANUAL = 0–2 days ──────────────────
         const inWindow = manualTrigger
             ? (daysUntilStart >= 0 && daysUntilStart <= 2)
             : (daysUntilStart === 2);
 
         if (!inWindow) continue;
 
-        const notificationID = `${op.start}-${op.name.toUpperCase()}`;
+        // ── SRS Business Key: OPERATOR + SCHEDULE_ID + DUTY_DATE + TYPE ─────────
+        const scheduleId = op.scheduleId || op.start;   // use scheduleId if present
+        const dutyDate   = op.start;
+        const notifType  = daysUntilStart === 0 ? 'TODAY'
+                         : daysUntilStart === 1 ? 'URGENT'
+                         : 'SEND_NOTIFICATIONS';        // SRS canonical type name
 
-        // Duplicate prevention — skip if already logged (auto only)
-        if (!manualTrigger && notificationLog.some(l => l.id === notificationID)) {
-            console.log(`[Notification Check] Duplicate skipped: ${op.name}`);
-            // Write a SKIPPED entry so admins can see it in the log
-            const alreadySentEntry = notificationLog.find(l => l.id === notificationID);
-            // Only write SKIPPED if last entry for this ID was a success
-            if (alreadySentEntry && alreadySentEntry.emailStatus === 'Success') {
-                // Already sent successfully — truly skipping, no need to log again
-            } else if (!notificationLog.some(l => l.id === notificationID && l.emailStatus === 'Skipped')) {
-                const skipEntry = {
-                    id:           notificationID,
-                    timestamp:    new Date().toISOString(),
-                    operatorName: op.name,
-                    email:        (initialOperators.find(io => io.name === op.name) || op).email || '',
-                    mobile:       (initialOperators.find(io => io.name === op.name) || op).mobile || '',
-                    shiftStart:   op.start,
-                    type:         'reminder',
-                    emailStatus:  'Skipped',
-                    smsStatus:    'N/A',
-                    error:        'Duplicate — notification already sent for this shift'
-                };
-                if (notificationLog.length >= 500) notificationLog.pop();
-                notificationLog.unshift(skipEntry);
-                try {
-                    localStorage.setItem(NOTIFICATION_LOG_KEY, JSON.stringify(notificationLog));
-                } catch (e) { /* silent */ }
-            }
+        // Unique business key — prevents all duplicates regardless of restarts
+        const businessKey = `${op.name.toUpperCase()}|${scheduleId}|${dutyDate}|${notifType}`;
+
+        // ── SRS One-Time Rule: if a SUCCESS exists for this business key → SKIP ──
+        const alreadySentSuccessfully = notificationLog.some(
+            l => l.businessKey === businessKey && l.emailStatus === 'Success'
+        );
+
+        if (alreadySentSuccessfully) {
+            console.log(`[NotifEngine] Already SENT — skip: ${op.name} (${dutyDate})`);
+            // SRS: do not log anything extra — a clean SENT record already exists
             continue;
         }
 
-        const masterOp     = initialOperators.find(io => io.name === op.name) || op;
-        const operatorData = masterOp;
+        // ── FAILURE-on-same-day check: auto mode only ────────────────────────────
+        // If it already FAILED today (not a retry request), don't spam the log.
+        if (!manualTrigger) {
+            const failedToday = notificationLog.some(
+                l => l.businessKey === businessKey
+                  && l.emailStatus === 'Failure'
+                  && (l.timestamp || '').startsWith(nowStr)
+            );
+            if (failedToday) {
+                console.log(`[NotifEngine] Already FAILED today — skip: ${op.name}`);
+                continue;
+            }
+        }
 
-        // Guard: no email
-        if (!operatorData.email || operatorData.email === 'N/A') {
-            const failEntry = {
-                id: notificationID,
+        // ── Guard: no email (SRS §20 Scenario 2) ────────────────────────────────
+        if (!masterOp.email || masterOp.email === 'N/A') {
+            const noEmailEntry = {
+                businessKey,
+                id:           businessKey,
+                notifId:      `${businessKey}-${Date.now()}`,
                 timestamp:    new Date().toISOString(),
-                operatorName: operatorData.name,
-                email:        operatorData.email || '',
-                mobile:       operatorData.mobile || '',
+                operatorName: masterOp.name,
+                scheduleId,
+                dutyDate,
+                email:        masterOp.email || '',
+                mobile:       masterOp.mobile || '',
                 shiftStart:   op.start,
-                type:         'reminder',
+                shiftEnd:     op.end,
+                type:         notifType,
                 emailStatus:  'Failure',
                 smsStatus:    'N/A',
-                error:        'No valid email address'
+                sentDate:     null,
+                sentTime:     null,
+                error:        'No valid email address — administrator action required',
+                retryCount:   0
             };
-            // Cap at 500
-            if (notificationLog.length >= 500) notificationLog.pop();
-            notificationLog.unshift(failEntry);
-            try {
-                localStorage.setItem(NOTIFICATION_LOG_KEY, JSON.stringify(notificationLog));
-            } catch (e) {
-                showToast('Notification log could not be saved', 'error');
-            }
-            showToast(`⚠️ No email for ${operatorData.name}`, 'warning');
+            _pushNotifLog(noEmailEntry);
+            showToast(`⚠️ ADMIN ACTION REQUIRED: ${masterOp.name} has no email — notification not sent`, 'warning');
+            logAuditAction('NOTIF_NO_EMAIL',
+                `Notification NOT sent to ${masterOp.name} — no valid email. Admin must update email address.`,
+                { referenceId: scheduleId, oldValue: null, newValue: 'Failure:NoEmail' });
             continue;
         }
 
-        // Determine type (always 'reminder' for 2-day; 'urgent'=1 day; 'today'=0 days)
-        const notifType = daysUntilStart === 0 ? 'today'
-                        : daysUntilStart === 1 ? 'urgent'
+        // ── Send the notification ────────────────────────────────────────────────
+        // Map SRS canonical types → email template types
+        const emailType = notifType === 'SEND_NOTIFICATIONS' ? 'reminder'
+                        : notifType === 'URGENT'              ? 'urgent'
+                        : notifType === 'TODAY'               ? 'today'
                         : 'reminder';
-
         try {
-            const results = await sendNotificationToOperator(operatorData, op, notifType);
-            const emailOK = results.email.success;
+            const results  = await sendNotificationToOperator(masterOp, op, emailType);
+            const emailOK  = results.email.success;
+            const sentNow  = new Date();
 
-            // Build log entry
             const logEntry = {
-                id:           notificationID,
-                timestamp:    new Date().toISOString(),
-                operatorName: operatorData.name,
-                email:        operatorData.email,
-                mobile:       operatorData.mobile || '',
+                businessKey,
+                id:           businessKey,           // backward-compat alias
+                notifId:      `${businessKey}-${sentNow.getTime()}`,
+                timestamp:    sentNow.toISOString(),
+                operatorName: masterOp.name,
+                scheduleId,
+                dutyDate,
+                email:        masterOp.email,
+                mobile:       masterOp.mobile || '',
                 shiftStart:   op.start,
+                shiftEnd:     op.end,
                 type:         notifType,
                 emailStatus:  emailOK ? 'Success' : 'Failure',
-                smsStatus:    'N/A'
+                smsStatus:    'N/A',
+                sentDate:     emailOK ? sentNow.toISOString().split('T')[0]   : null,
+                sentTime:     emailOK ? sentNow.toTimeString().split(' ')[0]  : null,
+                error:        (!emailOK && results.email.error) ? results.email.error : null,
+                retryCount:   0
             };
-            if (!emailOK && results.email.error) logEntry.error = results.email.error;
 
-            // Cap at 500
-            if (notificationLog.length >= 500) notificationLog.pop();
-            notificationLog.unshift(logEntry);
-
-            try {
-                localStorage.setItem(NOTIFICATION_LOG_KEY, JSON.stringify(notificationLog));
-            } catch (e) {
-                showToast('Notification log could not be saved', 'error');
-            }
+            _pushNotifLog(logEntry);
 
             if (emailOK) {
                 notificationsSent++;
-                console.log(`[Notification Check] ✅ Sent to ${operatorData.name}`);
+                console.log(`[NotifEngine] ✅ SENT: ${masterOp.name} | ${dutyDate}`);
+                logAuditAction('NOTIF_SENT',
+                    `Notification SENT to ${masterOp.name} for duty date ${dutyDate}.`,
+                    { referenceId: scheduleId, oldValue: 'Pending', newValue: 'Success' });
             } else {
-                // Always surface failure — not just for manual runs
-                showToast(`❌ Email failed for ${operatorData.name}: ${results.email.error || 'Unknown error'}`, 'error');
-                console.warn(`[Notification Check] ❌ Failed: ${operatorData.name}`, results.email.error);
+                showToast(`❌ Email failed for ${masterOp.name}: ${results.email.error || 'Unknown'}`, 'error');
+                console.warn(`[NotifEngine] ❌ FAILED: ${masterOp.name}`, results.email.error);
             }
 
         } catch (err) {
-            console.error(`[Notification Check] Exception for ${operatorData.name}:`, err);
-            showToast(`❌ Notification error for ${operatorData.name}`, 'error');
+            console.error(`[NotifEngine] Exception for ${masterOp.name}:`, err);
+            showToast(`❌ Notification error for ${masterOp.name}`, 'error');
         }
     }
 
+    // ── Summary feedback ─────────────────────────────────────────────────────────
     if (manualTrigger) {
         setTimeout(() => {
             if (notificationsSent > 0) {
                 showToast(`✅ ${notificationsSent} notification(s) sent!`, 'success');
-                alert(`Manual check complete.\n\n${notificationsSent} notification(s) sent.\n\nCheck the Notification Log for details.`);
+                alert(`Manual check complete.\n\n✅ ${notificationsSent} notification(s) sent.\n\nCheck the Notification Log for details.`);
             } else {
-                showToast('No notifications sent — check log for details.', 'info');
-                alert('Manual check complete.\n\nNo notifications sent. This may be because:\n• No shifts start in exactly 2 days\n• Notifications already sent (check log)\n• Email addresses missing');
+                showToast('No notifications sent — see log for details.', 'info');
+                alert('Manual check complete.\n\nNo notifications sent. Reasons may include:\n• No shifts start in exactly 2 days\n• Already sent successfully (one-time rule)\n• Email addresses missing\n• Operators inactive');
             }
         }, 1500);
     } else if (notificationsSent > 0) {
-        showToast(`📧 ${notificationsSent} automatic 2-day reminder(s) sent`, 'success');
-        console.log(`[Automatic Check] ${notificationsSent} notification(s) sent.`);
+        showToast(`📧 ${notificationsSent} automatic SEND_NOTIFICATIONS email(s) sent`, 'success');
+        console.log(`[NotifEngine] ${notificationsSent} notification(s) sent.`);
+    }
+}
+
+/** Helper — push a log entry respecting the 500-cap, then persist to localStorage. */
+function _pushNotifLog(entry) {
+    if (notificationLog.length >= 500) notificationLog.pop();
+    notificationLog.unshift(entry);
+    try {
+        localStorage.setItem(NOTIFICATION_LOG_KEY, JSON.stringify(notificationLog));
+    } catch (e) {
+        showToast('Notification log could not be saved to storage', 'error');
     }
 }
 
@@ -7948,7 +7994,8 @@ function generateFullSchedule(officialStartDate) {
 
     operators = [];
     
-    let opIndex = 0;
+    let opIndex    = 0;
+    let sequenceNo = 1;  // SRS: SEQUENCE_NO field
     let nextShiftStart = new Date(scheduleInputDate);
     nextShiftStart.setDate(nextShiftStart.getDate() + 1);
     nextShiftStart.setHours(0, 0, 0, 0);
@@ -7962,15 +8009,20 @@ function generateFullSchedule(officialStartDate) {
         
         if (shiftStart.getTime() <= targetEnd.getTime()) {
               const newShift = {
-                  name: opDetails.name,
-                  checkedBy: opDetails.name,    
-                  mobile: opDetails.mobile,
-                  email: opDetails.email, // ADDED EMAIL
-                  start: shiftStart.toISOString().split('T')[0],
-                  end: shiftEnd.toISOString().split('T')[0],
-                  status: 'Active' 
+                  scheduleId:  `SCH-${shiftStart.toISOString().split('T')[0]}-${opDetails.name.replace(/\s+/g,'')}`,
+                  sequenceNo:  sequenceNo,
+                  createdBy:   loggedInUser || 'SYSTEM',
+                  createdDate: new Date().toISOString(),
+                  name:        opDetails.name,
+                  checkedBy:   opDetails.name,    
+                  mobile:      opDetails.mobile,
+                  email:       opDetails.email,
+                  start:       shiftStart.toISOString().split('T')[0],
+                  end:         shiftEnd.toISOString().split('T')[0],
+                  status:      'Active' 
               };
               operators.push(newShift);
+              sequenceNo++;
         } else {
             break;    
         }
@@ -9780,7 +9832,8 @@ function markShiftFinished(globalIndex) {
     if (confirm(`Are you sure you want to mark your shift (${formatDate(shift.start)} - ${formatDate(shift.end)}) as FINISHED?`)) {
         operators[globalIndex].status = 'Finished';
         localStorage.setItem('operators', JSON.stringify(operators));
-        logAuditAction('SHIFT_STATUS', `Operator ${shift.name} marked shift (Start: ${shift.start}) as FINISHED.`);
+        logAuditAction('SHIFT_STATUS', `Operator ${shift.name} marked shift (Start: ${shift.start}) as FINISHED.`,
+            { referenceId: shift.scheduleId || shift.start, oldValue: 'Active', newValue: 'Finished' });
         renderTable();
         alert('Shift successfully marked as Finished. Thank you!');
     }
@@ -9795,7 +9848,8 @@ function resetShiftStatus(globalIndex) {
     if (confirm(`Are you sure you want the shift for ${shift.name} starting ${formatDate(shift.start)} back to ACTIVE?`)) {
         operators[globalIndex].status = 'Active';
         localStorage.setItem('operators', JSON.stringify(operators));
-        logAuditAction('SHIFT_STATUS_RESET', `Admin reset shift status for ${shift.name} (Start: ${shift.start}) from Finished to ACTIVE.`);
+        logAuditAction('SHIFT_STATUS_RESET', `Admin reset shift status for ${shift.name} (Start: ${shift.start}) from Finished to ACTIVE.`,
+            { referenceId: shift.scheduleId || shift.start, oldValue: 'Finished', newValue: 'Active' });
         renderTable();
         alert('Shift status successfully reset to Active.');
     }
@@ -10092,7 +10146,8 @@ function toggleOperatorStatus(index) {
     localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
 
     logAuditAction(`OPERATOR_${action}`,
-        `Operator ${op.name} status changed from ${currentStatus} to ${newStatus}.`);
+        `Operator ${op.name} status changed from ${currentStatus} to ${newStatus}.`,
+        { referenceId: op.name, oldValue: currentStatus, newValue: newStatus });
 
     // Rebuild only future shifts so existing active/finished shifts are unaffected
     const startDate = document.getElementById('startDate').value;
@@ -10224,8 +10279,12 @@ function regenerateFromCurrentPosition(officialStartDate) {
     targetEnd.setHours(0, 0, 0, 0);
 
     const futureShifts = [];
-    let current = new Date(nextStart);
-    let opIndex  = nextOpIndex;
+    let current    = new Date(nextStart);
+    let opIndex    = nextOpIndex;
+    // Continue sequenceNo from last preserved shift (or 1 if none have it)
+    let sequenceNo = preservedShifts.length > 0
+        ? ((preservedShifts[preservedShifts.length - 1].sequenceNo || preservedShifts.length) + 1)
+        : 1;
 
     while (current.getTime() <= targetEnd.getTime() && futureShifts.length < 500) {
         const opDetails  = uniqueOperators[opIndex];
@@ -10235,14 +10294,19 @@ function regenerateFromCurrentPosition(officialStartDate) {
 
         if (shiftStart.getTime() <= targetEnd.getTime()) {
             futureShifts.push({
-                name:      opDetails.name,
-                checkedBy: opDetails.name,
-                mobile:    opDetails.mobile,
-                email:     opDetails.email,
-                start:     shiftStart.toISOString().split('T')[0],
-                end:       shiftEnd.toISOString().split('T')[0],
-                status:    'Active'
+                scheduleId:  `SCH-${shiftStart.toISOString().split('T')[0]}-${opDetails.name.replace(/\s+/g,'')}`,
+                sequenceNo:  sequenceNo,
+                createdBy:   loggedInUser || 'SYSTEM',
+                createdDate: new Date().toISOString(),
+                name:        opDetails.name,
+                checkedBy:   opDetails.name,
+                mobile:      opDetails.mobile,
+                email:       opDetails.email,
+                start:       shiftStart.toISOString().split('T')[0],
+                end:         shiftEnd.toISOString().split('T')[0],
+                status:      'Active'
             });
+            sequenceNo++;
         } else {
             break;
         }
@@ -10277,7 +10341,8 @@ function deleteMasterOperator(index) {
 
         const startDate = document.getElementById('startDate').value;
 
-        logAuditAction('MASTER_OP_DEL', `Master operator ${opToDelete.name} deleted. Future schedule regenerated from current position.`);
+        logAuditAction('MASTER_OP_DEL', `Master operator ${opToDelete.name} deleted. Future schedule regenerated from current position.`,
+            { referenceId: opToDelete.name, oldValue: 'Active', newValue: 'Deleted' });
 
         // Smart regeneration: preserve all shifts up to and including the current
         // active shift, then rebuild only the future tail with the remaining operators.
@@ -10339,7 +10404,14 @@ function confirmEditOperator() {
     }
     
     const startDate = document.getElementById('startDate').value;
-    logAuditAction('MASTER_OP_EDIT', `Master operator ${oldOperator.name} edited (New Name: ${newName}, New Mobile: ${newMobile}, New Email: ${newEmail}). Schedule regenerated.`); // UPDATED LOG
+    logAuditAction('MASTER_OP_EDIT',
+        `Master operator ${oldOperator.name} edited (New Name: ${newName}, New Mobile: ${newMobile}, New Email: ${newEmail}). Schedule regenerated.`,
+        {
+            referenceId: newName,
+            oldValue: `Name:${oldOperator.name} Mobile:${oldOperator.mobile} Email:${oldOperator.email}`,
+            newValue: `Name:${newName} Mobile:${newMobile} Email:${newEmail}`
+        }
+    );
     generateFullSchedule(startDate);
     renderTable();
     renderOperatorManagementTable();
@@ -10368,7 +10440,8 @@ function deleteOperatorShift(globalIndex) {
     if (confirm(`Are you sure you want to DELETE the shift starting ${formatDate(shiftToDelete.start)} for ${shiftToDelete.name}?`)) {
         operators.splice(globalIndex, 1);
         localStorage.setItem('operators', JSON.stringify(operators));
-        logAuditAction('SHIFT_DELETE', `Shift deleted for ${shiftToDelete.name} (Start: ${shiftToDelete.start}).`);
+        logAuditAction('SHIFT_DELETE', `Shift deleted for ${shiftToDelete.name} (Start: ${shiftToDelete.start}).`,
+            { referenceId: shiftToDelete.scheduleId || shiftToDelete.start, oldValue: shiftToDelete.status, newValue: 'Deleted' });
         renderTable();
         alert('Shift deleted.');
     }
@@ -10437,7 +10510,8 @@ function confirmRename() {
     oldShift.status = 'Active';
 
     localStorage.setItem('operators', JSON.stringify(operators));
-    logAuditAction('SHIFT_RENAME', `Shift (Start: ${oldShift.start}) renamed from ${oldName} to ${newName}.`);
+    logAuditAction('SHIFT_RENAME', `Shift (Start: ${oldShift.start}) renamed from ${oldName} to ${newName}.`,
+        { referenceId: oldShift.scheduleId || oldShift.start, oldValue: oldName, newValue: newName });
     renderTable();
     closeRenameModal();
     alert(`Shift successfully renamed to ${newName}.`);
@@ -10808,19 +10882,24 @@ function debugNotificationSystem() {
     let alreadySentCount = 0;
     
     operators.forEach((op, index) => {
-        const shiftStart = getCleanDate(op.start);
+        const shiftStart     = getCleanDate(op.start);
         const daysUntilStart = daysBetween(now, shiftStart);
-        const notificationID = `${op.start}-${op.name.toUpperCase()}`;
-        const alreadySent = notificationLog.some(log => log.id === notificationID);
-        
+        const scheduleId     = op.scheduleId || op.start;
+        const businessKey    = `${op.name.toUpperCase()}|${scheduleId}|${op.start}|SEND_NOTIFICATIONS`;
+        const alreadySent    = notificationLog.some(
+            l => (l.businessKey === businessKey || l.id === businessKey) && l.emailStatus === 'Success'
+        );
+
         debugInfo += `\n${index + 1}. ${op.name}:\n`;
         debugInfo += `   Status: ${op.status}\n`;
         debugInfo += `   Shift Start: ${op.start}\n`;
+        debugInfo += `   Schedule ID: ${scheduleId}\n`;
+        debugInfo += `   Business Key: ${businessKey}\n`;
         debugInfo += `   Days Until: ${daysUntilStart}\n`;
         debugInfo += `   Auto-trigger (exactly 2 days): ${daysUntilStart === 2 ? 'YES' : 'NO'}\n`;
-        debugInfo += `   Already Sent: ${alreadySent ? 'YES' : 'NO'}\n`;
+        debugInfo += `   Already SENT: ${alreadySent ? 'YES' : 'NO'}\n`;
         debugInfo += `   Will Auto-Send: ${op.status === 'Active' && daysUntilStart === 2 && !alreadySent ? 'YES' : 'NO'}\n`;
-        
+
         if (op.status === 'Active' && daysUntilStart >= 1) upcomingCount++;
         if (op.status === 'Active' && daysUntilStart === 2) inWindowCount++;
         if (alreadySent) alreadySentCount++;
@@ -10853,8 +10932,11 @@ function check3DayNotifications() {
         
         // Check specifically for 2-day notifications (matching the auto-send engine)
         if (daysUntilStart === 2) {
-            const notificationID = `${op.start}-${op.name.toUpperCase()}`;
-            const alreadySent = notificationLog.some(log => log.id === notificationID);
+            const scheduleId  = op.scheduleId || op.start;
+            const businessKey = `${op.name.toUpperCase()}|${scheduleId}|${op.start}|SEND_NOTIFICATIONS`;
+            const alreadySent = notificationLog.some(
+                l => (l.businessKey === businessKey || l.id === businessKey) && l.emailStatus === 'Success'
+            );
             
             twoDayNotifications.push({
                 name: op.name,
@@ -10908,8 +10990,11 @@ function showUpcomingNotificationsSummary() {
         
         // Check if shift is within the next 7 days (to show upcoming notifications)
         if (daysUntilStart >= 1 && daysUntilStart <= 7) {
-            const notificationID = `${op.start}-${op.name.toUpperCase()}`;
-            const alreadySent = notificationLog.some(log => log.id === notificationID);
+            const scheduleId  = op.scheduleId || op.start;
+            const businessKey = `${op.name.toUpperCase()}|${scheduleId}|${op.start}|SEND_NOTIFICATIONS`;
+            const alreadySent = notificationLog.some(
+                l => (l.businessKey === businessKey || l.id === businessKey) && l.emailStatus === 'Success'
+            );
             
             upcomingNotifications.push({
                 name: op.name,
@@ -11756,7 +11841,13 @@ function renderDailyCheckView(dateStr) {
 
     html += `
         <div class="daily-check-field">
-            <span class="daily-check-field-label">👤 Assigned Operator</span>
+            <span class="daily-check-field-label">� Schedule Ref</span>
+            <span><small style="color:#888;font-family:monospace;">${op.scheduleId || '—'}</small>
+                &nbsp;<small style="color:#aaa;">Seq #${op.sequenceNo || '—'}</small>
+            </span>
+        </div>
+        <div class="daily-check-field">
+            <span class="daily-check-field-label">�👤 Assigned Operator</span>
             <strong>${op.name}</strong>
         </div>
         <div class="daily-check-field">
@@ -11824,19 +11915,20 @@ async function retryFailedNotifications() {
 
     notificationLog = JSON.parse(localStorage.getItem(NOTIFICATION_LOG_KEY) || '[]');
 
-    // Build set of IDs that already have a Success entry — never retry those
-    const successIds = new Set(
+    // Build set of businessKeys that already have a Success entry — never retry those
+    const successKeys = new Set(
         notificationLog
             .filter(e => e.emailStatus === 'Success')
-            .map(e => e.id)
+            .map(e => e.businessKey || e.id)
     );
 
-    // Find unique failed IDs that have no success entry
+    // Find unique failed entries that have no success entry
     const retryTargets = [];
     const seen = new Set();
     for (const entry of notificationLog) {
-        if (entry.emailStatus === 'Failure' && !successIds.has(entry.id) && !seen.has(entry.id)) {
-            seen.add(entry.id);
+        const key = entry.businessKey || entry.id;
+        if (entry.emailStatus === 'Failure' && !successKeys.has(key) && !seen.has(key)) {
+            seen.add(key);
             retryTargets.push(entry);
         }
     }
@@ -11879,30 +11971,41 @@ async function retryFailedNotifications() {
 
         retried++;
         try {
-            const daysUntil = daysBetween(getCleanDate(new Date()), getCleanDate(op.start));
-            const notifType = daysUntil <= 0 ? 'today' : daysUntil === 1 ? 'urgent' : 'reminder';
+            const daysUntil  = daysBetween(getCleanDate(new Date()), getCleanDate(op.start));
+            const notifType  = daysUntil <= 0 ? 'TODAY' : daysUntil === 1 ? 'URGENT' : 'SEND_NOTIFICATIONS';
+            const emailType  = notifType === 'SEND_NOTIFICATIONS' ? 'reminder'
+                             : notifType === 'URGENT'              ? 'urgent'
+                             : 'today';
+            const bKey       = failedEntry.businessKey || failedEntry.id;
+            const sentNow    = new Date();
 
-            const results = await sendNotificationToOperator(masterOp, op, notifType);
+            const results = await sendNotificationToOperator(masterOp, op, emailType);
             const emailOK = results.email.success;
 
             const retryEntry = {
-                id:           failedEntry.id,
-                timestamp:    new Date().toISOString(),
+                businessKey:  bKey,
+                id:           bKey,
+                notifId:      `${bKey}-retry-${sentNow.getTime()}`,
+                timestamp:    sentNow.toISOString(),
                 operatorName: masterOp.name,
+                scheduleId:   failedEntry.scheduleId || op.start,
+                dutyDate:     op.start,
                 email:        masterOp.email,
                 mobile:       masterOp.mobile || '',
                 shiftStart:   op.start,
+                shiftEnd:     op.end,
                 type:         `${notifType} (retry)`,
                 emailStatus:  emailOK ? 'Success' : 'Failure',
-                smsStatus:    'N/A'
+                smsStatus:    'N/A',
+                sentDate:     emailOK ? sentNow.toISOString().split('T')[0]  : null,
+                sentTime:     emailOK ? sentNow.toTimeString().split(' ')[0] : null,
+                error:        (!emailOK && results.email.error) ? results.email.error : null,
+                retryCount:   (failedEntry.retryCount || 0) + 1
             };
-            if (!emailOK && results.email.error) retryEntry.error = results.email.error;
 
             // Reload log fresh before writing (another retry may have run)
             notificationLog = JSON.parse(localStorage.getItem(NOTIFICATION_LOG_KEY) || '[]');
-            if (notificationLog.length >= 500) notificationLog.pop();
-            notificationLog.unshift(retryEntry);
-            localStorage.setItem(NOTIFICATION_LOG_KEY, JSON.stringify(notificationLog));
+            _pushNotifLog(retryEntry);
 
             if (emailOK) {
                 succeeded++;

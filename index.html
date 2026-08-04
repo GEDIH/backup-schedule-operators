@@ -5089,7 +5089,9 @@ body.dark-mode .daily-check-field-label { color: #aaa; }
                 <th>S/N</th>
                 <th>Operator Name</th>
                 <th>Mobile Number</th>
-                <th>Email Address</th> <th>Actions</th>
+                <th>Email Address</th>
+                <th>Status</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -5373,6 +5375,7 @@ body.dark-mode .daily-check-field-label { color: #aaa; }
         </div>
         <div style="text-align: center; margin-top: 15px;">
             <button onclick="clearNotificationLog()" style="background-color: #f0ad4e;">Clear Notification Log</button>
+            <button onclick="retryFailedNotifications()" style="background-color: #17a2b8; color:white; padding:6px 14px; border:none; border-radius:4px; cursor:pointer; margin-left:8px;">🔄 Retry Failed</button>
         </div>
     </div>
 </div>
@@ -6992,11 +6995,11 @@ const SMS_API_CONFIG = {
 };
 
 let initialOperators = JSON.parse(localStorage.getItem(INITIAL_OPERATORS_DATA_KEY)) || [
-    { name: "ABRAHAM CHALA",  mobile: "0913564114", email: "abraham.chala@oromiabank.com" },
-    { name: "BERISO SHIBIRU", mobile: "0902911411", email: "bariso.s@orointbank.com" },
-    { name: "HAMBISA ADAMU",  mobile: "0913456466", email: "hambisa.adamu@oromiabank.com" },
-    { name: "DAME TERFASSA",  mobile: "0911117524", email: "dame.terfassa@oromiabank.com" },
-    { name: "TSION GIRMA",    mobile: "0946700418", email: "tsion.g@orointbank.com" }
+    { name: "ABRAHAM CHALA",  mobile: "0913564114", email: "abraham.chala@oromiabank.com",  status: "Active" },
+    { name: "BERISO SHIBIRU", mobile: "0902911411", email: "bariso.s@orointbank.com",        status: "Active" },
+    { name: "HAMBISA ADAMU",  mobile: "0913456466", email: "hambisa.adamu@oromiabank.com",  status: "Active" },
+    { name: "DAME TERFASSA",  mobile: "0911117524", email: "dame.terfassa@oromiabank.com",  status: "Active" },
+    { name: "TSION GIRMA",    mobile: "0946700418", email: "tsion.g@orointbank.com",         status: "Active" }
 ];
 
 let operators = JSON.parse(localStorage.getItem('operators') || '[]');
@@ -7697,20 +7700,35 @@ function renderNotificationLog() {
 
     notificationLog.forEach(entry => {
         const tr = document.createElement('tr');
-        
+
         const emailStatus = entry.emailStatus || 'Unknown';
         const smsStatus   = entry.smsStatus   || 'Unknown';
-        const emailIcon   = emailStatus === 'Success' ? '✅📧' : '❌📧';
-        const smsIcon     = smsStatus   === 'Success' ? '✅📱' : (smsStatus === 'N/A' ? '—' : '❌📱');
-        
+
+        // Status badge with color coding for all 5 states
+        const statusConfig = {
+            'Success': { bg: '#d4edda', color: '#155724', icon: '✅' },
+            'Failure': { bg: '#f8d7da', color: '#721c24', icon: '❌' },
+            'Skipped': { bg: '#fff3cd', color: '#856404', icon: '⏭️' },
+            'Pending': { bg: '#cce5ff', color: '#004085', icon: '⏳' },
+            'Cancelled':{ bg: '#e2e3e5', color: '#383d41', icon: '🚫' }
+        };
+        const cfg = statusConfig[emailStatus] || { bg: '#e9ecef', color: '#495057', icon: '❓' };
+        const statusBadge = `<span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;background:${cfg.bg};color:${cfg.color};">${cfg.icon} ${emailStatus}</span>`;
+
+        const smsIcon = smsStatus === 'Success' ? '✅📱' : (smsStatus === 'N/A' ? '' : '❌📱');
+
+        // Row tinting
+        if (emailStatus === 'Failure') tr.style.background = '#fff5f5';
+        else if (emailStatus === 'Skipped') tr.style.background = '#fffdf0';
+
         tr.innerHTML = `
             <td>${formatTimestamp(entry.timestamp)}</td>
-            <td>${entry.operatorName}</td>
+            <td><strong>${entry.operatorName}</strong></td>
             <td>${formatDate(entry.shiftStart)}</td>
-            <td>${entry.type}</td>
-            <td>${entry.email || 'N/A'}</td>
-            <td>${entry.mobile || 'N/A'}</td>
-            <td>${emailIcon} ${smsIcon}</td>
+            <td><small>${entry.type || '—'}</small></td>
+            <td><small>${entry.email || 'N/A'}</small></td>
+            <td><small>${entry.mobile || 'N/A'}</small></td>
+            <td>${statusBadge} ${smsIcon}${entry.error ? `<br><small style="color:#888;">${entry.error}</small>` : ''}</td>
         `;
         tbody.appendChild(tr);
     });
@@ -7755,6 +7773,13 @@ async function checkAndSendNotifications(manualTrigger = false) {
     for (const op of operators) {
         if (op.status !== 'Active') continue;
 
+        // Skip if the master operator is now Inactive (BR-11)
+        const masterOpCheck = initialOperators.find(io => io.name === op.name);
+        if (masterOpCheck && (masterOpCheck.status || 'Active') === 'Inactive') {
+            console.log(`[Notification Check] Skipping inactive operator: ${op.name}`);
+            continue;
+        }
+
         const shiftStart    = getCleanDate(op.start);
         const daysUntilStart = daysBetween(now, shiftStart);
 
@@ -7771,6 +7796,30 @@ async function checkAndSendNotifications(manualTrigger = false) {
         // Duplicate prevention — skip if already logged (auto only)
         if (!manualTrigger && notificationLog.some(l => l.id === notificationID)) {
             console.log(`[Notification Check] Duplicate skipped: ${op.name}`);
+            // Write a SKIPPED entry so admins can see it in the log
+            const alreadySentEntry = notificationLog.find(l => l.id === notificationID);
+            // Only write SKIPPED if last entry for this ID was a success
+            if (alreadySentEntry && alreadySentEntry.emailStatus === 'Success') {
+                // Already sent successfully — truly skipping, no need to log again
+            } else if (!notificationLog.some(l => l.id === notificationID && l.emailStatus === 'Skipped')) {
+                const skipEntry = {
+                    id:           notificationID,
+                    timestamp:    new Date().toISOString(),
+                    operatorName: op.name,
+                    email:        (initialOperators.find(io => io.name === op.name) || op).email || '',
+                    mobile:       (initialOperators.find(io => io.name === op.name) || op).mobile || '',
+                    shiftStart:   op.start,
+                    type:         'reminder',
+                    emailStatus:  'Skipped',
+                    smsStatus:    'N/A',
+                    error:        'Duplicate — notification already sent for this shift'
+                };
+                if (notificationLog.length >= 500) notificationLog.pop();
+                notificationLog.unshift(skipEntry);
+                try {
+                    localStorage.setItem(NOTIFICATION_LOG_KEY, JSON.stringify(notificationLog));
+                } catch (e) { /* silent */ }
+            }
             continue;
         }
 
@@ -7878,11 +7927,19 @@ function generateFullSchedule(officialStartDate) {
 
     let scheduleInputDate = getCleanDate(officialStartDate || DEFAULT_SCHEDULE_START_DATE);
 
-    const uniqueOperators = initialOperators.map(op => ({    
-        name: op.name,    
-        mobile: op.mobile,
-        email: op.email // ADDED
-    }));
+    const uniqueOperators = initialOperators
+        .filter(op => (op.status || 'Active') === 'Active')  // skip Inactive operators
+        .map(op => ({
+            name:   op.name,
+            mobile: op.mobile,
+            email:  op.email
+        }));
+
+    if (uniqueOperators.length === 0) {
+        operators = [];
+        localStorage.setItem('operators', JSON.stringify(operators));
+        return;
+    }
 
     const targetEnd = new Date(scheduleInputDate);
     targetEnd.setFullYear(targetEnd.getFullYear() + 1);
@@ -9533,11 +9590,15 @@ function init() {
     }
     
     let initialDataCheck = false; 
-    // Ensure all master operators have an email field for the new feature (for backward compatibility)
+    // Ensure all master operators have an email field AND a status field (backward compatibility)
     initialOperators = initialOperators.map(op => {
         if (!op.email) {
-            // Generate placeholder email if missing
             op.email = `${op.name.toLowerCase().replace(/\s/g, '.')}@oromiabank.com`;
+            initialDataCheck = true;
+        }
+        // Migrate: add status field if missing (existing operators default to Active)
+        if (!op.status) {
+            op.status = 'Active';
             initialDataCheck = true;
         }
         return op;
@@ -9977,10 +10038,26 @@ function renderOperatorManagementTable() {
     initialOperators.forEach((op, index) => {
         const tr = document.createElement('tr');
         const opNameUpper = op.name.toUpperCase();
-        
+        const opStatus = op.status || 'Active';
+        const isActive = opStatus === 'Active';
+
+        // Dim the row for inactive operators
+        if (!isActive) tr.style.opacity = '0.55';
+
+        const statusBadge = isActive
+            ? `<span style="display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;background:#d4edda;color:#155724;border:1px solid #c3e6cb;">● Active</span>`
+            : `<span style="display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;background:#f8d7da;color:#721c24;border:1px solid #f5c6cb;">● Inactive</span>`;
+
+        const toggleLabel = isActive ? 'Deactivate' : 'Activate';
+        const toggleStyle = isActive
+            ? 'background:#ffc107;color:#333;'
+            : 'background:#28a745;color:#fff;';
+
         let actionButtons = `
             <button class="reset-btn" onclick="event.stopPropagation(); resetOperatorPasswordMaster('${opNameUpper}')">Reset Pwd</button>
             <button class="rename-btn" onclick="event.stopPropagation(); openEditOperatorModal(${index})">Edit</button>
+            <button style="padding:4px 8px;border:none;border-radius:3px;cursor:pointer;margin:2px;font-size:13px;${toggleStyle}"
+                    onclick="event.stopPropagation(); toggleOperatorStatus(${index})">${toggleLabel}</button>
             <button class="delete-btn" onclick="event.stopPropagation(); deleteMasterOperator(${index})">Delete</button>
         `;
 
@@ -9989,10 +10066,40 @@ function renderOperatorManagementTable() {
             <td>${op.name}</td>
             <td>${op.mobile}</td>
             <td>${op.email}</td>
+            <td>${statusBadge}</td>
             <td>${actionButtons}</td>
         `;
         tbody.appendChild(tr);
     });
+}
+
+/** Toggles an operator between Active and Inactive without deleting them.
+ *  Inactive operators are excluded from future schedule generation. */
+function toggleOperatorStatus(index) {
+    if (!isAdmin) return;
+    const op = initialOperators[index];
+    const currentStatus = op.status || 'Active';
+    const newStatus = currentStatus === 'Active' ? 'Inactive' : 'Active';
+    const action = newStatus === 'Inactive' ? 'DEACTIVATE' : 'ACTIVATE';
+
+    const warning = newStatus === 'Inactive'
+        ? `\n\nNote: ${op.name} will be excluded from future schedule slots but existing shifts are preserved.`
+        : '';
+
+    if (!confirm(`${action} operator ${op.name}?${warning}`)) return;
+
+    initialOperators[index].status = newStatus;
+    localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
+
+    logAuditAction(`OPERATOR_${action}`,
+        `Operator ${op.name} status changed from ${currentStatus} to ${newStatus}.`);
+
+    // Rebuild only future shifts so existing active/finished shifts are unaffected
+    const startDate = document.getElementById('startDate').value;
+    regenerateFromCurrentPosition(startDate);
+
+    renderOperatorManagementTable();
+    showToast(`${newStatus === 'Active' ? '✅' : '⏸️'} ${op.name} is now ${newStatus}`, 'success');
 }
 
 function addOperator() {
@@ -10008,7 +10115,7 @@ function addOperator() {
     const exists = initialOperators.some(op => op.name.toLowerCase() === name.toLowerCase());
     if (exists) return alert('This operator name already exists.');
 
-    initialOperators.push({ name, mobile, email }); // ADD EMAIL
+    initialOperators.push({ name, mobile, email, status: 'Active' });
     localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
     
     if (!operatorPasswords[name]) {
@@ -10027,6 +10134,134 @@ function addOperator() {
     alert(`Operator ${name} added and schedule regenerated.`);
 }
 
+/**
+ * Smart schedule regeneration used after an operator is deleted or added.
+ *
+ * Strategy:
+ *  1. Keep ALL shifts that have already started on or before today
+ *     (status = Finished, or the currently active shift) — unchanged.
+ *  2. Find the cutoff: the last shift that started on or before today.
+ *     Everything from the shift AFTER that is discarded.
+ *  3. Rebuild future shifts starting from the day after that cutoff
+ *     shift ends, using the updated initialOperators list and picking
+ *     up the rotation at the operator that comes AFTER the cutoff
+ *     operator in the new list.
+ *  4. If no shifts exist yet, falls back to a full generateFullSchedule.
+ */
+function regenerateFromCurrentPosition(officialStartDate) {
+    if (initialOperators.length === 0) {
+        operators = [];
+        localStorage.setItem('operators', JSON.stringify(operators));
+        return;
+    }
+
+    const todayMs = getCleanDate(new Date()).getTime();
+
+    // Step 1: Find the index of the last shift that has already started
+    // (start date <= today). This covers both Finished and the current active shift.
+    let cutoffIndex = -1;
+    for (let i = 0; i < operators.length; i++) {
+        const shiftStart = getCleanDate(operators[i].start).getTime();
+        if (shiftStart <= todayMs) {
+            cutoffIndex = i;
+        } else {
+            break; // operators[] is chronological — stop once we pass today
+        }
+    }
+
+    // No shifts started yet — full rebuild
+    if (cutoffIndex === -1) {
+        generateFullSchedule(officialStartDate);
+        return;
+    }
+
+    // Step 2: Keep shifts 0..cutoffIndex, discard the rest
+    const preservedShifts = operators.slice(0, cutoffIndex + 1);
+    const cutoffShift = preservedShifts[cutoffIndex];
+
+    // Step 3: Determine next start date (day after cutoff shift ends)
+    const nextStart = new Date(getCleanDate(cutoffShift.end));
+    nextStart.setDate(nextStart.getDate() + 1);
+    nextStart.setHours(0, 0, 0, 0);
+
+    // Step 4: Determine which operator comes next in the rotation.
+    // Find the cutoff operator's position in the NEW initialOperators list.
+    // If they were deleted, find the operator that was AFTER them in the
+    // original list who still exists.
+    const uniqueOperators = initialOperators
+        .filter(op => (op.status || 'Active') === 'Active')  // skip Inactive operators
+        .map(op => ({
+            name:   op.name,
+            mobile: op.mobile,
+            email:  op.email
+        }));
+
+    if (uniqueOperators.length === 0) {
+        // All operators inactive — keep preserved shifts, clear future
+        operators = [...preservedShifts];
+        localStorage.setItem('operators', JSON.stringify(operators));
+        renderTable(); renderNextShifts();
+        return;
+    }
+
+    // Walk backwards through preserved shifts to find the first one whose
+    // operator still exists in the new list — that determines rotation position.
+    let nextOpIndex = 0;
+    for (let i = preservedShifts.length - 1; i >= 0; i--) {
+        const pos = uniqueOperators.findIndex(u => u.name === preservedShifts[i].name);
+        if (pos !== -1) {
+            // Start rotation at the operator AFTER this one
+            nextOpIndex = (pos + 1) % uniqueOperators.length;
+            break;
+        }
+    }
+
+    // Step 5: Generate future shifts from nextStart onward (1 year from original start)
+    const scheduleInputDate = getCleanDate(officialStartDate || DEFAULT_SCHEDULE_START_DATE);
+    const targetEnd = new Date(scheduleInputDate);
+    targetEnd.setFullYear(targetEnd.getFullYear() + 1);
+    targetEnd.setDate(targetEnd.getDate() - 1);
+    targetEnd.setHours(0, 0, 0, 0);
+
+    const futureShifts = [];
+    let current = new Date(nextStart);
+    let opIndex  = nextOpIndex;
+
+    while (current.getTime() <= targetEnd.getTime() && futureShifts.length < 500) {
+        const opDetails  = uniqueOperators[opIndex];
+        const shiftStart = new Date(current);
+        const shiftEnd   = calculateEndDate(shiftStart);
+        shiftEnd.setHours(0, 0, 0, 0);
+
+        if (shiftStart.getTime() <= targetEnd.getTime()) {
+            futureShifts.push({
+                name:      opDetails.name,
+                checkedBy: opDetails.name,
+                mobile:    opDetails.mobile,
+                email:     opDetails.email,
+                start:     shiftStart.toISOString().split('T')[0],
+                end:       shiftEnd.toISOString().split('T')[0],
+                status:    'Active'
+            });
+        } else {
+            break;
+        }
+
+        current = new Date(shiftEnd);
+        current.setDate(current.getDate() + 1);
+        current.setHours(0, 0, 0, 0);
+        opIndex = (opIndex + 1) % uniqueOperators.length;
+    }
+
+    // Step 6: Merge and save
+    operators = [...preservedShifts, ...futureShifts];
+    localStorage.setItem('operators', JSON.stringify(operators));
+
+    renderTable();
+    renderNextShifts();
+    checkAndSendNotifications();
+}
+
 function deleteMasterOperator(index) {
     if (!isAdmin) return;
     const opToDelete = initialOperators[index];
@@ -10034,19 +10269,23 @@ function deleteMasterOperator(index) {
         return alert('Cannot delete: You must have at least one operator in the master list.');
     }
 
-    if (confirm(`Are you sure you want to DELETE the master operator ${opToDelete.name}? This will remove them from the list and regenerate the entire schedule.`)) {
+    if (confirm(`Are you sure you want to DELETE the master operator ${opToDelete.name}?\n\nThis will:\n• Remove them from the master list\n• Keep all past and current shifts unchanged\n• Rebuild only future shifts (after today's active shift)\n\nContinue?`)) {
         initialOperators.splice(index, 1);
         delete operatorPasswords[opToDelete.name.toUpperCase()];
         localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
         localStorage.setItem('operatorPasswords', JSON.stringify(operatorPasswords));
-        
+
         const startDate = document.getElementById('startDate').value;
 
-        logAuditAction('MASTER_OP_DEL', `Master operator ${opToDelete.name} deleted. Schedule regenerated.`);
-        generateFullSchedule(startDate);
+        logAuditAction('MASTER_OP_DEL', `Master operator ${opToDelete.name} deleted. Future schedule regenerated from current position.`);
+
+        // Smart regeneration: preserve all shifts up to and including the current
+        // active shift, then rebuild only the future tail with the remaining operators.
+        regenerateFromCurrentPosition(startDate);
+
         renderTable();
         renderOperatorManagementTable();
-        alert(`Operator ${opToDelete.name} deleted and schedule regenerated.`);
+        alert(`Operator ${opToDelete.name} deleted.\n\nToday's operator is unchanged.\nFuture schedule has been rebuilt with the remaining operators.`);
     }
 }
 
@@ -11572,6 +11811,123 @@ function filterNotificationLog(term) {
         const text = tr.textContent.toLowerCase();
         tr.style.display = (!t || text.includes(t)) ? '' : 'none';
     });
+}
+
+/**
+ * Retry mechanism — re-attempts all FAILED notification entries.
+ * Only retries entries where emailStatus === 'Failure' AND no
+ * subsequent 'Success' entry exists for the same Notification ID.
+ * Never creates a duplicate if a success was already recorded.
+ */
+async function retryFailedNotifications() {
+    if (!isAdmin && !isManager) return;
+
+    notificationLog = JSON.parse(localStorage.getItem(NOTIFICATION_LOG_KEY) || '[]');
+
+    // Build set of IDs that already have a Success entry — never retry those
+    const successIds = new Set(
+        notificationLog
+            .filter(e => e.emailStatus === 'Success')
+            .map(e => e.id)
+    );
+
+    // Find unique failed IDs that have no success entry
+    const retryTargets = [];
+    const seen = new Set();
+    for (const entry of notificationLog) {
+        if (entry.emailStatus === 'Failure' && !successIds.has(entry.id) && !seen.has(entry.id)) {
+            seen.add(entry.id);
+            retryTargets.push(entry);
+        }
+    }
+
+    if (retryTargets.length === 0) {
+        showToast('No failed notifications to retry.', 'info');
+        alert('No failed notifications found that need retrying.\n\nAll failures either already succeeded on a later attempt, or there are no failures in the log.');
+        return;
+    }
+
+    if (!confirm(`Retry ${retryTargets.length} failed notification(s)?\n\n${retryTargets.map(e => `• ${e.operatorName} (${formatDate(e.shiftStart)})`).join('\n')}`)) return;
+
+    showToast(`🔄 Retrying ${retryTargets.length} failed notification(s)...`, 'info');
+    showLoading(true);
+
+    let retried = 0, succeeded = 0, stillFailed = 0;
+
+    for (const failedEntry of retryTargets) {
+        // Find the corresponding operator and shift
+        const masterOp = initialOperators.find(io => io.name === failedEntry.operatorName);
+        const op = operators.find(o =>
+            o.name === failedEntry.operatorName && o.start === failedEntry.shiftStart
+        );
+
+        if (!masterOp || !op) {
+            console.warn(`[Retry] Operator or shift not found for: ${failedEntry.operatorName}`);
+            continue;
+        }
+
+        // Skip inactive operators (BR-11)
+        if ((masterOp.status || 'Active') === 'Inactive') {
+            console.log(`[Retry] Skipping inactive operator: ${masterOp.name}`);
+            continue;
+        }
+
+        if (!masterOp.email || masterOp.email === 'N/A') {
+            showToast(`⚠️ No email for ${masterOp.name} — cannot retry`, 'warning');
+            continue;
+        }
+
+        retried++;
+        try {
+            const daysUntil = daysBetween(getCleanDate(new Date()), getCleanDate(op.start));
+            const notifType = daysUntil <= 0 ? 'today' : daysUntil === 1 ? 'urgent' : 'reminder';
+
+            const results = await sendNotificationToOperator(masterOp, op, notifType);
+            const emailOK = results.email.success;
+
+            const retryEntry = {
+                id:           failedEntry.id,
+                timestamp:    new Date().toISOString(),
+                operatorName: masterOp.name,
+                email:        masterOp.email,
+                mobile:       masterOp.mobile || '',
+                shiftStart:   op.start,
+                type:         `${notifType} (retry)`,
+                emailStatus:  emailOK ? 'Success' : 'Failure',
+                smsStatus:    'N/A'
+            };
+            if (!emailOK && results.email.error) retryEntry.error = results.email.error;
+
+            // Reload log fresh before writing (another retry may have run)
+            notificationLog = JSON.parse(localStorage.getItem(NOTIFICATION_LOG_KEY) || '[]');
+            if (notificationLog.length >= 500) notificationLog.pop();
+            notificationLog.unshift(retryEntry);
+            localStorage.setItem(NOTIFICATION_LOG_KEY, JSON.stringify(notificationLog));
+
+            if (emailOK) {
+                succeeded++;
+                console.log(`[Retry] ✅ Success: ${masterOp.name}`);
+            } else {
+                stillFailed++;
+                console.warn(`[Retry] ❌ Still failed: ${masterOp.name}`);
+            }
+        } catch (err) {
+            stillFailed++;
+            console.error(`[Retry] Exception for ${masterOp.name}:`, err);
+        }
+
+        // Small delay between retries to avoid rate limiting
+        await new Promise(r => setTimeout(r, 600));
+    }
+
+    showLoading(false);
+    renderNotificationLog();
+
+    const msg = `🔄 Retry Complete\n\n• Retried: ${retried}\n• Succeeded: ${succeeded}\n• Still failed: ${stillFailed}\n\nCheck the Notification Log for details.`;
+    alert(msg);
+    showToast(succeeded > 0 ? `✅ ${succeeded} retry(ies) succeeded` : '❌ All retries failed — check email config', succeeded > 0 ? 'success' : 'error');
+
+    logAuditAction('NOTIF_RETRY', `Retry attempted for ${retried} failed notification(s). ${succeeded} succeeded, ${stillFailed} still failed.`);
 }
 
 // ================================================================

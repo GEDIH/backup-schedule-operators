@@ -7000,7 +7000,7 @@ let initialOperators = JSON.parse(localStorage.getItem(INITIAL_OPERATORS_DATA_KE
     { name: "BERISO SHIBIRU", mobile: "0902911411", email: "bariso.s@orointbank.com",        status: "Active" },
     { name: "HAMBISA ADAMU",  mobile: "0913456466", email: "hambisa.adamu@oromiabank.com",  status: "Active" },
     { name: "DAME TERFASSA",  mobile: "0911117524", email: "dame.terfassa@oromiabank.com",  status: "Active" },
-    { name: "TSION GIRMA",    mobile: "0946700418", email: "tsion.g@orointbank.com",         status: "Active" }
+    { name: "TSION GIRMA",    mobile: "0946700418", email: "tsion.g@orointbank.com",         status: "Inactive" }
 ];
 
 let operators = JSON.parse(localStorage.getItem('operators') || '[]');
@@ -7037,7 +7037,7 @@ const DEFAULT_OPERATOR_PWD = 'op123';
 const SHIFT_LENGTH = 10; 
 
 const today = getCleanDate(new Date());    
-const DEFAULT_SCHEDULE_START_DATE = '2025-10-08';    
+const DEFAULT_SCHEDULE_START_DATE = '2025-09-01';    
 
 // --- Core Helper Functions ---
 
@@ -10462,7 +10462,7 @@ function resetAll() {
             { name: "BERISO SHIBIRU", mobile: "0902911411", email: "bariso.s@orointbank.com",        status: "Active" },
             { name: "HAMBISA ADAMU",  mobile: "0913456466", email: "hambisa.adamu@oromiabank.com",  status: "Active" },
             { name: "DAME TERFASSA",  mobile: "0911117524", email: "dame.terfassa@oromiabank.com",  status: "Active" },
-            { name: "TSION GIRMA",    mobile: "0946700418", email: "tsion.g@orointbank.com",         status: "Active" }
+            { name: "TSION GIRMA",    mobile: "0946700418", email: "tsion.g@orointbank.com",         status: "Inactive" }
         ];
         localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
 

@@ -9724,19 +9724,12 @@ function confirmLogout() {
     logout();
 }
 
-function init() {
-    // Check for existing session first
-    if (restoreSessionState()) {
-        // Session restored successfully, user is already logged in
-        document.body.classList.remove('login-active');
-        return;
-    }
-    
-    // Migrate old cyber security username if exists
-    migrateCyberSecurityUsername();
+// ── _runDataMigrations: runs BEFORE session restore and BEFORE init body ──
+// Fixes: timezone-safe schedule reset, status sync, email migration.
+// Called unconditionally so a cached session never blocks config changes.
+function _runDataMigrations() {
 
-    // ── Migrate operator emails to official addresses ──────────────────────
-    // Replaces any old Gmail addresses with the correct official emails
+    // 1. Email migration
     const officialEmails = {
         'ABRAHAM CHALA':  'abraham.chala@oromiabank.com',
         'BERISO SHIBIRU': 'bariso.s@orointbank.com',
@@ -9746,31 +9739,22 @@ function init() {
     };
     let emailsMigrated = false;
     initialOperators = initialOperators.map(op => {
-        const correctEmail = officialEmails[op.name.toUpperCase()];
-        if (correctEmail && op.email !== correctEmail) {
-            op.email = correctEmail;
-            emailsMigrated = true;
-        }
+        const correct = officialEmails[op.name.toUpperCase()];
+        if (correct && op.email !== correct) { op.email = correct; emailsMigrated = true; }
         return op;
     });
     if (emailsMigrated) {
-        localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
-        // Also update emails in scheduled shifts
-        let shiftUpdated = false;
         operators = operators.map(op => {
-            const correctEmail = officialEmails[op.name.toUpperCase()];
-            if (correctEmail && op.email !== correctEmail) {
-                op.email = correctEmail;
-                shiftUpdated = true;
-            }
+            const correct = officialEmails[op.name.toUpperCase()];
+            if (correct && op.email !== correct) op.email = correct;
             return op;
         });
-        if (shiftUpdated) localStorage.setItem('operators', JSON.stringify(operators));
-        console.log('✅ Operator emails migrated to official addresses');
+        localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
+        localStorage.setItem('operators', JSON.stringify(operators));
+        console.log('[Migration] Emails synced.');
     }
-    // ── End email migration ────────────────────────────────────────────────
 
-    // ── Migrate operator status from hardcoded defaults (e.g. Inactive flag) ──
+    // 2. Operator status migration (Inactive / Active per hardcoded defaults)
     const defaultStatuses = {
         'ABRAHAM CHALA':  'Active',
         'BERISO SHIBIRU': 'Active',
@@ -9782,28 +9766,53 @@ function init() {
     initialOperators = initialOperators.map(op => {
         const canonical = defaultStatuses[op.name.toUpperCase()];
         if (canonical !== undefined && op.status !== canonical) {
-            op.status = canonical;
-            statusMigrated = true;
+            op.status = canonical; statusMigrated = true;
         }
         return op;
     });
     if (statusMigrated) {
         localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
-        console.log('✅ Operator statuses synced from defaults');
+        console.log('[Migration] Operator statuses synced (TSION → Inactive).');
     }
-    // ── End status migration ───────────────────────────────────────────────
 
-    // ── Force schedule regeneration if start date has changed ─────────────
-    const savedStartDate = operators.length > 0 ? operators[0].start : null;
-    const expectedFirstShift = new Date(DEFAULT_SCHEDULE_START_DATE);
-    expectedFirstShift.setDate(expectedFirstShift.getDate() + 1);
-    const expectedFirstShiftStr = expectedFirstShift.toISOString().split('T')[0];
-    if (statusMigrated || (savedStartDate && savedStartDate !== expectedFirstShiftStr)) {
+    // 3. Schedule reset — timezone-safe date comparison
+    // Build the expected first-shift date string using LOCAL date math, not UTC.
+    const dsBase = DEFAULT_SCHEDULE_START_DATE; // 'YYYY-MM-DD'
+    const [sy, sm, sd] = dsBase.split('-').map(Number);
+    const expectedFirstShiftDate = new Date(sy, sm - 1, sd + 1); // +1 day, LOCAL
+    const pad = n => String(n).padStart(2,'0');
+    const expectedFirstShiftStr =
+        `${expectedFirstShiftDate.getFullYear()}-${pad(expectedFirstShiftDate.getMonth()+1)}-${pad(expectedFirstShiftDate.getDate())}`;
+
+    const savedFirstShift = operators.length > 0 ? operators[0].start : null;
+
+    if (statusMigrated || (savedFirstShift && savedFirstShift !== expectedFirstShiftStr)) {
         localStorage.removeItem('operators');
         operators = [];
-        console.log('✅ Schedule cleared for regeneration due to config change');
+        console.log(`[Migration] Schedule cleared — saved first=${savedFirstShift}, expected first=${expectedFirstShiftStr}`);
     }
-    // ── End schedule regeneration check ───────────────────────────────────
+}
+
+function init() {
+    // ── Run data migrations FIRST (before any session restore) ────────────
+    // This ensures schedule/operator changes in code always take effect,
+    // even when a saved session exists in localStorage.
+    _runDataMigrations();
+    // ── End pre-session migrations ─────────────────────────────────────────
+
+    // Check for existing session first
+    if (restoreSessionState()) {
+        // Session restored successfully, user is already logged in
+        document.body.classList.remove('login-active');
+        return;
+    }
+    
+    // Migrate old cyber security username if exists
+    migrateCyberSecurityUsername();
+
+    // ── All other migrations are now handled by _runDataMigrations() ───────
+    // (already called above, before session restore)
+    // ── End migration section ─────────────────────────────────────────────
 
     // Set initial body class for login state
     document.body.classList.add('login-active');

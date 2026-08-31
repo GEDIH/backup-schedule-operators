@@ -7004,7 +7004,6 @@ async function testNotificationToAllOperators() {
     // List of all operator emails
     const operatorEmails = [
         { name: 'DAME TERFASSA',  email: 'dame.terfassa@oromiabank.com' },
-        { name: 'TSION GIRMA',    email: 'tsion.g@orointbank.com' },
         { name: 'ABRAHAM CHALA',  email: 'abraham.chala@oromiabank.com' },
         { name: 'BERISO SHIBIRU', email: 'bariso.s@orointbank.com' },
         { name: 'HAMBISA ADAMU',  email: 'hambisa.adamu@oromiabank.com' }
@@ -7165,8 +7164,7 @@ let initialOperators = JSON.parse(localStorage.getItem(INITIAL_OPERATORS_DATA_KE
     { name: "ABRAHAM CHALA",  mobile: "0913564114", email: "abraham.chala@oromiabank.com",  status: "Active" },
     { name: "BERISO SHIBIRU", mobile: "0902911411", email: "bariso.s@orointbank.com",        status: "Active" },
     { name: "HAMBISA ADAMU",  mobile: "0913456466", email: "hambisa.adamu@oromiabank.com",  status: "Active" },
-    { name: "DAME TERFASSA",  mobile: "0911117524", email: "dame.terfassa@oromiabank.com",  status: "Active" },
-    { name: "TSION GIRMA",    mobile: "0946700418", email: "tsion.g@orointbank.com",         status: "Inactive" }
+    { name: "DAME TERFASSA",  mobile: "0911117524", email: "dame.terfassa@oromiabank.com",  status: "Active" }
 ];
 
 let operators = JSON.parse(localStorage.getItem('operators') || '[]');
@@ -9734,8 +9732,7 @@ function _runDataMigrations() {
         'ABRAHAM CHALA':  'abraham.chala@oromiabank.com',
         'BERISO SHIBIRU': 'bariso.s@orointbank.com',
         'HAMBISA ADAMU':  'hambisa.adamu@oromiabank.com',
-        'DAME TERFASSA':  'dame.terfassa@oromiabank.com',
-        'TSION GIRMA':    'tsion.g@orointbank.com'
+        'DAME TERFASSA':  'dame.terfassa@oromiabank.com'
     };
     let emailsMigrated = false;
     initialOperators = initialOperators.map(op => {
@@ -9759,8 +9756,7 @@ function _runDataMigrations() {
         'ABRAHAM CHALA':  'Active',
         'BERISO SHIBIRU': 'Active',
         'HAMBISA ADAMU':  'Active',
-        'DAME TERFASSA':  'Active',
-        'TSION GIRMA':    'Inactive'
+        'DAME TERFASSA':  'Active'
     };
     let statusMigrated = false;
     initialOperators = initialOperators.map(op => {
@@ -10647,8 +10643,7 @@ function resetAll() {
             { name: "ABRAHAM CHALA",  mobile: "0913564114", email: "abraham.chala@oromiabank.com",  status: "Active" },
             { name: "BERISO SHIBIRU", mobile: "0902911411", email: "bariso.s@orointbank.com",        status: "Active" },
             { name: "HAMBISA ADAMU",  mobile: "0913456466", email: "hambisa.adamu@oromiabank.com",  status: "Active" },
-            { name: "DAME TERFASSA",  mobile: "0911117524", email: "dame.terfassa@oromiabank.com",  status: "Active" },
-            { name: "TSION GIRMA",    mobile: "0946700418", email: "tsion.g@orointbank.com",         status: "Inactive" }
+            { name: "DAME TERFASSA",  mobile: "0911117524", email: "dame.terfassa@oromiabank.com",  status: "Active" }
         ];
         localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
 

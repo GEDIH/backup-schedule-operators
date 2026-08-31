@@ -9627,9 +9627,43 @@ function init() {
     }
     // ── End email migration ────────────────────────────────────────────────
 
+    // ── Migrate operator status from hardcoded defaults (e.g. Inactive flag) ──
+    const defaultStatuses = {
+        'ABRAHAM CHALA':  'Active',
+        'BERISO SHIBIRU': 'Active',
+        'HAMBISA ADAMU':  'Active',
+        'DAME TERFASSA':  'Active',
+        'TSION GIRMA':    'Inactive'
+    };
+    let statusMigrated = false;
+    initialOperators = initialOperators.map(op => {
+        const canonical = defaultStatuses[op.name.toUpperCase()];
+        if (canonical !== undefined && op.status !== canonical) {
+            op.status = canonical;
+            statusMigrated = true;
+        }
+        return op;
+    });
+    if (statusMigrated) {
+        localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
+        console.log('✅ Operator statuses synced from defaults');
+    }
+    // ── End status migration ───────────────────────────────────────────────
+
+    // ── Force schedule regeneration if start date has changed ─────────────
+    const savedStartDate = operators.length > 0 ? operators[0].start : null;
+    const expectedFirstShift = new Date(DEFAULT_SCHEDULE_START_DATE);
+    expectedFirstShift.setDate(expectedFirstShift.getDate() + 1);
+    const expectedFirstShiftStr = expectedFirstShift.toISOString().split('T')[0];
+    if (statusMigrated || (savedStartDate && savedStartDate !== expectedFirstShiftStr)) {
+        localStorage.removeItem('operators');
+        operators = [];
+        console.log('✅ Schedule cleared for regeneration due to config change');
+    }
+    // ── End schedule regeneration check ───────────────────────────────────
+
     // Set initial body class for login state
     document.body.classList.add('login-active');
-    
     let passwordUpdated = false;
     initialOperators.forEach(op => {
         if (!operatorPasswords[op.name.toUpperCase()]) {

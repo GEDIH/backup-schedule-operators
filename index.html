@@ -4279,6 +4279,163 @@ body.dark-mode .daily-check-date-row { background: #0f3460; border-color: #1a4a8
 body.dark-mode .daily-check-field { border-bottom-color: #0f3460; }
 body.dark-mode .daily-check-field-label { color: #aaa; }
 /* === END DAILY CHECK VIEW === */
+
+/* ================================================================
+   COMPREHENSIVE ENHANCEMENT CSS — All fixes #5,#6,#9,#10,#11,#12,#14,#15
+   ================================================================ */
+
+/* --- Mobile-hide columns (#5, #10) --- */
+@media (max-width: 640px) {
+    .col-mobile, .col-checked-by { display: none !important; }
+    #scheduleTable td:nth-child(3),
+    #scheduleTable th:nth-child(3),
+    #scheduleTable td:nth-child(4),
+    #scheduleTable th:nth-child(4) { display: none !important; }
+    .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .kpi-bar { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
+    .sticky-topbar { flex-wrap: wrap !important; gap: 6px !important; }
+    #topbarActions { flex-wrap: wrap !important; gap: 4px !important; }
+    .topbar-btn { font-size: 11px !important; padding: 5px 8px !important; }
+    .top-section { flex-direction: column !important; align-items: stretch !important; }
+    .top-section button, .top-section select { width: 100%; }
+}
+@media (max-width: 420px) {
+    .kpi-bar { grid-template-columns: 1fr 1fr !important; }
+    .login-container { padding: 28px 18px !important; }
+    .admin-btn-grid { flex-direction: column; }
+}
+
+/* --- Table toolbar (#6) --- */
+.table-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px 4px;
+    margin-bottom: 6px;
+}
+.table-toolbar-right { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.table-toolbar-label { font-size: 13px; color: #555; font-weight: 600; }
+.table-count-label { font-size: 13px; color: #666; }
+.table-rows-select {
+    padding: 5px 10px; border: 1px solid #ccc; border-radius: 6px;
+    font-size: 13px; background: #fff; cursor: pointer;
+}
+.table-page-btn {
+    padding: 5px 10px; border: 1px solid #ccc; border-radius: 6px;
+    font-size: 13px; background: #fff; cursor: pointer;
+    transition: background 0.2s;
+}
+.table-page-btn:hover { background: #e9ecef; }
+.table-page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.table-page-label { font-size: 13px; color: #555; min-width: 60px; text-align: center; }
+body.dark-mode .table-rows-select,
+body.dark-mode .table-page-btn { background: #2c3e50; color: #ecf0f1; border-color: #555; }
+
+/* --- Password show/hide (#9) --- */
+.pwd-toggle-btn {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: rgba(255,255,255,0.7);
+    padding: 0;
+    z-index: 2;
+    transition: color 0.2s;
+    line-height: 1;
+}
+.pwd-toggle-btn:hover { color: #94C83D; }
+#passwordGroup { position: relative; }
+
+/* --- Status badges (#12) --- */
+.badge-active {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: linear-gradient(135deg, #d4edda, #c3e6cb);
+    color: #155724; border: 1px solid #b1dfbb;
+    padding: 3px 10px; border-radius: 12px;
+    font-size: 12px; font-weight: 700;
+}
+.badge-finished {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: linear-gradient(135deg, #cce5ff, #b8daff);
+    color: #004085; border: 1px solid #b8daff;
+    padding: 3px 10px; border-radius: 12px;
+    font-size: 12px; font-weight: 700;
+}
+.badge-active::before  { content: '●'; color: #28a745; font-size: 9px; }
+.badge-finished::before { content: '✓'; font-size: 10px; }
+
+/* --- Shift progress bar in table (#14) --- */
+.shift-progress-wrap {
+    height: 5px; background: #e9ecef; border-radius: 3px;
+    overflow: hidden; margin-top: 4px; width: 100%;
+}
+.shift-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #94C83D, #7DAE2F);
+    border-radius: 3px;
+    transition: width 0.4s ease;
+}
+.shift-days-badge {
+    font-size: 10px; color: #6c757d; font-weight: 600;
+    display: block; margin-top: 2px;
+}
+body.dark-mode .shift-progress-wrap { background: #3a4a5c; }
+body.dark-mode .shift-days-badge { color: #aaa; }
+
+/* --- Operator management search (#11) --- */
+#opMgmtSearch, #opMgmtStatusFilter {
+    padding: 7px 12px; border: 1px solid #ccc; border-radius: 6px;
+    font-size: 13px; transition: border-color 0.2s;
+}
+#opMgmtSearch:focus, #opMgmtStatusFilter:focus {
+    border-color: #94C83D; outline: none;
+    box-shadow: 0 0 0 3px rgba(148,200,61,0.15);
+}
+body.dark-mode #opMgmtSearch, body.dark-mode #opMgmtStatusFilter {
+    background: #2c3e50; color: #ecf0f1; border-color: #555;
+}
+
+/* --- Schedule table row enhancements (#12) --- */
+#scheduleTable tbody tr { cursor: pointer; }
+#scheduleTable tbody tr:hover:not(.highlight-today):not(.highlight-next):not(.highlight-finished) {
+    background-color: #f0fae0 !important;
+}
+body.dark-mode #scheduleTable tbody tr:hover:not(.highlight-today):not(.highlight-next):not(.highlight-finished) {
+    background-color: #1e3a1e !important;
+}
+
+/* --- Dark mode toggle button --- */
+#darkModeBtn.active { background: rgba(255,255,0,0.15) !important; color: #ffd700 !important; }
+
+/* --- Search highlight (#13) --- */
+.search-highlight {
+    background: #fff176; color: #333; padding: 0 2px;
+    border-radius: 2px; font-weight: 700;
+}
+body.dark-mode .search-highlight { background: #f9a825; color: #000; }
+
+/* --- startDate only for admin (#17) --- */
+#startDateLabel, #startDate { transition: opacity 0.2s; }
+
+/* --- Copy phone button --- */
+.copy-phone-btn {
+    background: none; border: none; cursor: pointer;
+    font-size: 13px; padding: 0 3px; opacity: 0.6;
+    transition: opacity 0.2s; vertical-align: middle;
+}
+.copy-phone-btn:hover { opacity: 1; }
+
+/* --- Table container horizontal scroll on all sizes --- */
+.table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+#scheduleTable { min-width: 600px; }
+#operatorManagementTable { min-width: 500px; }
+
 </style>
 </head>
 <body>
@@ -4404,7 +4561,7 @@ body.dark-mode .daily-check-field-label { color: #aaa; }
 <div class="loading-spinner" id="loadingSpinner"></div>
 
 <div class="top-section">
-    <label for="startDate">Schedule Start Date (Shifts start the day after this date):</label>
+    <label for="startDate" id="startDateLabel">Schedule Start Date (Shifts start the day after this date):</label>
     <input type="date" id="startDate" onchange="generateScheduleByDate(this.value)">
     <button id="downloadPdfBtn" onclick="downloadPdf()" style="display:none;">Download PDF</button>
 
@@ -4478,6 +4635,7 @@ body.dark-mode .daily-check-field-label { color: #aaa; }
             <div class="input-group" id="passwordGroup">
                 <span class="input-icon">🔒</span>
                 <input type="password" id="adminPassword" placeholder="Enter password" autocomplete="current-password" required>
+                <button type="button" class="pwd-toggle-btn" id="pwdToggleBtn" onclick="togglePasswordVisibility()" title="Show/hide password">👁</button>
             </div>
             
             <!-- Biometric Authentication Section -->
@@ -5083,6 +5241,16 @@ body.dark-mode .daily-check-field-label { color: #aaa; }
         <input type="text" id="mobileNumber" placeholder="Mobile Number">
         <input type="email" id="emailAddress" placeholder="Email Address"> <button onclick="addOperator()">Add New Operator</button>
     </div>
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px; flex-wrap:wrap; justify-content:center;">
+        <input type="text" id="opMgmtSearch" placeholder="🔍 Search operators..." oninput="renderOperatorManagementTable()"
+               style="padding:7px 12px; border:1px solid #ccc; border-radius:6px; font-size:13px; min-width:220px;">
+        <select id="opMgmtStatusFilter" onchange="renderOperatorManagementTable()"
+                style="padding:7px 12px; border:1px solid #ccc; border-radius:6px; font-size:13px;">
+            <option value="">All Statuses</option>
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+        </select>
+    </div>
     <table id="operatorManagementTable">
         <thead>
             <tr>
@@ -5120,13 +5288,29 @@ body.dark-mode .daily-check-field-label { color: #aaa; }
 </div>
 
 <div class="table-container" id="scheduleView" style="display:none;">
+    <div class="table-toolbar">
+        <span id="tableRowCountLabel" class="table-count-label"></span>
+        <div class="table-toolbar-right">
+            <label class="table-toolbar-label">Show:</label>
+            <select id="tableRowsPerPage" onchange="renderTable()" class="table-rows-select">
+                <option value="5">5 rows</option>
+                <option value="10">10 rows</option>
+                <option value="20">20 rows</option>
+                <option value="50">50 rows</option>
+                <option value="all" selected>All</option>
+            </select>
+            <button id="tablePrevBtn" onclick="tablePageChange(-1)" class="table-page-btn">‹ Prev</button>
+            <span id="tablePageLabel" class="table-page-label"></span>
+            <button id="tableNextBtn" onclick="tablePageChange(1)" class="table-page-btn">Next ›</button>
+        </div>
+    </div>
     <table id="scheduleTable">
         <thead>
             <tr>
                 <th>S/N</th>
                 <th>Taken by</th>
-                <th>Checked by</th>
-                <th>Mobile number</th>
+                <th class="col-checked-by">Checked by</th>
+                <th class="col-mobile">Mobile number</th>
                 <th>Date Range</th>
                 <th>Status</th>
                 <th id="actionsHeader">Actions</th>
@@ -5221,7 +5405,7 @@ body.dark-mode .daily-check-field-label { color: #aaa; }
 <!-- ============================================================
      FEATURE 8: COUNTDOWN TIMER ON ACTIVE SHIFT (injected via JS into table)
      ============================================================ -->
-<div id="countdownBanner" style="display:none; max-width:1000px; margin:0 auto 15px auto; background:linear-gradient(135deg,#e8f5e9,#c8e6c9); border:2px solid #4caf50; border-radius:12px; padding:14px 20px; display:none; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+<div id="countdownBanner" style="display:none; max-width:1000px; margin:0 auto 15px auto; background:linear-gradient(135deg,#e8f5e9,#c8e6c9); border:2px solid #4caf50; border-radius:12px; padding:14px 20px; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
     <div>
         <div style="font-weight:800; color:#1b5e20; font-size:14px;">⏰ Active Shift Countdown</div>
         <div id="countdownOperatorName" style="font-size:13px; color:#2e7d32; margin-top:3px;"></div>
@@ -6417,24 +6601,6 @@ function closeModal() {
 }
 
 // === END BACKUP STATUS TRACKING FUNCTIONS ===
-
-// Convert operator selection to standardized status
-function getConvertedStatus(operatorStatus) {
-    if (!operatorStatus) return 'Pending';
-    
-    switch (operatorStatus) {
-        case 'Completely Backed Up':
-            return 'Completed';
-        case 'Issue Encountered':
-            return 'Failed';
-        case 'Holiday':
-            return 'Holiday';
-        case 'Weekend':
-            return 'Weekend';
-        default:
-            return 'Pending';
-    }
-}
 
 // Helper functions for backup tracking
 function getDayType(date) {
@@ -8802,31 +8968,8 @@ function createRippleEffect(element) {
     }, 600);
 }
 
-// Enhanced biometric simulation
-function simulateBiometric(type) {
-    const btn = event.target;
-    btn.classList.add('active');
-    
-    // Create scanning effect
-    const scanLine = document.createElement('div');
-    scanLine.style.position = 'absolute';
-    scanLine.style.top = '0';
-    scanLine.style.left = '0';
-    scanLine.style.right = '0';
-    scanLine.style.height = '2px';
-    scanLine.style.background = 'linear-gradient(90deg, transparent, #94C83D, transparent)';
-    scanLine.style.animation = 'scanLine 2s ease-in-out';
-    btn.appendChild(scanLine);
-    
-    // Simulate authentication process
-    setTimeout(() => {
-        btn.classList.remove('active');
-        scanLine.remove();
-        
-        // Show success feedback
-        showBiometricSuccess(type);
-    }, 2000);
-}
+// Enhanced biometric simulation — delegates to main simulateBiometric above
+// (duplicate removed; showBiometricSuccess kept for visual feedback)
 
 function showBiometricSuccess(type) {
     const message = document.createElement('div');
@@ -10807,15 +10950,6 @@ function downloadPdf() {
     logAuditAction('DOWNLOAD', `PDF schedule downloaded by ${loggedInUser}.`);
 }
 
-// --- HELP MODAL FUNCTIONS ---
-function showHelpModal() {
-    document.getElementById('helpModal').style.display = 'block';
-}
-
-function closeHelpModal() {
-    document.getElementById('helpModal').style.display = 'none';
-}
-
 // --- NOTIFICATION CONFIGURATION FUNCTIONS ---
 function openNotificationConfigModal() {
     if (!isAdmin) return;
@@ -12465,46 +12599,6 @@ hideStickyTopbar = function() {
     clearInterval(sessionCountdownTimer);
 };
 
-// Override renderTable to add progress bars and copy buttons
-const _origRenderTable = renderTable;
-renderTable = function() {
-    _origRenderTable();
-
-    // Post-process: add shift progress bars
-    const tbody = document.querySelector('#scheduleTable tbody');
-    if (!tbody || !loggedInUser) return;
-
-    const searchTerm = (document.getElementById('searchOperatorName') ? document.getElementById('searchOperatorName').value : '').toLowerCase();
-
-    tbody.querySelectorAll('tr').forEach((tr, idx) => {
-        const cells = tr.querySelectorAll('td');
-        if (cells.length < 5) return;
-
-        // Cell index 4 is Date Range — add progress bar after it
-        const dateCell = cells[4];
-        if (dateCell && !dateCell.querySelector('.shift-progress-wrap')) {
-            // Find matching operator
-            const nameCell = cells[1];
-            if (nameCell) {
-                const opName = nameCell.textContent.trim();
-                const op = operators.find(o => o.name === opName);
-                if (op) {
-                    const progressHTML = buildShiftProgressBar(op);
-                    dateCell.insertAdjacentHTML('beforeend', progressHTML);
-                }
-            }
-        }
-
-        // Highlight search term in operator name cell
-        if (searchTerm && searchTerm.length >= 2 && cells[1]) {
-            const original = cells[1].textContent;
-            if (original.toLowerCase().includes(searchTerm)) {
-                cells[1].innerHTML = highlightSearchText(original, searchTerm);
-            }
-        }
-    });
-};
-
 // Override renderNextShifts to add copy-phone buttons in shift cards
 const _origRenderNextShifts = renderNextShifts;
 renderNextShifts = function() {
@@ -12544,6 +12638,263 @@ setInterval(() => {
         updateKpiBar();
     }
 }, 60000); // every minute
+
+// ================================================================
+// COMPREHENSIVE FIXES & ENHANCEMENTS BLOCK
+// Fixes: #6 pagination, #7 wiring, #9 pwd toggle, #11 op mgmt search,
+//        #12 badges, #13 notif log search, #14 progress, #15 dark mode,
+//        #17 startDate visibility
+// ================================================================
+
+/* ---------- #6  Pagination state ---------- */
+let _tablePage = 0;  // current page index (0-based)
+
+function tablePageChange(delta) {
+    const sel = document.getElementById('tableRowsPerPage');
+    if (!sel || sel.value === 'all') return;
+    _tablePage = Math.max(0, _tablePage + delta);
+    renderTable();
+}
+
+/* ---------- #9  Password show/hide ---------- */
+function togglePasswordVisibility() {
+    const input = document.getElementById('adminPassword');
+    const btn   = document.getElementById('pwdToggleBtn');
+    if (!input) return;
+    if (input.type === 'password') {
+        input.type = 'text';
+        if (btn) btn.textContent = '🙈';
+    } else {
+        input.type = 'password';
+        if (btn) btn.textContent = '👁';
+    }
+}
+
+/* ---------- #11 Operator management table with search/filter ---------- */
+// Override renderOperatorManagementTable to support search + status filter
+const _origRenderOpMgmt = typeof renderOperatorManagementTable === 'function' ? renderOperatorManagementTable : null;
+renderOperatorManagementTable = function() {
+    const tbody = document.querySelector('#operatorManagementTable tbody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+
+    const searchTerm = ((document.getElementById('opMgmtSearch') || {}).value || '').toLowerCase().trim();
+    const statusFilter = (document.getElementById('opMgmtStatusFilter') || {}).value || '';
+
+    let filtered = initialOperators.filter((op, idx) => {
+        const matchSearch = !searchTerm ||
+            op.name.toLowerCase().includes(searchTerm) ||
+            (op.mobile || '').includes(searchTerm) ||
+            (op.email || '').toLowerCase().includes(searchTerm);
+        const matchStatus = !statusFilter || (op.status || 'Active') === statusFilter;
+        return matchSearch && matchStatus;
+    });
+
+    if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#999;padding:20px;">No operators found.</td></tr>';
+        return;
+    }
+
+    filtered.forEach((op) => {
+        const idx = initialOperators.indexOf(op);
+        const status = op.status || 'Active';
+        const statusStyle = status === 'Active'
+            ? 'background:#d4edda;color:#155724;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:700;'
+            : 'background:#f8d7da;color:#721c24;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:700;';
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${idx + 1}</td>
+            <td><strong>${op.name}</strong></td>
+            <td>
+                <span style="display:inline-flex;align-items:center;gap:4px;">
+                    ${op.mobile || 'N/A'}
+                    <button class="copy-phone-btn" onclick="event.stopPropagation();copyPhoneNumber('${op.mobile}',this)" title="Copy"
+                            style="background:none;border:none;cursor:pointer;font-size:12px;opacity:0.6;">📋</button>
+                </span>
+            </td>
+            <td>${op.email || 'N/A'}</td>
+            <td><span style="${statusStyle}">${status}</span></td>
+            <td>
+                <button onclick="toggleOperatorStatus(${idx})" style="padding:4px 10px;border:none;border-radius:5px;cursor:pointer;font-size:12px;background:${status==='Active'?'#ffc107':'#28a745'};color:${status==='Active'?'#333':'#fff'};">
+                    ${status === 'Active' ? '⏸ Deactivate' : '▶ Activate'}
+                </button>
+                <button onclick="openEditOperatorModal(${idx})" style="padding:4px 10px;border:none;border-radius:5px;cursor:pointer;font-size:12px;background:#007bff;color:#fff;margin-left:4px;">✏️ Edit</button>
+                <button onclick="resetOperatorPasswordMaster('${op.name}')" style="padding:4px 10px;border:none;border-radius:5px;cursor:pointer;font-size:12px;background:#6c757d;color:#fff;margin-left:4px;">🔑 Reset Pwd</button>
+                <button onclick="deleteMasterOperator(${idx})" style="padding:4px 10px;border:none;border-radius:5px;cursor:pointer;font-size:12px;background:#dc3545;color:#fff;margin-left:4px;">🗑 Delete</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+};
+
+/* ---------- #12 Enhanced renderTable with badges + pagination ---------- */
+const __origRenderTable = typeof renderTable === 'function' ? renderTable : null;
+renderTable = (function(_orig) {
+    return function enhancedRenderTable() {
+
+        // Run original first
+        if (_orig) _orig();
+
+        const tbody = document.querySelector('#scheduleTable tbody');
+        if (!tbody || !loggedInUser) return;
+
+        // --- Apply pagination (#6) ---
+        const sel = document.getElementById('tableRowsPerPage');
+        const rowsPerPage = sel ? sel.value : 'all';
+        const allRows = Array.from(tbody.querySelectorAll('tr'));
+        const total = allRows.length;
+
+        if (rowsPerPage === 'all') {
+            _tablePage = 0;
+            allRows.forEach(r => r.style.display = '');
+            const lbl = document.getElementById('tableRowCountLabel');
+            if (lbl) lbl.textContent = `Showing ${total} row${total !== 1 ? 's' : ''}`;
+            const prev = document.getElementById('tablePrevBtn');
+            const next = document.getElementById('tableNextBtn');
+            const pg   = document.getElementById('tablePageLabel');
+            if (prev) prev.style.display = 'none';
+            if (next) next.style.display = 'none';
+            if (pg)   pg.style.display   = 'none';
+        } else {
+            const rpp = parseInt(rowsPerPage);
+            const maxPage = Math.max(0, Math.ceil(total / rpp) - 1);
+            _tablePage = Math.min(_tablePage, maxPage);
+            const start = _tablePage * rpp;
+            const end   = start + rpp;
+            allRows.forEach((r, i) => { r.style.display = (i >= start && i < end) ? '' : 'none'; });
+
+            const lbl  = document.getElementById('tableRowCountLabel');
+            const prev = document.getElementById('tablePrevBtn');
+            const next = document.getElementById('tableNextBtn');
+            const pg   = document.getElementById('tablePageLabel');
+            if (lbl)  lbl.textContent = `Showing ${Math.min(end, total)} of ${total} rows`;
+            if (pg)   { pg.textContent = `Page ${_tablePage + 1} / ${maxPage + 1}`; pg.style.display = ''; }
+            if (prev) { prev.style.display = ''; prev.disabled = _tablePage === 0; }
+            if (next) { next.style.display = ''; next.disabled = _tablePage >= maxPage; }
+        }
+
+        // --- Upgrade status cells to badges (#12) ---
+        tbody.querySelectorAll('tr').forEach(tr => {
+            const cells = tr.querySelectorAll('td');
+            if (cells.length < 6) return;
+            const statusCell = cells[5];
+            if (statusCell && !statusCell.querySelector('.badge-active, .badge-finished')) {
+                const raw = statusCell.textContent.trim().replace(/[●✓]/g, '').trim();
+                if (raw === 'Active' || raw === 'Finished') {
+                    const indicator = statusCell.querySelector('.status-indicator');
+                    const badge = document.createElement('span');
+                    badge.className = raw === 'Active' ? 'badge-active' : 'badge-finished';
+                    badge.textContent = raw;
+                    statusCell.innerHTML = '';
+                    if (indicator) statusCell.appendChild(indicator);
+                    statusCell.appendChild(badge);
+                }
+            }
+
+            // --- Add progress bar to date cell (#14) ---
+            const dateCell = cells[4];
+            if (dateCell && !dateCell.querySelector('.shift-progress-wrap')) {
+                const nameCell = cells[1];
+                if (nameCell) {
+                    const opName = nameCell.textContent.trim();
+                    const op = operators.find(o => o.name === opName);
+                    if (op && op.status !== 'Finished') {
+                        const start = getCleanDate(op.start);
+                        const end   = getCleanDate(op.end);
+                        const now   = getCleanDate(new Date());
+                        const total_d = Math.max(1, daysBetween(start, end) + 1);
+                        const elapsed = Math.max(0, daysBetween(start, now));
+                        const pct     = Math.min(100, Math.round((elapsed / total_d) * 100));
+                        const dLeft   = Math.max(0, daysBetween(now, end));
+                        dateCell.insertAdjacentHTML('beforeend',
+                            `<div class="shift-progress-wrap" title="${elapsed}/${total_d} days (${pct}%)">
+                                <div class="shift-progress-fill" style="width:${pct}%"></div>
+                             </div>
+                             <span class="shift-days-badge">${dLeft}d left (${pct}%)</span>`
+                        );
+                    }
+                }
+            }
+        });
+
+        // --- Search highlight (#13 / bonus for schedule search) ---
+        const searchTerm = (document.getElementById('searchOperatorName') || {}).value || '';
+        if (searchTerm.length >= 2) {
+            tbody.querySelectorAll('tr td:nth-child(2)').forEach(cell => {
+                const t = cell.textContent;
+                if (t.toLowerCase().includes(searchTerm.toLowerCase())) {
+                    cell.innerHTML = highlightSearchText(t, searchTerm);
+                }
+            });
+        }
+    };
+})(__origRenderTable);
+
+/* ---------- #15 Dark mode — ensure initDarkMode runs ---------- */
+// initDarkMode is defined in the existing code; call it safely here too
+(function() {
+    try { if (typeof initDarkMode === 'function') initDarkMode(); } catch(e) {}
+})();
+
+/* ---------- #17 Hide startDate from non-admin users ---------- */
+// Patch setupUserInterface to also manage startDate visibility
+const __origSetupUI = typeof setupUserInterface === 'function' ? setupUserInterface : null;
+if (__origSetupUI) {
+    setupUserInterface = (function(_orig) {
+        return function patchedSetupUI() {
+            _orig();
+            const lbl   = document.getElementById('startDateLabel');
+            const input = document.getElementById('startDate');
+            const show  = isAdmin;
+            if (lbl)   { lbl.style.display   = show ? '' : 'none'; }
+            if (input) { input.style.display  = show ? '' : 'none'; }
+        };
+    })(__origSetupUI);
+}
+
+// Also patch logout to hide it
+const __origLogout = typeof logout === 'function' ? logout : null;
+if (__origLogout) {
+    logout = (function(_orig) {
+        return function patchedLogout() {
+            _orig();
+            const lbl   = document.getElementById('startDateLabel');
+            const input = document.getElementById('startDate');
+            if (lbl)   lbl.style.display   = 'none';
+            if (input) input.style.display  = 'none';
+        };
+    })(__origLogout);
+}
+
+// Hide on page load (before login)
+(function() {
+    const lbl   = document.getElementById('startDateLabel');
+    const input = document.getElementById('startDate');
+    if (lbl)   lbl.style.display   = 'none';
+    if (input) input.style.display  = 'none';
+})();
+
+/* ---------- Wiring check — ensure getConvertedStatus null-safety ---------- */
+// The first definition at ~L6228 did not have a null guard; fix it inline:
+(function() {
+    const _orig = getConvertedStatus;
+    getConvertedStatus = function(operatorStatus) {
+        if (!operatorStatus) return 'Pending';
+        return _orig(operatorStatus);
+    };
+})();
+
+/* ---------- Reset page to 0 when filter changes ---------- */
+(function() {
+    const sel = document.getElementById('tableRowsPerPage');
+    if (sel) sel.addEventListener('change', function() { _tablePage = 0; });
+    const opFilter = document.getElementById('operatorFilter');
+    if (opFilter) opFilter.addEventListener('change', function() { _tablePage = 0; });
+})();
+
+// ================================================================
+// END COMPREHENSIVE FIXES
+// ================================================================
 </script>
 </body>
 </html>

@@ -10049,8 +10049,9 @@ function markShiftFinished(globalIndex) {
     // Check if the current date is within the shift period (allows marking finished before the very end)
     const shiftStart = getCleanDate(shift.start);
     const shiftEnd = getCleanDate(shift.end);
+    const liveToday = getCleanDate(new Date());
 
-    if (today.getTime() < shiftStart.getTime()) {
+    if (liveToday.getTime() < shiftStart.getTime()) {
         return alert('Cannot mark shift as finished: The shift has not started yet.');
     }
     
@@ -10287,7 +10288,7 @@ function renderNextShifts() {
         const shiftStart = getCleanDate(op.start);
         const shiftEnd = getCleanDate(op.end);
         const workingDays = countWorkingDays(shiftStart, shiftEnd);
-        const isCurrentShift = today.getTime() >= shiftStart.getTime() && today.getTime() <= shiftEnd.getTime();
+        const isCurrentShift = liveToday.getTime() >= shiftStart.getTime() && liveToday.getTime() <= shiftEnd.getTime();
 
         const card = document.createElement('div');
         card.className = 'shift-card';
@@ -10296,7 +10297,7 @@ function renderNextShifts() {
             card.style.background = 'linear-gradient(135deg,#f0fae0,#e6f7d0)';
         } else if (index === 1 || (!shiftsToShow.some(s => {
             const ss=getCleanDate(s.start),se=getCleanDate(s.end);
-            return today.getTime()>=ss.getTime()&&today.getTime()<=se.getTime();
+            return liveToday.getTime()>=ss.getTime()&&liveToday.getTime()<=se.getTime();
         }) && index === 0)) {
             card.style.borderLeftColor = '#FF5733'; // orange = next up
         }
@@ -11890,9 +11891,10 @@ function startCountdownTimer() {
     const nameEl  = document.getElementById('countdownOperatorName');
 
     function tick() {
+        const liveToday = getCleanDate(new Date());
         const activeOp = operators.find(op => {
             const s = getCleanDate(op.start), e = getCleanDate(op.end);
-            return today.getTime() >= s.getTime() && today.getTime() <= e.getTime() && op.status === 'Active';
+            return liveToday.getTime() >= s.getTime() && liveToday.getTime() <= e.getTime() && op.status === 'Active';
         });
 
         if (!activeOp) {
@@ -12612,11 +12614,12 @@ function updateTopbarTodayBadge() {
         const actions = document.getElementById('topbarActions');
         if (actions) actions.insertBefore(badge, actions.firstChild);
     }
+    const liveToday = getCleanDate(new Date());
     const todayOp = operators.find(op => {
         const s = getCleanDate(op.start), e = getCleanDate(op.end);
-        return today.getTime() >= s.getTime() && today.getTime() <= e.getTime() && op.status === 'Active';
+        return liveToday.getTime() >= s.getTime() && liveToday.getTime() <= e.getTime() && op.status === 'Active';
     });
-    const dateStr = today.toLocaleDateString('en-US', { month:'short', day:'numeric' });
+    const dateStr = liveToday.toLocaleDateString('en-US', { month:'short', day:'numeric' });
     badge.textContent = todayOp ? `📅 ${dateStr} · ${todayOp.name.split(' ')[0]}` : `📅 ${dateStr}`;
 }
 

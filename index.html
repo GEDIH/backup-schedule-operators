@@ -4717,14 +4717,647 @@ body.dark-mode .search-highlight { background: #f9a825; color: #000; }
 </div>
 
 <style>
-/* ===== ADMIN PANEL REDESIGN ===== */
-.admin-panel {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 0;
+/* ================================================================
+   ULTRA-MODERN ADMIN PANEL — Professional Redesign
+   Glass morphism, icon cards, tab nav, gradient accents
+   ================================================================ */
+
+/* ── Outer wrapper ── */
+#adminControls {
+    max-width: 1040px;
+    margin: 0 auto 28px auto;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow:
+        0 8px 32px rgba(0,0,0,0.18),
+        0 2px 8px rgba(0,0,0,0.10),
+        0 0 0 1px rgba(255,255,255,0.08);
 }
 
+/* ── Admin panel container ── */
+.admin-panel {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    background: #f4f6fb;
+    border-radius: 20px;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+body.dark-mode .admin-panel { background: #111827; }
+
+/* ── Glassmorphism header ── */
 .admin-panel-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 22px 28px;
+    background: linear-gradient(135deg, #0f2027 0%, #1a1a2e 40%, #16213e 70%, #0f3460 100%);
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px 20px 0 0;
+}
+.admin-panel-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 15% 50%, rgba(148,200,61,0.18) 0%, transparent 55%),
+        radial-gradient(circle at 85% 20%, rgba(79,139,202,0.18) 0%, transparent 50%);
+    pointer-events: none;
+}
+.admin-panel-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #94C83D 30%, #4D8BCA 70%, transparent);
+}
+.admin-avatar {
+    width: 52px; height: 52px;
+    background: linear-gradient(135deg, #94C83D, #7DAE2F);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; flex-shrink: 0;
+    box-shadow: 0 4px 16px rgba(148,200,61,0.45), 0 0 0 3px rgba(148,200,61,0.15);
+    position: relative; z-index: 1;
+    animation: adminAvatarPulse 3s ease-in-out infinite;
+}
+@keyframes adminAvatarPulse {
+    0%,100% { box-shadow: 0 4px 16px rgba(148,200,61,0.45), 0 0 0 3px rgba(148,200,61,0.15); }
+    50%      { box-shadow: 0 6px 24px rgba(148,200,61,0.65), 0 0 0 6px rgba(148,200,61,0.10); }
+}
+.admin-panel-header h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.3px;
+    position: relative; z-index: 1;
+}
+.admin-panel-header p {
+    margin: 3px 0 0;
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+    font-weight: 400;
+    position: relative; z-index: 1;
+}
+.admin-header-meta {
+    margin-left: auto;
+    display: flex; gap: 10px; align-items: center;
+    position: relative; z-index: 1;
+}
+.admin-meta-chip {
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.85);
+    backdrop-filter: blur(10px);
+    white-space: nowrap;
+}
+.admin-meta-chip.green { background: rgba(148,200,61,0.20); border-color: rgba(148,200,61,0.35); color: #b8f576; }
+
+/* ── Monitoring status bar ── */
+#adminMonitoringStatus {
+    margin: 0;
+    border-radius: 0;
+    font-size: 13px;
+    padding: 10px 24px;
+    border: none;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+}
+#adminMonitoringStatus:empty { display: none; }
+.status-ok    { background: linear-gradient(90deg,#d4edda,#c3e6cb); color:#155724; border-bottom: 2px solid #b1dfbb; }
+.status-urgent{ background: linear-gradient(90deg,#f8d7da,#f5c6cb); color:#721c24; border-bottom: 2px solid #f1aeb5; }
+
+/* ── Tab navigation ── */
+.admin-tabs {
+    display: flex;
+    background: #fff;
+    border-bottom: 2px solid #e9ecef;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    position: sticky; top: 0; z-index: 5;
+}
+.admin-tabs::-webkit-scrollbar { display: none; }
+body.dark-mode .admin-tabs { background: #1f2937; border-color: #374151; }
+
+.admin-tab {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 12px 20px;
+    font-size: 13px; font-weight: 700;
+    color: #888;
+    border: none; background: none;
+    cursor: pointer; white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: color 0.2s, border-color 0.2s;
+    letter-spacing: 0.2px;
+}
+.admin-tab:hover { color: #444; }
+.admin-tab.active { color: #94C83D; border-bottom-color: #94C83D; }
+body.dark-mode .admin-tab { color: #9ca3af; }
+body.dark-mode .admin-tab.active { color: #94C83D; border-bottom-color: #94C83D; }
+body.dark-mode .admin-tab:hover { color: #e5e7eb; }
+.admin-tab-icon { font-size: 15px; }
+
+/* ── Section panels ── */
+.admin-section {
+    background: #fff;
+    padding: 24px 28px;
+    display: none; /* hidden by default, shown by tab */
+    border-top: none;
+    animation: adminSectionIn 0.22s ease;
+}
+.admin-section.active { display: block; }
+.admin-section:last-child { border-radius: 0 0 20px 20px; }
+body.dark-mode .admin-section { background: #1f2937; }
+
+@keyframes adminSectionIn {
+    from { opacity:0; transform:translateY(6px); }
+    to   { opacity:1; transform:translateY(0);   }
+}
+
+/* ── Section title ── */
+.admin-section-title {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 11px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 1.5px;
+    color: #999;
+    margin: 0 0 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0f0f0;
+}
+body.dark-mode .admin-section-title { color: #6b7280; border-color: #374151; }
+.section-icon {
+    width: 26px; height: 26px; border-radius: 7px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 13px; flex-shrink: 0;
+}
+.icon-green  { background: linear-gradient(135deg,#d4edda,#c3e6cb); }
+.icon-red    { background: linear-gradient(135deg,#f8d7da,#f5c6cb); }
+.icon-blue   { background: linear-gradient(135deg,#cce5ff,#b8daff); }
+.icon-purple { background: linear-gradient(135deg,#e2d9f3,#d2c4f0); }
+.icon-orange { background: linear-gradient(135deg,#ffe5d0,#ffd9b8); }
+.icon-teal   { background: linear-gradient(135deg,#d1ecf1,#bee5eb); }
+
+/* ── Card grid for action buttons ── */
+.admin-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(188px, 1fr));
+    gap: 12px;
+    margin-bottom: 4px;
+}
+.admin-card {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 16px;
+    background: #f8fafc;
+    border: 1.5px solid #e9ecef;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.22s cubic-bezier(0.25,0.46,0.45,0.94);
+    text-align: left;
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    text-decoration: none;
+}
+.admin-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg,rgba(255,255,255,0),rgba(255,255,255,0.5));
+    opacity: 0; transition: opacity 0.22s;
+}
+.admin-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); border-color: transparent; }
+.admin-card:hover::before { opacity: 1; }
+.admin-card:active { transform: translateY(-1px); }
+body.dark-mode .admin-card { background: #111827; border-color: #374151; color: #e5e7eb; }
+body.dark-mode .admin-card:hover { border-color: transparent; box-shadow: 0 8px 24px rgba(0,0,0,0.35); }
+
+.admin-card-icon {
+    width: 38px; height: 38px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+}
+.admin-card-label { line-height: 1.3; }
+.admin-card-label small {
+    display: block; font-size: 10px; font-weight: 400;
+    color: #9ca3af; margin-top: 1px;
+}
+body.dark-mode .admin-card-label small { color: #6b7280; }
+
+/* Card accent colours */
+.card-lime   { background: linear-gradient(135deg,#f0fae0,#e6f7d0); border-color: #c6f090; }
+.card-lime   .admin-card-icon { background: linear-gradient(135deg,#94C83D,#7DAE2F); color:#fff; }
+.card-lime:hover { background: linear-gradient(135deg,#94C83D,#7DAE2F); color:#fff; border-color:transparent; }
+.card-lime:hover small { color:rgba(255,255,255,0.75); }
+
+.card-red    { background: linear-gradient(135deg,#fff0f0,#ffe5e5); border-color: #f5c6cb; }
+.card-red    .admin-card-icon { background: linear-gradient(135deg,#dc3545,#c82333); color:#fff; }
+.card-red:hover { background: linear-gradient(135deg,#dc3545,#c82333); color:#fff; border-color:transparent; }
+.card-red:hover small { color:rgba(255,255,255,0.75); }
+
+.card-dark   { background: linear-gradient(135deg,#f0f0f2,#e8e8ec); border-color: #d0d0d8; }
+.card-dark   .admin-card-icon { background: linear-gradient(135deg,#343a40,#23272b); color:#fff; }
+.card-dark:hover { background: linear-gradient(135deg,#343a40,#23272b); color:#fff; border-color:transparent; }
+.card-dark:hover small { color:rgba(255,255,255,0.75); }
+
+.card-teal   { background: linear-gradient(135deg,#e6f9fb,#d0f0f5); border-color: #bee3f8; }
+.card-teal   .admin-card-icon { background: linear-gradient(135deg,#17a2b8,#138496); color:#fff; }
+.card-teal:hover { background: linear-gradient(135deg,#17a2b8,#138496); color:#fff; border-color:transparent; }
+.card-teal:hover small { color:rgba(255,255,255,0.75); }
+
+.card-purple { background: linear-gradient(135deg,#f3f0fb,#ebe5f5); border-color: #d2c4f0; }
+.card-purple .admin-card-icon { background: linear-gradient(135deg,#6f42c1,#5a32a3); color:#fff; }
+.card-purple:hover { background: linear-gradient(135deg,#6f42c1,#5a32a3); color:#fff; border-color:transparent; }
+.card-purple:hover small { color:rgba(255,255,255,0.75); }
+
+.card-green  { background: linear-gradient(135deg,#e8faf0,#d4edda); border-color: #b1dfbb; }
+.card-green  .admin-card-icon { background: linear-gradient(135deg,#28a745,#20c997); color:#fff; }
+.card-green:hover { background: linear-gradient(135deg,#28a745,#20c997); color:#fff; border-color:transparent; }
+.card-green:hover small { color:rgba(255,255,255,0.75); }
+
+.card-blue   { background: linear-gradient(135deg,#e8f0fe,#d0e4ff); border-color: #b8daff; }
+.card-blue   .admin-card-icon { background: linear-gradient(135deg,#007bff,#0056b3); color:#fff; }
+.card-blue:hover { background: linear-gradient(135deg,#007bff,#0056b3); color:#fff; border-color:transparent; }
+.card-blue:hover small { color:rgba(255,255,255,0.75); }
+
+.card-orange { background: linear-gradient(135deg,#fff5e8,#ffe5cc); border-color: #ffd9b8; }
+.card-orange .admin-card-icon { background: linear-gradient(135deg,#fd7e14,#e06b00); color:#fff; }
+.card-orange:hover { background: linear-gradient(135deg,#fd7e14,#e06b00); color:#fff; border-color:transparent; }
+.card-orange:hover small { color:rgba(255,255,255,0.75); }
+
+.card-indigo { background: linear-gradient(135deg,#eaf0fb,#d6e6f8); border-color: #b8daff; }
+.card-indigo .admin-card-icon { background: linear-gradient(135deg,#4D8BCA,#2e6da4); color:#fff; }
+.card-indigo:hover { background: linear-gradient(135deg,#4D8BCA,#2e6da4); color:#fff; border-color:transparent; }
+.card-indigo:hover small { color:rgba(255,255,255,0.75); }
+
+.card-pink   { background: linear-gradient(135deg,#fff0f8,#ffe5f3); border-color: #f5c6dd; }
+.card-pink   .admin-card-icon { background: linear-gradient(135deg,#e83e8c,#c82076); color:#fff; }
+.card-pink:hover { background: linear-gradient(135deg,#e83e8c,#c82076); color:#fff; border-color:transparent; }
+.card-pink:hover small { color:rgba(255,255,255,0.75); }
+
+.card-whatsapp { background: linear-gradient(135deg,#e8fbef,#d4f7e0); border-color: #a8e6c0; }
+.card-whatsapp .admin-card-icon { background: linear-gradient(135deg,#25D366,#128C7E); color:#fff; }
+.card-whatsapp:hover { background: linear-gradient(135deg,#25D366,#128C7E); color:#fff; border-color:transparent; }
+.card-whatsapp:hover small { color:rgba(255,255,255,0.75); }
+
+/* ── Auto-notification status pill ── */
+.notif-status-pill {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: linear-gradient(135deg,#e8faf0,#d4edda);
+    color: #155724;
+    border: 1.5px solid #b1dfbb;
+    border-radius: 14px;
+    padding: 12px 18px;
+    font-size: 13px; font-weight: 600;
+    margin-bottom: 18px;
+    width: 100%; box-sizing: border-box;
+    box-shadow: 0 2px 8px rgba(40,167,69,0.10);
+}
+body.dark-mode .notif-status-pill { background: rgba(40,167,69,0.10); border-color: rgba(40,167,69,0.25); color: #86efac; }
+.pulse-dot {
+    width: 10px; height: 10px;
+    background: #28a745; border-radius: 50%; flex-shrink: 0;
+    box-shadow: 0 0 0 0 rgba(40,167,69,0.5);
+    animation: livePulse 1.8s ease-in-out infinite;
+}
+@keyframes livePulse {
+    0%   { box-shadow: 0 0 0 0 rgba(40,167,69,0.5); }
+    70%  { box-shadow: 0 0 0 8px rgba(40,167,69,0); }
+    100% { box-shadow: 0 0 0 0 rgba(40,167,69,0); }
+}
+
+/* ── Notify days row ── */
+.notif-days-row {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    margin-bottom: 18px;
+    padding: 16px 18px;
+    background: #f8fafc;
+    border-radius: 14px;
+    border: 1.5px solid #e9ecef;
+}
+body.dark-mode .notif-days-row { background: #111827; border-color: #374151; }
+.notif-days-row label { font-size: 13px; font-weight: 600; color: #495057; margin: 0; }
+body.dark-mode .notif-days-row label { color: #9ca3af; }
+.notif-days-input {
+    width: 70px; padding: 8px 12px;
+    border: 2px solid #dee2e6; border-radius: 10px;
+    font-size: 15px; font-weight: 700; text-align: center;
+    color: #333; transition: border-color 0.2s, box-shadow 0.2s;
+    background: #fff;
+}
+.notif-days-input:focus { border-color: #94C83D; outline: none; box-shadow: 0 0 0 3px rgba(148,200,61,0.15); }
+body.dark-mode .notif-days-input { background: #1f2937; color: #e5e7eb; border-color: #374151; }
+
+/* ── Inline action buttons (used in notif row) ── */
+.admin-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 9px 18px;
+    border: none; border-radius: 10px;
+    cursor: pointer;
+    font-size: 13px; font-weight: 700;
+    transition: all 0.2s ease;
+    white-space: nowrap; line-height: 1;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+.admin-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.18); }
+.admin-btn:active { transform: translateY(0); }
+.btn-green  { background: linear-gradient(135deg,#28a745,#20c997); color:#fff; }
+.btn-orange { background: linear-gradient(135deg,#fd7e14,#e06b00); color:#fff; }
+.btn-lime   { background: linear-gradient(135deg,#94C83D,#7DAE2F); color:#fff; }
+.btn-red    { background: linear-gradient(135deg,#dc3545,#c82333); color:#fff; }
+.btn-dark   { background: linear-gradient(135deg,#343a40,#23272b); color:#fff; }
+.btn-teal   { background: linear-gradient(135deg,#17a2b8,#138496); color:#fff; }
+.btn-purple { background: linear-gradient(135deg,#6f42c1,#5a32a3); color:#fff; }
+.btn-gray   { background: linear-gradient(135deg,#6c757d,#545b62); color:#fff; }
+.btn-pink   { background: linear-gradient(135deg,#e83e8c,#c82076); color:#fff; }
+.btn-blue   { background: linear-gradient(135deg,#007bff,#0056b3); color:#fff; }
+.btn-indigo { background: linear-gradient(135deg,#4D8BCA,#2e6da4); color:#fff; }
+
+/* ── Next check badge ── */
+.next-check-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px; padding: 6px 14px;
+    font-size: 12px; color: #64748b; margin-top: 6px;
+}
+body.dark-mode .next-check-badge { background: #111827; border-color: #374151; color: #9ca3af; }
+
+/* ── Shift calculator card ── */
+.shift-calc-card {
+    background: linear-gradient(135deg,#e8f4fd,#d6eaf8);
+    border: 1.5px solid #bee3f8;
+    border-radius: 14px; padding: 20px 22px;
+    box-shadow: 0 2px 8px rgba(41,128,185,0.08);
+}
+body.dark-mode .shift-calc-card { background: linear-gradient(135deg,#1e3a5f,#1a2d4a); border-color: #2d4a6e; }
+.shift-calc-card h4 {
+    margin: 0 0 14px; font-size: 14px; font-weight: 700; color: #1a5276;
+    display: flex; align-items: center; gap: 8px;
+}
+body.dark-mode .shift-calc-card h4 { color: #93c5fd; }
+.shift-calc-grid {
+    display: grid; grid-template-columns: auto 1fr;
+    gap: 10px 14px; align-items: center; max-width: 340px;
+}
+.shift-calc-grid label { font-size: 13px; font-weight: 700; color: #2e86c1; white-space: nowrap; }
+body.dark-mode .shift-calc-grid label { color: #60a5fa; }
+.shift-calc-grid input[type="date"] {
+    padding: 9px 12px; border: 2px solid #bee3f8;
+    border-radius: 10px; font-size: 13px; background: #fff;
+    color: #333; transition: border-color 0.2s, box-shadow 0.2s;
+}
+.shift-calc-grid input[type="date"]:focus { border-color: #2980b9; outline: none; box-shadow: 0 0 0 3px rgba(41,128,185,0.12); }
+body.dark-mode .shift-calc-grid input[type="date"] { background: #1f2937; color: #e5e7eb; border-color: #2d4a6e; }
+.shift-calc-result { display: flex; gap: 12px; margin-top: 14px; flex-wrap: wrap; }
+.calc-result-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #fff; border: 1.5px solid #bee3f8;
+    border-radius: 20px; padding: 6px 16px;
+    font-size: 13px; color: #1a5276;
+    box-shadow: 0 1px 4px rgba(41,128,185,0.08);
+}
+body.dark-mode .calc-result-chip { background: #1f2937; border-color: #2d4a6e; color: #93c5fd; }
+.calc-result-chip strong { color: #2980b9; font-weight: 800; }
+
+/* ── Section divider (legacy, kept for safety) ── */
+.admin-divider {
+    height: 1px;
+    background: linear-gradient(90deg,transparent,#e9ecef 20%,#e9ecef 80%,transparent);
+    margin: 0;
+}
+
+/* ── Dark mode overrides ── */
+body.dark-mode .admin-card     { background: #111827; border-color: #374151; color: #e5e7eb; }
+body.dark-mode .admin-card.card-lime   { background: rgba(148,200,61,0.08); border-color: rgba(148,200,61,0.2); }
+body.dark-mode .admin-card.card-red    { background: rgba(220,53,69,0.08);  border-color: rgba(220,53,69,0.2);  }
+body.dark-mode .admin-card.card-dark   { background: rgba(52,58,64,0.30);   border-color: rgba(52,58,64,0.5);   }
+body.dark-mode .admin-card.card-teal   { background: rgba(23,162,184,0.08); border-color: rgba(23,162,184,0.2); }
+body.dark-mode .admin-card.card-purple { background: rgba(111,66,193,0.08); border-color: rgba(111,66,193,0.2); }
+body.dark-mode .admin-card.card-green  { background: rgba(40,167,69,0.08);  border-color: rgba(40,167,69,0.2);  }
+body.dark-mode .admin-card.card-blue   { background: rgba(0,123,255,0.08);  border-color: rgba(0,123,255,0.2);  }
+body.dark-mode .admin-card.card-orange { background: rgba(253,126,20,0.08); border-color: rgba(253,126,20,0.2); }
+body.dark-mode .admin-card.card-indigo { background: rgba(77,139,202,0.08); border-color: rgba(77,139,202,0.2); }
+body.dark-mode .admin-card.card-pink   { background: rgba(232,62,140,0.08); border-color: rgba(232,62,140,0.2); }
+body.dark-mode .admin-card.card-whatsapp { background: rgba(37,211,102,0.08); border-color: rgba(37,211,102,0.2); }
+body.dark-mode .admin-section  { background: #1f2937; }
+body.dark-mode .admin-section-title { color: #6b7280; border-color: #374151; }
+body.dark-mode .admin-divider  { background: linear-gradient(90deg,transparent,#374151 20%,#374151 80%,transparent); }
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+    .admin-card-grid { grid-template-columns: repeat(2,1fr); gap: 8px; }
+    .admin-card { padding: 12px; gap: 10px; }
+    .admin-card-icon { width:32px; height:32px; font-size:15px; }
+    .admin-panel-header { padding: 16px 18px; }
+    .admin-panel-header h2 { font-size: 16px; }
+    .admin-header-meta { display: none; }
+    .admin-tab { padding: 10px 14px; font-size: 12px; }
+    .shift-calc-grid { grid-template-columns: 1fr; }
+    .notif-days-row { flex-direction: column; align-items: flex-start; }
+}
+@media (max-width: 420px) {
+    .admin-card-grid { grid-template-columns: 1fr; }
+}
+/* ===== END MODERN ADMIN PANEL ===== */
+</style>
+
+<div class="controls" id="adminControls" style="display:none; padding:0; background:transparent; box-shadow:none; border-radius:20px; overflow:hidden;">
+    <div class="admin-panel">
+
+        <!-- ── Panel Header ── -->
+        <div class="admin-panel-header">
+            <div class="admin-avatar">🛡️</div>
+            <div>
+                <h2>Admin Control Panel</h2>
+                <p>Schedule management, notifications &amp; system utilities</p>
+            </div>
+            <div class="admin-header-meta">
+                <span class="admin-meta-chip green" id="adminOperatorCount">4 Operators</span>
+                <span class="admin-meta-chip" id="adminShiftCount">— Shifts</span>
+            </div>
+        </div>
+
+        <!-- ── Monitoring Status ── -->
+        <div id="adminMonitoringStatus"></div>
+
+        <!-- ── Tab Navigation ── -->
+        <div class="admin-tabs" id="adminTabNav">
+            <button class="admin-tab active" onclick="switchAdminTab('schedule',this)">
+                <span class="admin-tab-icon">📅</span> Schedule
+            </button>
+            <button class="admin-tab" onclick="switchAdminTab('notifications',this)">
+                <span class="admin-tab-icon">📨</span> Notifications
+            </button>
+            <button class="admin-tab" onclick="switchAdminTab('autonotify',this)">
+                <span class="admin-tab-icon">🤖</span> Auto-Notify
+            </button>
+            <button class="admin-tab" onclick="switchAdminTab('calculator',this)">
+                <span class="admin-tab-icon">🔢</span> Calculator
+            </button>
+        </div>
+
+        <!-- ══ TAB 1: Schedule Generation ══ -->
+        <div class="admin-section active" id="adminTab-schedule">
+            <div class="admin-section-title">
+                <span class="section-icon icon-green">📅</span>
+                Schedule Generation &amp; Utilities
+            </div>
+            <div class="admin-card-grid">
+                <button class="admin-card card-lime" onclick="generateScheduleButton()">
+                    <div class="admin-card-icon">📅</div>
+                    <div class="admin-card-label">Generate Schedule<small>Rebuild full 1-year schedule</small></div>
+                </button>
+                <button class="admin-card card-dark" onclick="openAuditLogView()">
+                    <div class="admin-card-icon">📋</div>
+                    <div class="admin-card-label">Audit Log<small>View all system actions</small></div>
+                </button>
+                <button class="admin-card card-indigo" onclick="toggleCalendar()">
+                    <div class="admin-card-icon">📆</div>
+                    <div class="admin-card-label">Calendar View<small>Monthly schedule calendar</small></div>
+                </button>
+                <button class="admin-card card-teal" onclick="toggleCompletionChart()">
+                    <div class="admin-card-icon">📊</div>
+                    <div class="admin-card-label">Completion Chart<small>Shift completion chart</small></div>
+                </button>
+                <button class="admin-card card-purple" onclick="openDailyCheckView()">
+                    <div class="admin-card-icon">📋</div>
+                    <div class="admin-card-label">Daily Check<small>Backup status by date</small></div>
+                </button>
+                <button class="admin-card card-green" onclick="exportOperatorsCSV()">
+                    <div class="admin-card-icon">📥</div>
+                    <div class="admin-card-label">Export Operators<small>Download CSV</small></div>
+                </button>
+                <button class="admin-card card-blue" onclick="importOperatorsCSV()">
+                    <div class="admin-card-icon">📤</div>
+                    <div class="admin-card-label">Import Operators<small>Upload CSV file</small></div>
+                </button>
+                <button class="admin-card card-orange" onclick="detectShiftConflicts()">
+                    <div class="admin-card-icon">⚠️</div>
+                    <div class="admin-card-label">Check Conflicts<small>Detect scheduling issues</small></div>
+                </button>
+                <button class="admin-card card-teal" onclick="createSampleBackupData()">
+                    <div class="admin-card-icon">🧪</div>
+                    <div class="admin-card-label">Sample Data<small>Generate test backup data</small></div>
+                </button>
+                <button class="admin-card card-red" onclick="resetAll()">
+                    <div class="admin-card-icon">🗑️</div>
+                    <div class="admin-card-label">Clear ALL Data<small>Full system reset</small></div>
+                </button>
+            </div>
+        </div>
+
+        <!-- ══ TAB 2: Send Notifications ══ -->
+        <div class="admin-section" id="adminTab-notifications">
+            <div class="admin-section-title">
+                <span class="section-icon icon-purple">📨</span>
+                Send Notifications to Operators
+            </div>
+            <div class="admin-card-grid">
+                <button class="admin-card card-dark" onclick="openNotificationConfigModal()">
+                    <div class="admin-card-icon">⚙️</div>
+                    <div class="admin-card-label">Configure APIs<small>EmailJS &amp; SMS settings</small></div>
+                </button>
+                <button class="admin-card card-purple" onclick="testNotificationSystem()">
+                    <div class="admin-card-icon">📨</div>
+                    <div class="admin-card-label">Send Notification<small>Test single send</small></div>
+                </button>
+                <button class="admin-card card-pink" onclick="testNotificationToAllOperators()">
+                    <div class="admin-card-icon">📧</div>
+                    <div class="admin-card-label">Send to All<small>Email all operators</small></div>
+                </button>
+                <button class="admin-card card-whatsapp" onclick="sendWhatsAppToAll()">
+                    <div class="admin-card-icon">💬</div>
+                    <div class="admin-card-label">WhatsApp All<small>Open WhatsApp links</small></div>
+                </button>
+                <button class="admin-card card-blue" onclick="requestPushPermission()">
+                    <div class="admin-card-icon">🔔</div>
+                    <div class="admin-card-label">Push Alerts<small>Enable browser push</small></div>
+                </button>
+            </div>
+        </div>
+
+        <!-- ══ TAB 3: Auto-Notify ══ -->
+        <div class="admin-section" id="adminTab-autonotify">
+            <div class="admin-section-title">
+                <span class="section-icon icon-blue">🤖</span>
+                Automatic Notification Engine
+            </div>
+
+            <!-- Live status pill -->
+            <div class="notif-status-pill">
+                <span class="pulse-dot"></span>
+                <span><strong>Auto-Notifications Active</strong> — operators are notified automatically <strong id="notifyDaysDisplay">2</strong> days before their shift starts (checks every hour)</span>
+            </div>
+
+            <!-- Days config row -->
+            <div class="notif-days-row">
+                <span style="font-size:18px;">📅</span>
+                <label for="notifyDays">Days before shift to notify:</label>
+                <input class="notif-days-input" type="number" id="notifyDays" value="2" min="0" max="30"
+                       oninput="document.getElementById('notifyDaysDisplay').textContent=this.value">
+                <button class="admin-btn btn-green" onclick="saveNotificationSettings()">💾 Save &amp; Start</button>
+                <button class="admin-btn btn-orange" onclick="checkAndSendNotifications(true)">📤 Send Now</button>
+            </div>
+
+            <!-- Action cards -->
+            <div class="admin-card-grid">
+                <button class="admin-card card-lime" onclick="check3DayNotifications()">
+                    <div class="admin-card-icon">🎯</div>
+                    <div class="admin-card-label">Check Notifications<small>Run 2-day check now</small></div>
+                </button>
+                <button class="admin-card card-indigo" onclick="openNotificationLogView()">
+                    <div class="admin-card-icon">📋</div>
+                    <div class="admin-card-label">Notification Log<small>View sent history</small></div>
+                </button>
+                <button class="admin-card card-teal" onclick="previewNotificationMessage()">
+                    <div class="admin-card-icon">👁️</div>
+                    <div class="admin-card-label">Preview Message<small>See what operators get</small></div>
+                </button>
+                <button class="admin-card card-orange" onclick="debugNotificationSystem()">
+                    <div class="admin-card-icon">🔍</div>
+                    <div class="admin-card-label">Debug System<small>Notification diagnostics</small></div>
+                </button>
+            </div>
+
+            <!-- Next check time -->
+            <div id="notificationStatus" style="margin-top:16px;">
+                <span class="next-check-badge">
+                    🕐 Next automatic check: <strong id="nextCheckTime">--</strong>
+                </span>
+            </div>
+        </div>
+
+        <!-- ══ TAB 4: Shift Calculator ══ -->
+        <div class="admin-section" id="adminTab-calculator" style="border-radius:0 0 20px 20px;">
+            <div class="admin-section-title">
+                <span class="section-icon icon-teal">🔢</span>
+                Shift Range Calculator
+            </div>
+            <div class="shift-calc-card">
+                <h4>⏱️ 10 Working Days Calculator <span style="font-weight:400;font-size:11px;opacity:0.7;">(Sundays excluded)</span></h4>
+                <div class="shift-calc-grid">
+                    <label for="calcStartDate">Start Date:</label>
+                    <input type="date" id="calcStartDate" onchange="calculateShiftRange()">
+                </div>
+                <div class="shift-calc-result">
+                    <span class="calc-result-chip">📅 End Date: <strong id="calcEndDate">--</strong></span>
+                    <span class="calc-result-chip">✅ Working Days: <strong id="calcWorkingDays">--</strong></span>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- end .admin-panel -->
+</div>
     display: flex;
     align-items: center;
     gap: 12px;
@@ -12959,6 +13592,60 @@ if (__origLogout) {
 
 // ================================================================
 // END COMPREHENSIVE FIXES
+// ================================================================
+
+// ================================================================
+// MODERN ADMIN PANEL — Tab switching + header meta counts
+// ================================================================
+
+function switchAdminTab(tabId, btnEl) {
+    // Hide all sections
+    document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+    // Deactivate all tabs
+    document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+    // Show target section
+    const section = document.getElementById('adminTab-' + tabId);
+    if (section) section.classList.add('active');
+    // Activate clicked tab
+    if (btnEl) btnEl.classList.add('active');
+}
+
+function updateAdminHeaderMeta() {
+    const opCount = document.getElementById('adminOperatorCount');
+    const shiftCount = document.getElementById('adminShiftCount');
+    if (opCount) {
+        const active = initialOperators.filter(o => (o.status || 'Active') === 'Active').length;
+        opCount.textContent = `${active} Operator${active !== 1 ? 's' : ''}`;
+    }
+    if (shiftCount) {
+        const active = operators.filter(o => o.status === 'Active').length;
+        shiftCount.textContent = `${active} Active Shifts`;
+    }
+}
+
+// Hook into setupUserInterface to update meta counts
+const __origSetupUIForMeta = typeof setupUserInterface === 'function' ? setupUserInterface : null;
+if (__origSetupUIForMeta) {
+    setupUserInterface = (function(_orig) {
+        return function() {
+            _orig();
+            setTimeout(updateAdminHeaderMeta, 100);
+        };
+    })(__origSetupUIForMeta);
+}
+
+// Also update after schedule generation
+const __origGenForMeta = typeof generateFullSchedule === 'function' ? generateFullSchedule : null;
+if (__origGenForMeta) {
+    generateFullSchedule = (function(_orig) {
+        return function(d) {
+            _orig(d);
+            setTimeout(updateAdminHeaderMeta, 100);
+        };
+    })(__origGenForMeta);
+}
+// ================================================================
+// END MODERN ADMIN PANEL
 // ================================================================
 </script>
 </body>

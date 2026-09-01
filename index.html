@@ -9752,7 +9752,9 @@ function _runDataMigrations() {
         ];
         localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
         localStorage.setItem('scheduleVersion', CURRENT_SCHEDULE_VERSION);
-        console.log(`[Migration] Version mismatch (${savedVersion} → ${CURRENT_SCHEDULE_VERSION}). Full reset applied.`);
+        // Generate the schedule immediately so it's ready before init() continues
+        generateFullSchedule(DEFAULT_SCHEDULE_START_DATE);
+        console.log(`[Migration] Version mismatch (${savedVersion} → ${CURRENT_SCHEDULE_VERSION}). Full reset + schedule regenerated.`);
         return; // skip further migration steps — data is already clean
     }
     // ── End version guard ──────────────────────────────────────────────────
@@ -9828,7 +9830,16 @@ function init() {
 
     // Check for existing session first
     if (restoreSessionState()) {
-        // Session restored successfully, user is already logged in
+        // Session restored successfully, user is already logged in.
+        // But if operators is empty (e.g. after a version reset), regenerate now.
+        if (operators.length === 0) {
+            generateFullSchedule(DEFAULT_SCHEDULE_START_DATE);
+            document.getElementById('startDate').value = DEFAULT_SCHEDULE_START_DATE;
+            populateFilter();
+            renderTable();
+            renderNextShifts();
+            updateKpiBar();
+        }
         document.body.classList.remove('login-active');
         return;
     }

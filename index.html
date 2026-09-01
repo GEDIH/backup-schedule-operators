@@ -9962,10 +9962,12 @@ function checkAndRenderNotification(isInitialAdminLogin = false) {
     const banner = document.getElementById('notificationBanner');
     const adminStatus = document.getElementById('adminMonitoringStatus');
 
+    const liveToday = getCleanDate(new Date());
+
     const activeShiftIndex = operators.findIndex(op => {
         const opStart = getCleanDate(op.start);
         const opEnd = getCleanDate(op.end);
-        return (today.getTime() >= opStart.getTime() && today.getTime() <= opEnd.getTime() && op.status === 'Active');
+        return (liveToday.getTime() >= opStart.getTime() && liveToday.getTime() <= opEnd.getTime() && op.status === 'Active');
     });
 
     if (activeShiftIndex === -1) {
@@ -9983,7 +9985,7 @@ function checkAndRenderNotification(isInitialAdminLogin = false) {
 
     const activeShift = operators[activeShiftIndex];
     const activeShiftEnd = getCleanDate(activeShift.end);
-    const daysLeft = daysBetween(today, activeShiftEnd);
+    const daysLeft = daysBetween(liveToday, activeShiftEnd);
 
     let notificationIsActive = false;
 
@@ -10103,11 +10105,14 @@ function renderTable() {
     let activeShiftIndexInFilteredList = -1;
     let nextShiftIndexInFilteredList = -1;
 
+    // Always use a fresh live date for all comparisons
+    const liveToday = getCleanDate(new Date());
+
     if (isTodayFilterActive) {
         const activeShiftGlobalIndex = operators.findIndex(op => {
             const opStart = getCleanDate(op.start);
             const opEnd = getCleanDate(op.end);
-            return (today.getTime() >= opStart.getTime() && today.getTime() <= opEnd.getTime() && op.status === 'Active');
+            return (liveToday.getTime() >= opStart.getTime() && liveToday.getTime() <= opEnd.getTime() && op.status === 'Active');
         });
         
         if (activeShiftGlobalIndex !== -1) {
@@ -10115,7 +10120,7 @@ function renderTable() {
             activeShiftIndexInFilteredList = 0;
             nextShiftIndexInFilteredList = 1;
         } else {
-            const upcomingShiftGlobalIndex = operators.findIndex(op => getCleanDate(op.start).getTime() > today.getTime() && op.status === 'Active');
+            const upcomingShiftGlobalIndex = operators.findIndex(op => getCleanDate(op.start).getTime() > liveToday.getTime() && op.status === 'Active');
             if (upcomingShiftGlobalIndex !== -1) {
                 filteredOperators = operators.slice(upcomingShiftGlobalIndex, upcomingShiftGlobalIndex + 5);
                 activeShiftIndexInFilteredList = -1; 
@@ -10256,18 +10261,20 @@ function renderNextShifts() {
         return;
     }
 
+    const liveToday = getCleanDate(new Date());
+
     let startIndex = operators.findIndex(op => {
         const opStart = getCleanDate(op.start);
         const opEnd = getCleanDate(op.end);
-        return (today.getTime() >= opStart.getTime() && today.getTime() <= opEnd.getTime() && op.status === 'Active');
+        return (liveToday.getTime() >= opStart.getTime() && liveToday.getTime() <= opEnd.getTime() && op.status === 'Active');
     });
 
     if (startIndex === -1) {
         // No active shift today — find the next upcoming one
-        startIndex = operators.findIndex(op => getCleanDate(op.start).getTime() > today.getTime() && op.status === 'Active');
+        startIndex = operators.findIndex(op => getCleanDate(op.start).getTime() > liveToday.getTime() && op.status === 'Active');
         if (startIndex === -1) startIndex = 0;
     }
-    // startIndex stays at the active shift (not +1) so current operator is shown first
+    // startIndex stays at the active shift so current operator is shown first
 
     const shiftsToShow = operators.slice(startIndex, startIndex + 5).filter(op => op.status === 'Active');
 
@@ -11328,22 +11335,25 @@ function updateKpiBar() {
         const completedShifts = operators.filter(op => op.status === 'Finished').length;
         const totalOps = initialOperators.length;
 
+        // Always use a fresh live date — never rely on the stale global 'today'
+        const liveToday = getCleanDate(new Date());
+
         // Find today's operator
         const todayOp = operators.find(op => {
             const s = getCleanDate(op.start), e = getCleanDate(op.end);
-            return today.getTime() >= s.getTime() && today.getTime() <= e.getTime() && op.status === 'Active';
+            return liveToday.getTime() >= s.getTime() && liveToday.getTime() <= e.getTime() && op.status === 'Active';
         });
 
         // Find next operator
         const nextOp = operators.find(op => {
             const s = getCleanDate(op.start);
-            return s.getTime() > today.getTime() && op.status === 'Active';
+            return s.getTime() > liveToday.getTime() && op.status === 'Active';
         });
 
         // Days remaining in current shift
         let daysLeft = '—';
         if (todayOp) {
-            daysLeft = daysBetween(today, getCleanDate(todayOp.end));
+            daysLeft = daysBetween(liveToday, getCleanDate(todayOp.end));
         }
 
         const kpiBar = document.getElementById('kpiBar');

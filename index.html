@@ -4279,163 +4279,6 @@ body.dark-mode .daily-check-date-row { background: #0f3460; border-color: #1a4a8
 body.dark-mode .daily-check-field { border-bottom-color: #0f3460; }
 body.dark-mode .daily-check-field-label { color: #aaa; }
 /* === END DAILY CHECK VIEW === */
-
-/* ================================================================
-   COMPREHENSIVE ENHANCEMENT CSS — All fixes #5,#6,#9,#10,#11,#12,#14,#15
-   ================================================================ */
-
-/* --- Mobile-hide columns (#5, #10) --- */
-@media (max-width: 640px) {
-    .col-mobile, .col-checked-by { display: none !important; }
-    #scheduleTable td:nth-child(3),
-    #scheduleTable th:nth-child(3),
-    #scheduleTable td:nth-child(4),
-    #scheduleTable th:nth-child(4) { display: none !important; }
-    .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    .kpi-bar { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
-    .sticky-topbar { flex-wrap: wrap !important; gap: 6px !important; }
-    #topbarActions { flex-wrap: wrap !important; gap: 4px !important; }
-    .topbar-btn { font-size: 11px !important; padding: 5px 8px !important; }
-    .top-section { flex-direction: column !important; align-items: stretch !important; }
-    .top-section button, .top-section select { width: 100%; }
-}
-@media (max-width: 420px) {
-    .kpi-bar { grid-template-columns: 1fr 1fr !important; }
-    .login-container { padding: 28px 18px !important; }
-    .admin-btn-grid { flex-direction: column; }
-}
-
-/* --- Table toolbar (#6) --- */
-.table-toolbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 8px;
-    padding: 8px 4px;
-    margin-bottom: 6px;
-}
-.table-toolbar-right { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.table-toolbar-label { font-size: 13px; color: #555; font-weight: 600; }
-.table-count-label { font-size: 13px; color: #666; }
-.table-rows-select {
-    padding: 5px 10px; border: 1px solid #ccc; border-radius: 6px;
-    font-size: 13px; background: #fff; cursor: pointer;
-}
-.table-page-btn {
-    padding: 5px 10px; border: 1px solid #ccc; border-radius: 6px;
-    font-size: 13px; background: #fff; cursor: pointer;
-    transition: background 0.2s;
-}
-.table-page-btn:hover { background: #e9ecef; }
-.table-page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-.table-page-label { font-size: 13px; color: #555; min-width: 60px; text-align: center; }
-body.dark-mode .table-rows-select,
-body.dark-mode .table-page-btn { background: #2c3e50; color: #ecf0f1; border-color: #555; }
-
-/* --- Password show/hide (#9) --- */
-.pwd-toggle-btn {
-    position: absolute;
-    right: 18px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    color: rgba(255,255,255,0.7);
-    padding: 0;
-    z-index: 2;
-    transition: color 0.2s;
-    line-height: 1;
-}
-.pwd-toggle-btn:hover { color: #94C83D; }
-#passwordGroup { position: relative; }
-
-/* --- Status badges (#12) --- */
-.badge-active {
-    display: inline-flex; align-items: center; gap: 4px;
-    background: linear-gradient(135deg, #d4edda, #c3e6cb);
-    color: #155724; border: 1px solid #b1dfbb;
-    padding: 3px 10px; border-radius: 12px;
-    font-size: 12px; font-weight: 700;
-}
-.badge-finished {
-    display: inline-flex; align-items: center; gap: 4px;
-    background: linear-gradient(135deg, #cce5ff, #b8daff);
-    color: #004085; border: 1px solid #b8daff;
-    padding: 3px 10px; border-radius: 12px;
-    font-size: 12px; font-weight: 700;
-}
-.badge-active::before  { content: '●'; color: #28a745; font-size: 9px; }
-.badge-finished::before { content: '✓'; font-size: 10px; }
-
-/* --- Shift progress bar in table (#14) --- */
-.shift-progress-wrap {
-    height: 5px; background: #e9ecef; border-radius: 3px;
-    overflow: hidden; margin-top: 4px; width: 100%;
-}
-.shift-progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #94C83D, #7DAE2F);
-    border-radius: 3px;
-    transition: width 0.4s ease;
-}
-.shift-days-badge {
-    font-size: 10px; color: #6c757d; font-weight: 600;
-    display: block; margin-top: 2px;
-}
-body.dark-mode .shift-progress-wrap { background: #3a4a5c; }
-body.dark-mode .shift-days-badge { color: #aaa; }
-
-/* --- Operator management search (#11) --- */
-#opMgmtSearch, #opMgmtStatusFilter {
-    padding: 7px 12px; border: 1px solid #ccc; border-radius: 6px;
-    font-size: 13px; transition: border-color 0.2s;
-}
-#opMgmtSearch:focus, #opMgmtStatusFilter:focus {
-    border-color: #94C83D; outline: none;
-    box-shadow: 0 0 0 3px rgba(148,200,61,0.15);
-}
-body.dark-mode #opMgmtSearch, body.dark-mode #opMgmtStatusFilter {
-    background: #2c3e50; color: #ecf0f1; border-color: #555;
-}
-
-/* --- Schedule table row enhancements (#12) --- */
-#scheduleTable tbody tr { cursor: pointer; }
-#scheduleTable tbody tr:hover:not(.highlight-today):not(.highlight-next):not(.highlight-finished) {
-    background-color: #f0fae0 !important;
-}
-body.dark-mode #scheduleTable tbody tr:hover:not(.highlight-today):not(.highlight-next):not(.highlight-finished) {
-    background-color: #1e3a1e !important;
-}
-
-/* --- Dark mode toggle button --- */
-#darkModeBtn.active { background: rgba(255,255,0,0.15) !important; color: #ffd700 !important; }
-
-/* --- Search highlight (#13) --- */
-.search-highlight {
-    background: #fff176; color: #333; padding: 0 2px;
-    border-radius: 2px; font-weight: 700;
-}
-body.dark-mode .search-highlight { background: #f9a825; color: #000; }
-
-/* --- startDate only for admin (#17) --- */
-#startDateLabel, #startDate { transition: opacity 0.2s; }
-
-/* --- Copy phone button --- */
-.copy-phone-btn {
-    background: none; border: none; cursor: pointer;
-    font-size: 13px; padding: 0 3px; opacity: 0.6;
-    transition: opacity 0.2s; vertical-align: middle;
-}
-.copy-phone-btn:hover { opacity: 1; }
-
-/* --- Table container horizontal scroll on all sizes --- */
-.table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-#scheduleTable { min-width: 600px; }
-#operatorManagementTable { min-width: 500px; }
-
 </style>
 </head>
 <body>
@@ -4449,14 +4292,11 @@ body.dark-mode .search-highlight { background: #f9a825; color: #000; }
         <span class="topbar-clock" id="topbarClock">--:--</span>
         <button class="topbar-btn" onclick="toggleCalendar()" id="topbarCalendarBtn">📅 Calendar</button>
         <button class="topbar-btn" onclick="toggleCompletionChart()" id="topbarChartBtn">📊 Chart</button>
-        <button class="topbar-btn" onclick="toggleAnalytics()" id="topbarAnalyticsBtn">� Analytics</button>
+        <button class="topbar-btn" onclick="toggleAnalytics()" id="topbarAnalyticsBtn">📊 Analytics</button>
         <button class="topbar-btn" onclick="toggleAdvancedSearch()" id="topbarSearchBtn">🔍 Search</button>
-        <button class="topbar-btn" onclick="showBackupOverview()" id="topbarOverviewBtn" style="display:none;">📋 Overview</button>
         <button class="topbar-btn" onclick="exportToExcel()" id="topbarExportBtn">📥 Export</button>
         <button class="topbar-btn" onclick="downloadPdf()" id="topbarPdfBtn">🖨️ PDF</button>
         <button class="topbar-btn" onclick="openDailyCheckView()" id="topbarDailyCheckBtn">📋 Daily Check</button>
-        <button class="topbar-btn" onclick="resetCyberSecurityPassword()" id="cyberSecResetBtn" style="display:none; border-color:#dc3545; color:#ff6b6b;">🔑 Reset Pwd</button>
-        <button class="topbar-btn" id="darkModeBtn" onclick="toggleDarkMode()">🌙 Dark</button>
         <button class="topbar-btn" onclick="openLogoutConfirmModal()" id="topbarLogoutBtn" style="border-color: #dc3545; color: #ff6b6b;">🚪 Logout</button>
     </div>
 </div>
@@ -4470,12 +4310,12 @@ body.dark-mode .search-highlight { background: #f9a825; color: #000; }
     </div>
     <div class="kpi-card kpi-blue">
         <span class="kpi-icon">📅</span>
-        <div class="kpi-value" id="kpiTodayOp" title="">—</div>
+        <div class="kpi-value" id="kpiTodayOp">—</div>
         <div class="kpi-label">Today's Operator</div>
     </div>
     <div class="kpi-card kpi-orange">
         <span class="kpi-icon">⏭️</span>
-        <div class="kpi-value" id="kpiNextOp" title="">—</div>
+        <div class="kpi-value" id="kpiNextOp">—</div>
         <div class="kpi-label">Next Operator</div>
     </div>
     <div class="kpi-card kpi-purple">
@@ -4564,7 +4404,7 @@ body.dark-mode .search-highlight { background: #f9a825; color: #000; }
 <div class="loading-spinner" id="loadingSpinner"></div>
 
 <div class="top-section">
-    <label for="startDate" id="startDateLabel">Schedule Start Date (Shifts start the day after this date):</label>
+    <label for="startDate">Schedule Start Date (Shifts start the day after this date):</label>
     <input type="date" id="startDate" onchange="generateScheduleByDate(this.value)">
     <button id="downloadPdfBtn" onclick="downloadPdf()" style="display:none;">Download PDF</button>
 
@@ -4638,7 +4478,6 @@ body.dark-mode .search-highlight { background: #f9a825; color: #000; }
             <div class="input-group" id="passwordGroup">
                 <span class="input-icon">🔒</span>
                 <input type="password" id="adminPassword" placeholder="Enter password" autocomplete="current-password" required>
-                <button type="button" class="pwd-toggle-btn" id="pwdToggleBtn" onclick="togglePasswordVisibility()" title="Show/hide password">👁</button>
             </div>
             
             <!-- Biometric Authentication Section -->
@@ -4703,7 +4542,7 @@ body.dark-mode .search-highlight { background: #f9a825; color: #000; }
                     © 2025 Oromia Bank | Backup Operators Schedule
                 </div>
                 <div class="footer-developer">
-                    Designed and developed by <span class="developer-name">Database and Analytics Division </span>
+                    Designed and developed by <span class="developer-name">Database and Analytics Division | Hambisa Adamu</span>
                 </div>
                 <div class="footer-features">
                     Enhanced Security & Analytics Platform
@@ -4717,637 +4556,408 @@ body.dark-mode .search-highlight { background: #f9a825; color: #000; }
 </div>
 
 <style>
-/* ================================================================
-   ULTRA-MODERN ADMIN PANEL — Professional Redesign
-   Glass morphism, icon cards, tab nav, gradient accents
-   ================================================================ */
-
-/* ── Outer wrapper ── */
-#adminControls {
-    max-width: 1040px;
-    margin: 0 auto 28px auto;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow:
-        0 8px 32px rgba(0,0,0,0.18),
-        0 2px 8px rgba(0,0,0,0.10),
-        0 0 0 1px rgba(255,255,255,0.08);
-}
-
-/* ── Admin panel container ── */
+/* ===== ADMIN PANEL REDESIGN ===== */
 .admin-panel {
-    max-width: 100%;
-    margin: 0;
+    max-width: 1000px;
+    margin: 0 auto;
     padding: 0;
-    background: #f4f6fb;
-    border-radius: 20px;
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
-body.dark-mode .admin-panel { background: #111827; }
 
-/* ── Glassmorphism header ── */
 .admin-panel-header {
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 22px 28px;
-    background: linear-gradient(135deg, #0f2027 0%, #1a1a2e 40%, #16213e 70%, #0f3460 100%);
-    position: relative;
-    overflow: hidden;
-    border-radius: 20px 20px 0 0;
+    gap: 12px;
+    padding: 18px 22px;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+    border-radius: 14px 14px 0 0;
+    color: white;
+    margin-bottom: 0;
 }
-.admin-panel-header::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-        radial-gradient(circle at 15% 50%, rgba(148,200,61,0.18) 0%, transparent 55%),
-        radial-gradient(circle at 85% 20%, rgba(79,139,202,0.18) 0%, transparent 50%);
-    pointer-events: none;
-}
-.admin-panel-header::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, #94C83D 30%, #4D8BCA 70%, transparent);
-}
-.admin-avatar {
-    width: 52px; height: 52px;
+.admin-panel-header .admin-avatar {
+    width: 42px;
+    height: 42px;
     background: linear-gradient(135deg, #94C83D, #7DAE2F);
-    border-radius: 14px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 24px; flex-shrink: 0;
-    box-shadow: 0 4px 16px rgba(148,200,61,0.45), 0 0 0 3px rgba(148,200,61,0.15);
-    position: relative; z-index: 1;
-    animation: adminAvatarPulse 3s ease-in-out infinite;
-}
-@keyframes adminAvatarPulse {
-    0%,100% { box-shadow: 0 4px 16px rgba(148,200,61,0.45), 0 0 0 3px rgba(148,200,61,0.15); }
-    50%      { box-shadow: 0 6px 24px rgba(148,200,61,0.65), 0 0 0 6px rgba(148,200,61,0.10); }
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(148,200,61,0.4);
 }
 .admin-panel-header h2 {
     margin: 0;
-    font-size: 20px;
+    font-size: 17px;
     font-weight: 800;
-    color: #fff;
-    letter-spacing: -0.3px;
-    position: relative; z-index: 1;
+    color: white;
+    text-align: left;
+    letter-spacing: 0.3px;
 }
 .admin-panel-header p {
-    margin: 3px 0 0;
-    font-size: 12px;
-    color: rgba(255,255,255,0.55);
-    font-weight: 400;
-    position: relative; z-index: 1;
-}
-.admin-header-meta {
-    margin-left: auto;
-    display: flex; gap: 10px; align-items: center;
-    position: relative; z-index: 1;
-}
-.admin-meta-chip {
-    background: rgba(255,255,255,0.10);
-    border: 1px solid rgba(255,255,255,0.18);
-    border-radius: 20px;
-    padding: 4px 12px;
+    margin: 2px 0 0 0;
     font-size: 11px;
-    font-weight: 600;
-    color: rgba(255,255,255,0.85);
-    backdrop-filter: blur(10px);
-    white-space: nowrap;
+    color: rgba(255,255,255,0.65);
+    font-weight: 400;
 }
-.admin-meta-chip.green { background: rgba(148,200,61,0.20); border-color: rgba(148,200,61,0.35); color: #b8f576; }
 
-/* ── Monitoring status bar ── */
+/* Monitoring status inside panel */
 #adminMonitoringStatus {
     margin: 0;
     border-radius: 0;
     font-size: 13px;
-    padding: 10px 24px;
+    padding: 10px 18px;
     border: none;
     font-weight: 600;
-    letter-spacing: 0.2px;
 }
 #adminMonitoringStatus:empty { display: none; }
-.status-ok    { background: linear-gradient(90deg,#d4edda,#c3e6cb); color:#155724; border-bottom: 2px solid #b1dfbb; }
-.status-urgent{ background: linear-gradient(90deg,#f8d7da,#f5c6cb); color:#721c24; border-bottom: 2px solid #f1aeb5; }
 
-/* ── Tab navigation ── */
-.admin-tabs {
-    display: flex;
-    background: #fff;
-    border-bottom: 2px solid #e9ecef;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    position: sticky; top: 0; z-index: 5;
-}
-.admin-tabs::-webkit-scrollbar { display: none; }
-body.dark-mode .admin-tabs { background: #1f2937; border-color: #374151; }
-
-.admin-tab {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 12px 20px;
-    font-size: 13px; font-weight: 700;
-    color: #888;
-    border: none; background: none;
-    cursor: pointer; white-space: nowrap;
-    border-bottom: 3px solid transparent;
-    margin-bottom: -2px;
-    transition: color 0.2s, border-color 0.2s;
-    letter-spacing: 0.2px;
-}
-.admin-tab:hover { color: #444; }
-.admin-tab.active { color: #94C83D; border-bottom-color: #94C83D; }
-body.dark-mode .admin-tab { color: #9ca3af; }
-body.dark-mode .admin-tab.active { color: #94C83D; border-bottom-color: #94C83D; }
-body.dark-mode .admin-tab:hover { color: #e5e7eb; }
-.admin-tab-icon { font-size: 15px; }
-
-/* ── Section panels ── */
+/* Card sections */
 .admin-section {
     background: #fff;
-    padding: 24px 28px;
-    display: none; /* hidden by default, shown by tab */
+    border: 1px solid #e9ecef;
     border-top: none;
-    animation: adminSectionIn 0.22s ease;
+    padding: 20px 22px;
 }
-.admin-section.active { display: block; }
-.admin-section:last-child { border-radius: 0 0 20px 20px; }
-body.dark-mode .admin-section { background: #1f2937; }
-
-@keyframes adminSectionIn {
-    from { opacity:0; transform:translateY(6px); }
-    to   { opacity:1; transform:translateY(0);   }
+.admin-section:last-child {
+    border-radius: 0 0 14px 14px;
 }
-
-/* ── Section title ── */
 .admin-section-title {
-    display: flex; align-items: center; gap: 10px;
-    font-size: 11px; font-weight: 800;
-    text-transform: uppercase; letter-spacing: 1.5px;
-    color: #999;
-    margin: 0 0 18px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #666;
+    margin: 0 0 14px 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #f0f0f0;
 }
-body.dark-mode .admin-section-title { color: #6b7280; border-color: #374151; }
-.section-icon {
-    width: 26px; height: 26px; border-radius: 7px;
-    display: inline-flex; align-items: center; justify-content: center;
-    font-size: 13px; flex-shrink: 0;
+.admin-section-title .section-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
 }
-.icon-green  { background: linear-gradient(135deg,#d4edda,#c3e6cb); }
-.icon-red    { background: linear-gradient(135deg,#f8d7da,#f5c6cb); }
-.icon-blue   { background: linear-gradient(135deg,#cce5ff,#b8daff); }
-.icon-purple { background: linear-gradient(135deg,#e2d9f3,#d2c4f0); }
-.icon-orange { background: linear-gradient(135deg,#ffe5d0,#ffd9b8); }
-.icon-teal   { background: linear-gradient(135deg,#d1ecf1,#bee5eb); }
+.icon-green  { background: #d4edda; }
+.icon-red    { background: #f8d7da; }
+.icon-blue   { background: #cce5ff; }
+.icon-purple { background: #e2d9f3; }
+.icon-orange { background: #ffe5d0; }
+.icon-teal   { background: #d1ecf1; }
 
-/* ── Card grid for action buttons ── */
-.admin-card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(188px, 1fr));
-    gap: 12px;
-    margin-bottom: 4px;
+/* Button grid */
+.admin-btn-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
 }
-.admin-card {
-    display: flex; align-items: center; gap: 12px;
-    padding: 14px 16px;
-    background: #f8fafc;
-    border: 1.5px solid #e9ecef;
-    border-radius: 14px;
+.admin-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 16px;
+    border: none;
+    border-radius: 8px;
     cursor: pointer;
-    transition: all 0.22s cubic-bezier(0.25,0.46,0.45,0.94);
-    text-align: left;
     font-size: 13px;
     font-weight: 600;
-    color: #374151;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-    text-decoration: none;
-}
-.admin-card::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: linear-gradient(135deg,rgba(255,255,255,0),rgba(255,255,255,0.5));
-    opacity: 0; transition: opacity 0.22s;
-}
-.admin-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); border-color: transparent; }
-.admin-card:hover::before { opacity: 1; }
-.admin-card:active { transform: translateY(-1px); }
-body.dark-mode .admin-card { background: #111827; border-color: #374151; color: #e5e7eb; }
-body.dark-mode .admin-card:hover { border-color: transparent; box-shadow: 0 8px 24px rgba(0,0,0,0.35); }
-
-.admin-card-icon {
-    width: 38px; height: 38px; border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px; flex-shrink: 0;
-}
-.admin-card-label { line-height: 1.3; }
-.admin-card-label small {
-    display: block; font-size: 10px; font-weight: 400;
-    color: #9ca3af; margin-top: 1px;
-}
-body.dark-mode .admin-card-label small { color: #6b7280; }
-
-/* Card accent colours */
-.card-lime   { background: linear-gradient(135deg,#f0fae0,#e6f7d0); border-color: #c6f090; }
-.card-lime   .admin-card-icon { background: linear-gradient(135deg,#94C83D,#7DAE2F); color:#fff; }
-.card-lime:hover { background: linear-gradient(135deg,#94C83D,#7DAE2F); color:#fff; border-color:transparent; }
-.card-lime:hover small { color:rgba(255,255,255,0.75); }
-
-.card-red    { background: linear-gradient(135deg,#fff0f0,#ffe5e5); border-color: #f5c6cb; }
-.card-red    .admin-card-icon { background: linear-gradient(135deg,#dc3545,#c82333); color:#fff; }
-.card-red:hover { background: linear-gradient(135deg,#dc3545,#c82333); color:#fff; border-color:transparent; }
-.card-red:hover small { color:rgba(255,255,255,0.75); }
-
-.card-dark   { background: linear-gradient(135deg,#f0f0f2,#e8e8ec); border-color: #d0d0d8; }
-.card-dark   .admin-card-icon { background: linear-gradient(135deg,#343a40,#23272b); color:#fff; }
-.card-dark:hover { background: linear-gradient(135deg,#343a40,#23272b); color:#fff; border-color:transparent; }
-.card-dark:hover small { color:rgba(255,255,255,0.75); }
-
-.card-teal   { background: linear-gradient(135deg,#e6f9fb,#d0f0f5); border-color: #bee3f8; }
-.card-teal   .admin-card-icon { background: linear-gradient(135deg,#17a2b8,#138496); color:#fff; }
-.card-teal:hover { background: linear-gradient(135deg,#17a2b8,#138496); color:#fff; border-color:transparent; }
-.card-teal:hover small { color:rgba(255,255,255,0.75); }
-
-.card-purple { background: linear-gradient(135deg,#f3f0fb,#ebe5f5); border-color: #d2c4f0; }
-.card-purple .admin-card-icon { background: linear-gradient(135deg,#6f42c1,#5a32a3); color:#fff; }
-.card-purple:hover { background: linear-gradient(135deg,#6f42c1,#5a32a3); color:#fff; border-color:transparent; }
-.card-purple:hover small { color:rgba(255,255,255,0.75); }
-
-.card-green  { background: linear-gradient(135deg,#e8faf0,#d4edda); border-color: #b1dfbb; }
-.card-green  .admin-card-icon { background: linear-gradient(135deg,#28a745,#20c997); color:#fff; }
-.card-green:hover { background: linear-gradient(135deg,#28a745,#20c997); color:#fff; border-color:transparent; }
-.card-green:hover small { color:rgba(255,255,255,0.75); }
-
-.card-blue   { background: linear-gradient(135deg,#e8f0fe,#d0e4ff); border-color: #b8daff; }
-.card-blue   .admin-card-icon { background: linear-gradient(135deg,#007bff,#0056b3); color:#fff; }
-.card-blue:hover { background: linear-gradient(135deg,#007bff,#0056b3); color:#fff; border-color:transparent; }
-.card-blue:hover small { color:rgba(255,255,255,0.75); }
-
-.card-orange { background: linear-gradient(135deg,#fff5e8,#ffe5cc); border-color: #ffd9b8; }
-.card-orange .admin-card-icon { background: linear-gradient(135deg,#fd7e14,#e06b00); color:#fff; }
-.card-orange:hover { background: linear-gradient(135deg,#fd7e14,#e06b00); color:#fff; border-color:transparent; }
-.card-orange:hover small { color:rgba(255,255,255,0.75); }
-
-.card-indigo { background: linear-gradient(135deg,#eaf0fb,#d6e6f8); border-color: #b8daff; }
-.card-indigo .admin-card-icon { background: linear-gradient(135deg,#4D8BCA,#2e6da4); color:#fff; }
-.card-indigo:hover { background: linear-gradient(135deg,#4D8BCA,#2e6da4); color:#fff; border-color:transparent; }
-.card-indigo:hover small { color:rgba(255,255,255,0.75); }
-
-.card-pink   { background: linear-gradient(135deg,#fff0f8,#ffe5f3); border-color: #f5c6dd; }
-.card-pink   .admin-card-icon { background: linear-gradient(135deg,#e83e8c,#c82076); color:#fff; }
-.card-pink:hover { background: linear-gradient(135deg,#e83e8c,#c82076); color:#fff; border-color:transparent; }
-.card-pink:hover small { color:rgba(255,255,255,0.75); }
-
-.card-whatsapp { background: linear-gradient(135deg,#e8fbef,#d4f7e0); border-color: #a8e6c0; }
-.card-whatsapp .admin-card-icon { background: linear-gradient(135deg,#25D366,#128C7E); color:#fff; }
-.card-whatsapp:hover { background: linear-gradient(135deg,#25D366,#128C7E); color:#fff; border-color:transparent; }
-.card-whatsapp:hover small { color:rgba(255,255,255,0.75); }
-
-/* ── Auto-notification status pill ── */
-.notif-status-pill {
-    display: inline-flex; align-items: center; gap: 10px;
-    background: linear-gradient(135deg,#e8faf0,#d4edda);
-    color: #155724;
-    border: 1.5px solid #b1dfbb;
-    border-radius: 14px;
-    padding: 12px 18px;
-    font-size: 13px; font-weight: 600;
-    margin-bottom: 18px;
-    width: 100%; box-sizing: border-box;
-    box-shadow: 0 2px 8px rgba(40,167,69,0.10);
-}
-body.dark-mode .notif-status-pill { background: rgba(40,167,69,0.10); border-color: rgba(40,167,69,0.25); color: #86efac; }
-.pulse-dot {
-    width: 10px; height: 10px;
-    background: #28a745; border-radius: 50%; flex-shrink: 0;
-    box-shadow: 0 0 0 0 rgba(40,167,69,0.5);
-    animation: livePulse 1.8s ease-in-out infinite;
-}
-@keyframes livePulse {
-    0%   { box-shadow: 0 0 0 0 rgba(40,167,69,0.5); }
-    70%  { box-shadow: 0 0 0 8px rgba(40,167,69,0); }
-    100% { box-shadow: 0 0 0 0 rgba(40,167,69,0); }
-}
-
-/* ── Notify days row ── */
-.notif-days-row {
-    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
-    margin-bottom: 18px;
-    padding: 16px 18px;
-    background: #f8fafc;
-    border-radius: 14px;
-    border: 1.5px solid #e9ecef;
-}
-body.dark-mode .notif-days-row { background: #111827; border-color: #374151; }
-.notif-days-row label { font-size: 13px; font-weight: 600; color: #495057; margin: 0; }
-body.dark-mode .notif-days-row label { color: #9ca3af; }
-.notif-days-input {
-    width: 70px; padding: 8px 12px;
-    border: 2px solid #dee2e6; border-radius: 10px;
-    font-size: 15px; font-weight: 700; text-align: center;
-    color: #333; transition: border-color 0.2s, box-shadow 0.2s;
-    background: #fff;
-}
-.notif-days-input:focus { border-color: #94C83D; outline: none; box-shadow: 0 0 0 3px rgba(148,200,61,0.15); }
-body.dark-mode .notif-days-input { background: #1f2937; color: #e5e7eb; border-color: #374151; }
-
-/* ── Inline action buttons (used in notif row) ── */
-.admin-btn {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 9px 18px;
-    border: none; border-radius: 10px;
-    cursor: pointer;
-    font-size: 13px; font-weight: 700;
     transition: all 0.2s ease;
-    white-space: nowrap; line-height: 1;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    white-space: nowrap;
+    line-height: 1;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
-.admin-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.18); }
+.admin-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+}
 .admin-btn:active { transform: translateY(0); }
-.btn-green  { background: linear-gradient(135deg,#28a745,#20c997); color:#fff; }
-.btn-orange { background: linear-gradient(135deg,#fd7e14,#e06b00); color:#fff; }
-.btn-lime   { background: linear-gradient(135deg,#94C83D,#7DAE2F); color:#fff; }
-.btn-red    { background: linear-gradient(135deg,#dc3545,#c82333); color:#fff; }
-.btn-dark   { background: linear-gradient(135deg,#343a40,#23272b); color:#fff; }
-.btn-teal   { background: linear-gradient(135deg,#17a2b8,#138496); color:#fff; }
-.btn-purple { background: linear-gradient(135deg,#6f42c1,#5a32a3); color:#fff; }
-.btn-gray   { background: linear-gradient(135deg,#6c757d,#545b62); color:#fff; }
-.btn-pink   { background: linear-gradient(135deg,#e83e8c,#c82076); color:#fff; }
-.btn-blue   { background: linear-gradient(135deg,#007bff,#0056b3); color:#fff; }
-.btn-indigo { background: linear-gradient(135deg,#4D8BCA,#2e6da4); color:#fff; }
 
-/* ── Next check badge ── */
-.next-check-badge {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: #f1f5f9;
-    border: 1px solid #e2e8f0;
-    border-radius: 20px; padding: 6px 14px;
-    font-size: 12px; color: #64748b; margin-top: 6px;
+.btn-green   { background: linear-gradient(135deg,#28a745,#20c997); color:#fff; }
+.btn-red     { background: linear-gradient(135deg,#dc3545,#c82333); color:#fff; }
+.btn-dark    { background: linear-gradient(135deg,#343a40,#23272b); color:#fff; }
+.btn-teal    { background: linear-gradient(135deg,#17a2b8,#138496); color:#fff; }
+.btn-purple  { background: linear-gradient(135deg,#6f42c1,#5a32a3); color:#fff; }
+.btn-gray    { background: linear-gradient(135deg,#6c757d,#545b62); color:#fff; }
+.btn-pink    { background: linear-gradient(135deg,#e83e8c,#c82076); color:#fff; }
+.btn-orange  { background: linear-gradient(135deg,#fd7e14,#e06b00); color:#fff; }
+.btn-blue    { background: linear-gradient(135deg,#007bff,#0056b3); color:#fff; }
+.btn-indigo  { background: linear-gradient(135deg,#4D8BCA,#2e6da4); color:#fff; }
+.btn-lime    { background: linear-gradient(135deg,#94C83D,#7DAE2F); color:#fff; }
+
+/* Auto-notification status pill */
+.notif-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg,#d4edda,#c3e6cb);
+    color: #155724;
+    border: 1px solid #b1dfbb;
+    border-radius: 20px;
+    padding: 7px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 14px;
+    width: 100%;
+    box-sizing: border-box;
 }
-body.dark-mode .next-check-badge { background: #111827; border-color: #374151; color: #9ca3af; }
+.notif-status-pill .pulse-dot {
+    width: 8px;
+    height: 8px;
+    background: #28a745;
+    border-radius: 50%;
+    animation: kpiPulse 1.5s ease-in-out infinite;
+    flex-shrink: 0;
+}
+@keyframes kpiPulse {
+    0%,100% { opacity:1; transform:scale(1); }
+    50%      { opacity:0.5; transform:scale(1.3); }
+}
 
-/* ── Shift calculator card ── */
+/* Notify-days row */
+.notif-days-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    padding: 12px 14px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border: 1px solid #e9ecef;
+}
+.notif-days-row label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #495057;
+    margin: 0;
+}
+.notif-days-input {
+    width: 64px;
+    padding: 6px 10px;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    color: #333;
+    transition: border-color 0.2s;
+}
+.notif-days-input:focus {
+    border-color: #94C83D;
+    outline: none;
+}
+
+/* Next check badge */
+.next-check-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 12px;
+    color: #6c757d;
+    margin-top: 10px;
+}
+
+/* Shift calculator card */
 .shift-calc-card {
     background: linear-gradient(135deg,#e8f4fd,#d6eaf8);
-    border: 1.5px solid #bee3f8;
-    border-radius: 14px; padding: 20px 22px;
-    box-shadow: 0 2px 8px rgba(41,128,185,0.08);
+    border: 1px solid #bee3f8;
+    border-radius: 12px;
+    padding: 16px 18px;
 }
-body.dark-mode .shift-calc-card { background: linear-gradient(135deg,#1e3a5f,#1a2d4a); border-color: #2d4a6e; }
 .shift-calc-card h4 {
-    margin: 0 0 14px; font-size: 14px; font-weight: 700; color: #1a5276;
-    display: flex; align-items: center; gap: 8px;
+    margin: 0 0 12px 0;
+    font-size: 13px;
+    font-weight: 700;
+    color: #1a5276;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
-body.dark-mode .shift-calc-card h4 { color: #93c5fd; }
 .shift-calc-grid {
-    display: grid; grid-template-columns: auto 1fr;
-    gap: 10px 14px; align-items: center; max-width: 340px;
+    display: grid;
+    grid-template-columns: auto 1fr auto 1fr;
+    gap: 10px;
+    align-items: center;
 }
-.shift-calc-grid label { font-size: 13px; font-weight: 700; color: #2e86c1; white-space: nowrap; }
-body.dark-mode .shift-calc-grid label { color: #60a5fa; }
+.shift-calc-grid label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #2e86c1;
+    white-space: nowrap;
+}
 .shift-calc-grid input[type="date"] {
-    padding: 9px 12px; border: 2px solid #bee3f8;
-    border-radius: 10px; font-size: 13px; background: #fff;
-    color: #333; transition: border-color 0.2s, box-shadow 0.2s;
+    padding: 7px 10px;
+    border: 2px solid #bee3f8;
+    border-radius: 8px;
+    font-size: 13px;
+    background: white;
+    color: #333;
+    transition: border-color 0.2s;
 }
-.shift-calc-grid input[type="date"]:focus { border-color: #2980b9; outline: none; box-shadow: 0 0 0 3px rgba(41,128,185,0.12); }
-body.dark-mode .shift-calc-grid input[type="date"] { background: #1f2937; color: #e5e7eb; border-color: #2d4a6e; }
-.shift-calc-result { display: flex; gap: 12px; margin-top: 14px; flex-wrap: wrap; }
+.shift-calc-grid input[type="date"]:focus {
+    border-color: #2980b9;
+    outline: none;
+}
+.shift-calc-result {
+    display: flex;
+    gap: 16px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
 .calc-result-chip {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: #fff; border: 1.5px solid #bee3f8;
-    border-radius: 20px; padding: 6px 16px;
-    font-size: 13px; color: #1a5276;
-    box-shadow: 0 1px 4px rgba(41,128,185,0.08);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: white;
+    border: 1px solid #bee3f8;
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 13px;
+    color: #1a5276;
 }
-body.dark-mode .calc-result-chip { background: #1f2937; border-color: #2d4a6e; color: #93c5fd; }
-.calc-result-chip strong { color: #2980b9; font-weight: 800; }
+.calc-result-chip strong {
+    color: #2980b9;
+    font-weight: 800;
+}
 
-/* ── Section divider (legacy, kept for safety) ── */
+/* Section divider */
 .admin-divider {
     height: 1px;
-    background: linear-gradient(90deg,transparent,#e9ecef 20%,#e9ecef 80%,transparent);
+    background: linear-gradient(90deg, transparent, #e9ecef 20%, #e9ecef 80%, transparent);
     margin: 0;
 }
 
-/* ── Dark mode overrides ── */
-body.dark-mode .admin-card     { background: #111827; border-color: #374151; color: #e5e7eb; }
-body.dark-mode .admin-card.card-lime   { background: rgba(148,200,61,0.08); border-color: rgba(148,200,61,0.2); }
-body.dark-mode .admin-card.card-red    { background: rgba(220,53,69,0.08);  border-color: rgba(220,53,69,0.2);  }
-body.dark-mode .admin-card.card-dark   { background: rgba(52,58,64,0.30);   border-color: rgba(52,58,64,0.5);   }
-body.dark-mode .admin-card.card-teal   { background: rgba(23,162,184,0.08); border-color: rgba(23,162,184,0.2); }
-body.dark-mode .admin-card.card-purple { background: rgba(111,66,193,0.08); border-color: rgba(111,66,193,0.2); }
-body.dark-mode .admin-card.card-green  { background: rgba(40,167,69,0.08);  border-color: rgba(40,167,69,0.2);  }
-body.dark-mode .admin-card.card-blue   { background: rgba(0,123,255,0.08);  border-color: rgba(0,123,255,0.2);  }
-body.dark-mode .admin-card.card-orange { background: rgba(253,126,20,0.08); border-color: rgba(253,126,20,0.2); }
-body.dark-mode .admin-card.card-indigo { background: rgba(77,139,202,0.08); border-color: rgba(77,139,202,0.2); }
-body.dark-mode .admin-card.card-pink   { background: rgba(232,62,140,0.08); border-color: rgba(232,62,140,0.2); }
-body.dark-mode .admin-card.card-whatsapp { background: rgba(37,211,102,0.08); border-color: rgba(37,211,102,0.2); }
-body.dark-mode .admin-section  { background: #1f2937; }
-body.dark-mode .admin-section-title { color: #6b7280; border-color: #374151; }
-body.dark-mode .admin-divider  { background: linear-gradient(90deg,transparent,#374151 20%,#374151 80%,transparent); }
-
-/* ── Responsive ── */
-@media (max-width: 640px) {
-    .admin-card-grid { grid-template-columns: repeat(2,1fr); gap: 8px; }
-    .admin-card { padding: 12px; gap: 10px; }
-    .admin-card-icon { width:32px; height:32px; font-size:15px; }
-    .admin-panel-header { padding: 16px 18px; }
-    .admin-panel-header h2 { font-size: 16px; }
-    .admin-header-meta { display: none; }
-    .admin-tab { padding: 10px 14px; font-size: 12px; }
+@media (max-width: 600px) {
     .shift-calc-grid { grid-template-columns: 1fr; }
+    .admin-btn-grid { gap: 6px; }
+    .admin-btn { font-size: 12px; padding: 8px 12px; }
     .notif-days-row { flex-direction: column; align-items: flex-start; }
 }
-@media (max-width: 420px) {
-    .admin-card-grid { grid-template-columns: 1fr; }
-}
-/* ===== END MODERN ADMIN PANEL ===== */
+/* ===== END ADMIN PANEL REDESIGN ===== */
 </style>
 
-<div class="controls" id="adminControls" style="display:none; padding:0; background:transparent; box-shadow:none; border-radius:20px; overflow:hidden;">
+<div class="controls" id="adminControls" style="display:none; padding:0; background:transparent; box-shadow:none; border-radius:14px; overflow:hidden;">
     <div class="admin-panel">
 
-        <!-- ── Panel Header ── -->
+        <!-- Panel Header -->
         <div class="admin-panel-header">
             <div class="admin-avatar">🛡️</div>
             <div>
                 <h2>Admin Control Panel</h2>
-                <p>Schedule management, notifications &amp; system utilities</p>
-            </div>
-            <div class="admin-header-meta">
-                <span class="admin-meta-chip green" id="adminOperatorCount">4 Operators</span>
-                <span class="admin-meta-chip" id="adminShiftCount">— Shifts</span>
+                <p>Schedule management, notifications & system utilities</p>
             </div>
         </div>
 
-        <!-- ── Monitoring Status ── -->
+        <!-- Monitoring Status -->
         <div id="adminMonitoringStatus"></div>
 
-        <!-- ── Tab Navigation ── -->
-        <div class="admin-tabs" id="adminTabNav">
-            <button class="admin-tab active" onclick="switchAdminTab('schedule',this)">
-                <span class="admin-tab-icon">📅</span> Schedule
-            </button>
-            <button class="admin-tab" onclick="switchAdminTab('notifications',this)">
-                <span class="admin-tab-icon">📨</span> Notifications
-            </button>
-            <button class="admin-tab" onclick="switchAdminTab('autonotify',this)">
-                <span class="admin-tab-icon">🤖</span> Auto-Notify
-            </button>
-            <button class="admin-tab" onclick="switchAdminTab('calculator',this)">
-                <span class="admin-tab-icon">🔢</span> Calculator
-            </button>
-        </div>
-
-        <!-- ══ TAB 1: Schedule Generation ══ -->
-        <div class="admin-section active" id="adminTab-schedule">
+        <!-- ── Section 1: Schedule Generation ── -->
+        <div class="admin-section" data-section="schedule">
             <div class="admin-section-title">
                 <span class="section-icon icon-green">📅</span>
                 Schedule Generation &amp; Utilities
             </div>
-            <div class="admin-card-grid">
-                <button class="admin-card card-lime" onclick="generateScheduleButton()">
-                    <div class="admin-card-icon">📅</div>
-                    <div class="admin-card-label">Generate Schedule<small>Rebuild full 1-year schedule</small></div>
-                </button>
-                <button class="admin-card card-dark" onclick="openAuditLogView()">
-                    <div class="admin-card-icon">📋</div>
-                    <div class="admin-card-label">Audit Log<small>View all system actions</small></div>
-                </button>
-                <button class="admin-card card-indigo" onclick="toggleCalendar()">
-                    <div class="admin-card-icon">📆</div>
-                    <div class="admin-card-label">Calendar View<small>Monthly schedule calendar</small></div>
-                </button>
-                <button class="admin-card card-teal" onclick="toggleCompletionChart()">
-                    <div class="admin-card-icon">📊</div>
-                    <div class="admin-card-label">Completion Chart<small>Shift completion chart</small></div>
-                </button>
-                <button class="admin-card card-purple" onclick="openDailyCheckView()">
-                    <div class="admin-card-icon">📋</div>
-                    <div class="admin-card-label">Daily Check<small>Backup status by date</small></div>
-                </button>
-                <button class="admin-card card-green" onclick="exportOperatorsCSV()">
-                    <div class="admin-card-icon">📥</div>
-                    <div class="admin-card-label">Export Operators<small>Download CSV</small></div>
-                </button>
-                <button class="admin-card card-blue" onclick="importOperatorsCSV()">
-                    <div class="admin-card-icon">📤</div>
-                    <div class="admin-card-label">Import Operators<small>Upload CSV file</small></div>
-                </button>
-                <button class="admin-card card-orange" onclick="detectShiftConflicts()">
-                    <div class="admin-card-icon">⚠️</div>
-                    <div class="admin-card-label">Check Conflicts<small>Detect scheduling issues</small></div>
-                </button>
-                <button class="admin-card card-teal" onclick="createSampleBackupData()">
-                    <div class="admin-card-icon">🧪</div>
-                    <div class="admin-card-label">Sample Data<small>Generate test backup data</small></div>
-                </button>
-                <button class="admin-card card-red" onclick="resetAll()">
-                    <div class="admin-card-icon">🗑️</div>
-                    <div class="admin-card-label">Clear ALL Data<small>Full system reset</small></div>
-                </button>
+            <div class="admin-btn-grid">
+                <button class="admin-btn btn-lime"    onclick="generateScheduleButton()">📅 Generate Full Schedule</button>
+                <button class="admin-btn btn-red"     onclick="resetAll()">🗑️ Clear ALL Data</button>
+                <button class="admin-btn btn-dark"    onclick="openAuditLogView()">📋 View Audit Log</button>
+                <button class="admin-btn btn-teal"    onclick="createSampleBackupData()">🧪 Sample Backup Data</button>
+                <button class="admin-btn btn-purple"  onclick="debugBackupData()">🔍 Debug Backup Data</button>
+                <button class="admin-btn btn-green"   onclick="exportOperatorsCSV()">📥 Export Operators CSV</button>
+                <button class="admin-btn btn-blue"    onclick="importOperatorsCSV()">📤 Import Operators CSV</button>
+                <button class="admin-btn btn-orange"  onclick="detectShiftConflicts()">⚠️ Check Conflicts</button>
+                <button class="admin-btn btn-lime"    onclick="toggleCompletionChart()">📊 Completion Chart</button>
+                <button class="admin-btn btn-indigo"  onclick="toggleCalendar()">📅 Calendar View</button>
+                <button class="admin-btn btn-teal"    onclick="openDailyCheckView()">📋 Daily Check View</button>
             </div>
         </div>
 
-        <!-- ══ TAB 2: Send Notifications ══ -->
-        <div class="admin-section" id="adminTab-notifications">
+        <div class="admin-divider" data-divider="schedule"></div>
+
+        <!-- ── Section 2: Send Notifications ── -->
+        <div class="admin-section" data-section="notifications">
             <div class="admin-section-title">
                 <span class="section-icon icon-purple">📨</span>
                 Send Notifications to Operators
             </div>
-            <div class="admin-card-grid">
-                <button class="admin-card card-dark" onclick="openNotificationConfigModal()">
-                    <div class="admin-card-icon">⚙️</div>
-                    <div class="admin-card-label">Configure APIs<small>EmailJS &amp; SMS settings</small></div>
-                </button>
-                <button class="admin-card card-purple" onclick="testNotificationSystem()">
-                    <div class="admin-card-icon">📨</div>
-                    <div class="admin-card-label">Send Notification<small>Test single send</small></div>
-                </button>
-                <button class="admin-card card-pink" onclick="testNotificationToAllOperators()">
-                    <div class="admin-card-icon">📧</div>
-                    <div class="admin-card-label">Send to All<small>Email all operators</small></div>
-                </button>
-                <button class="admin-card card-whatsapp" onclick="sendWhatsAppToAll()">
-                    <div class="admin-card-icon">💬</div>
-                    <div class="admin-card-label">WhatsApp All<small>Open WhatsApp links</small></div>
-                </button>
-                <button class="admin-card card-blue" onclick="requestPushPermission()">
-                    <div class="admin-card-icon">🔔</div>
-                    <div class="admin-card-label">Push Alerts<small>Enable browser push</small></div>
-                </button>
+            <div class="admin-btn-grid">
+                <button class="admin-btn btn-gray"   onclick="openNotificationConfigModal()">⚙️ Configure APIs</button>
+                <button class="admin-btn btn-purple" onclick="testNotificationSystem()">📨 Send Notification</button>
+                <button class="admin-btn btn-pink"   onclick="testNotificationToAllOperators()">📧 Send to All Operators</button>
+                <button class="admin-btn btn-green"  onclick="sendWhatsAppToAll()" style="background:linear-gradient(135deg,#25D366,#128C7E);">💬 WhatsApp All</button>
+                <button class="admin-btn btn-blue"   onclick="requestPushPermission()">🔔 Enable Push Alerts</button>
             </div>
         </div>
 
-        <!-- ══ TAB 3: Auto-Notify ══ -->
-        <div class="admin-section" id="adminTab-autonotify">
+        <div class="admin-divider" data-divider="notifications"></div>
+        <!-- ── Section 3: Auto Notifications ── -->
+        <div class="admin-section" data-section="autonotify">
             <div class="admin-section-title">
-                <span class="section-icon icon-blue">🤖</span>
-                Automatic Notification Engine
+                <span class="section-icon icon-blue">📤</span>
+                Send Notifications
             </div>
 
-            <!-- Live status pill -->
+            <!-- Auto-active pill -->
             <div class="notif-status-pill">
                 <span class="pulse-dot"></span>
-                <span><strong>Auto-Notifications Active</strong> — operators are notified automatically <strong id="notifyDaysDisplay">2</strong> days before their shift starts (checks every hour)</span>
+                <span><strong>Auto-Notifications Active</strong> — operators are automatically notified <strong>2 days</strong> before their shift starts (checks every hour)</span>
             </div>
 
-            <!-- Days config row -->
+            <!-- Days input row -->
             <div class="notif-days-row">
-                <span style="font-size:18px;">📅</span>
-                <label for="notifyDays">Days before shift to notify:</label>
+                <span style="font-size:16px;">📅</span>
+                <label for="notifyDays">Manual "Send Now" window (days before shift):</label>
                 <input class="notif-days-input" type="number" id="notifyDays" value="2" min="0" max="30"
-                       oninput="document.getElementById('notifyDaysDisplay').textContent=this.value">
-                <button class="admin-btn btn-green" onclick="saveNotificationSettings()">💾 Save &amp; Start</button>
-                <button class="admin-btn btn-orange" onclick="checkAndSendNotifications(true)">📤 Send Now</button>
+                       oninput="document.getElementById('notifyDays').value=this.value">
+                <button class="admin-btn btn-green" onclick="saveNotificationSettings()" style="margin:0;">
+                    💾 Save &amp; Start
+                </button>
+                <button class="admin-btn btn-orange" onclick="checkAndSendNotifications(true)" style="margin:0;">
+                    📤 Send Now
+                </button>
             </div>
 
-            <!-- Action cards -->
-            <div class="admin-card-grid">
-                <button class="admin-card card-lime" onclick="check3DayNotifications()">
-                    <div class="admin-card-icon">🎯</div>
-                    <div class="admin-card-label">Check Notifications<small>Run 2-day check now</small></div>
-                </button>
-                <button class="admin-card card-indigo" onclick="openNotificationLogView()">
-                    <div class="admin-card-icon">📋</div>
-                    <div class="admin-card-label">Notification Log<small>View sent history</small></div>
-                </button>
-                <button class="admin-card card-teal" onclick="previewNotificationMessage()">
-                    <div class="admin-card-icon">👁️</div>
-                    <div class="admin-card-label">Preview Message<small>See what operators get</small></div>
-                </button>
-                <button class="admin-card card-orange" onclick="debugNotificationSystem()">
-                    <div class="admin-card-icon">🔍</div>
-                    <div class="admin-card-label">Debug System<small>Notification diagnostics</small></div>
-                </button>
+            <!-- Action buttons -->
+            <div class="admin-btn-grid">
+                <button class="admin-btn btn-lime"   onclick="check3DayNotifications()">🎯 Check 2-Day Notifications</button>
+                <button class="admin-btn btn-indigo" onclick="openNotificationLogView()">📋 View Notification Log</button>
+                <button class="admin-btn btn-teal"   onclick="previewNotificationMessage()">👁️ Preview Message</button>
+                <button class="admin-btn btn-orange" onclick="debugNotificationSystem()">🔍 Debug Notifications</button>
             </div>
 
             <!-- Next check time -->
-            <div id="notificationStatus" style="margin-top:16px;">
+            <div id="notificationStatus" style="margin-top:12px;">
                 <span class="next-check-badge">
                     🕐 Next automatic check: <strong id="nextCheckTime">--</strong>
                 </span>
             </div>
         </div>
 
-        <!-- ══ TAB 4: Shift Calculator ══ -->
-        <div class="admin-section" id="adminTab-calculator" style="border-radius:0 0 20px 20px;">
+        <div class="admin-divider"></div>
+
+        <!-- ── Section 4: Shift Calculator ── -->
+        <div class="admin-section" id="shiftCalculator" style="padding-bottom:22px;">
             <div class="admin-section-title">
                 <span class="section-icon icon-teal">🔢</span>
                 Shift Range Calculator
             </div>
             <div class="shift-calc-card">
-                <h4>⏱️ 10 Working Days Calculator <span style="font-weight:400;font-size:11px;opacity:0.7;">(Sundays excluded)</span></h4>
+                <h4>⏱️ 10 Working Days Calculator (Sundays excluded)</h4>
                 <div class="shift-calc-grid">
                     <label for="calcStartDate">Start Date:</label>
                     <input type="date" id="calcStartDate" onchange="calculateShiftRange()">
+                    <label style="visibility:hidden;">End:</label>
+                    <div></div>
                 </div>
                 <div class="shift-calc-result">
                     <span class="calc-result-chip">📅 End Date: <strong id="calcEndDate">--</strong></span>
@@ -5473,25 +5083,13 @@ body.dark-mode .admin-divider  { background: linear-gradient(90deg,transparent,#
         <input type="text" id="mobileNumber" placeholder="Mobile Number">
         <input type="email" id="emailAddress" placeholder="Email Address"> <button onclick="addOperator()">Add New Operator</button>
     </div>
-    <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px; flex-wrap:wrap; justify-content:center;">
-        <input type="text" id="opMgmtSearch" placeholder="🔍 Search operators..." oninput="renderOperatorManagementTable()"
-               style="padding:7px 12px; border:1px solid #ccc; border-radius:6px; font-size:13px; min-width:220px;">
-        <select id="opMgmtStatusFilter" onchange="renderOperatorManagementTable()"
-                style="padding:7px 12px; border:1px solid #ccc; border-radius:6px; font-size:13px;">
-            <option value="">All Statuses</option>
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
-        </select>
-    </div>
     <table id="operatorManagementTable">
         <thead>
             <tr>
                 <th>S/N</th>
                 <th>Operator Name</th>
                 <th>Mobile Number</th>
-                <th>Email Address</th>
-                <th>Status</th>
-                <th>Actions</th>
+                <th>Email Address</th> <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -5520,29 +5118,13 @@ body.dark-mode .admin-divider  { background: linear-gradient(90deg,transparent,#
 </div>
 
 <div class="table-container" id="scheduleView" style="display:none;">
-    <div class="table-toolbar">
-        <span id="tableRowCountLabel" class="table-count-label"></span>
-        <div class="table-toolbar-right">
-            <label class="table-toolbar-label">Show:</label>
-            <select id="tableRowsPerPage" onchange="renderTable()" class="table-rows-select">
-                <option value="5">5 rows</option>
-                <option value="10">10 rows</option>
-                <option value="20">20 rows</option>
-                <option value="50">50 rows</option>
-                <option value="all" selected>All</option>
-            </select>
-            <button id="tablePrevBtn" onclick="tablePageChange(-1)" class="table-page-btn">‹ Prev</button>
-            <span id="tablePageLabel" class="table-page-label"></span>
-            <button id="tableNextBtn" onclick="tablePageChange(1)" class="table-page-btn">Next ›</button>
-        </div>
-    </div>
     <table id="scheduleTable">
         <thead>
             <tr>
                 <th>S/N</th>
                 <th>Taken by</th>
-                <th class="col-checked-by">Checked by</th>
-                <th class="col-mobile">Mobile number</th>
+                <th>Checked by</th>
+                <th>Mobile number</th>
                 <th>Date Range</th>
                 <th>Status</th>
                 <th id="actionsHeader">Actions</th>
@@ -5637,7 +5219,7 @@ body.dark-mode .admin-divider  { background: linear-gradient(90deg,transparent,#
 <!-- ============================================================
      FEATURE 8: COUNTDOWN TIMER ON ACTIVE SHIFT (injected via JS into table)
      ============================================================ -->
-<div id="countdownBanner" style="display:none; max-width:1000px; margin:0 auto 15px auto; background:linear-gradient(135deg,#e8f5e9,#c8e6c9); border:2px solid #4caf50; border-radius:12px; padding:14px 20px; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+<div id="countdownBanner" style="display:none; max-width:1000px; margin:0 auto 15px auto; background:linear-gradient(135deg,#e8f5e9,#c8e6c9); border:2px solid #4caf50; border-radius:12px; padding:14px 20px; display:none; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
     <div>
         <div style="font-weight:800; color:#1b5e20; font-size:14px;">⏰ Active Shift Countdown</div>
         <div id="countdownOperatorName" style="font-size:13px; color:#2e7d32; margin-top:3px;"></div>
@@ -5651,7 +5233,7 @@ body.dark-mode .admin-divider  { background: linear-gradient(90deg,transparent,#
             © 2025 Oromia Bank Backup Operators Schedule | All rights reserved
         </div>
         <div class="footer-developer-credit">
-            Designed and developed by <span class="developer-highlight">Database and Analytics Division </span>
+            Designed and developed by <span class="developer-highlight">Database and Analytics Division | Hambisa Adamu</span>
         </div>
         <div class="footer-features-text">
         </div>
@@ -5776,13 +5358,12 @@ body.dark-mode .admin-divider  { background: linear-gradient(90deg,transparent,#
             <table id="notificationLogTable" style="min-width: 100%;">
                 <thead>
                     <tr>
-                        <th>Timestamp</th>
+                        <th>Date Sent</th>
                         <th>Operator</th>
-                        <th>Duty Date</th>
-                        <th>Schedule Ref</th>
-                        <th>Type</th>
-                        <th>Email</th>
-                        <th>Sent Date / Time</th>
+                        <th>Shift Start</th>
+                        <th>Notification Type</th>
+                        <th>Email Address</th>
+                        <th>Mobile Number</th>
                         <th>Status</th>
                     </tr>
                 </thead>
@@ -5792,7 +5373,6 @@ body.dark-mode .admin-divider  { background: linear-gradient(90deg,transparent,#
         </div>
         <div style="text-align: center; margin-top: 15px;">
             <button onclick="clearNotificationLog()" style="background-color: #f0ad4e;">Clear Notification Log</button>
-            <button onclick="retryFailedNotifications()" style="background-color: #17a2b8; color:white; padding:6px 14px; border:none; border-radius:4px; cursor:pointer; margin-left:8px;">🔄 Retry Failed</button>
         </div>
     </div>
 </div>
@@ -6834,6 +6414,24 @@ function closeModal() {
 
 // === END BACKUP STATUS TRACKING FUNCTIONS ===
 
+// Convert operator selection to standardized status
+function getConvertedStatus(operatorStatus) {
+    if (!operatorStatus) return 'Pending';
+    
+    switch (operatorStatus) {
+        case 'Completely Backed Up':
+            return 'Completed';
+        case 'Issue Encountered':
+            return 'Failed';
+        case 'Holiday':
+            return 'Holiday';
+        case 'Weekend':
+            return 'Weekend';
+        default:
+            return 'Pending';
+    }
+}
+
 // Helper functions for backup tracking
 function getDayType(date) {
     // Use isWorkingDay for consistent Sunday + holiday detection
@@ -7236,6 +6834,7 @@ async function testNotificationToAllOperators() {
     // List of all operator emails
     const operatorEmails = [
         { name: 'DAME TERFASSA',  email: 'dame.terfassa@oromiabank.com' },
+        { name: 'TSION GIRMA',    email: 'tsion.g@orointbank.com' },
         { name: 'ABRAHAM CHALA',  email: 'abraham.chala@oromiabank.com' },
         { name: 'BERISO SHIBIRU', email: 'bariso.s@orointbank.com' },
         { name: 'HAMBISA ADAMU',  email: 'hambisa.adamu@oromiabank.com' }
@@ -7393,10 +6992,11 @@ const SMS_API_CONFIG = {
 };
 
 let initialOperators = JSON.parse(localStorage.getItem(INITIAL_OPERATORS_DATA_KEY)) || [
-    { name: "ABRAHAM CHALA",  mobile: "0913564114", email: "abraham.chala@oromiabank.com",  status: "Active" },
-    { name: "BERISO SHIBIRU", mobile: "0902911411", email: "bariso.s@orointbank.com",        status: "Active" },
-    { name: "HAMBISA ADAMU",  mobile: "0913456466", email: "hambisa.adamu@oromiabank.com",  status: "Active" },
-    { name: "DAME TERFASSA",  mobile: "0911117524", email: "dame.terfassa@oromiabank.com",  status: "Active" }
+    { name: "ABRAHAM CHALA",  mobile: "0913564114", email: "abraham.chala@oromiabank.com" },
+    { name: "BERISO SHIBIRU", mobile: "0902911411", email: "bariso.s@orointbank.com" },
+    { name: "HAMBISA ADAMU",  mobile: "0913456466", email: "hambisa.adamu@oromiabank.com" },
+    { name: "DAME TERFASSA",  mobile: "0911117524", email: "dame.terfassa@oromiabank.com" },
+    { name: "TSION GIRMA",    mobile: "0946700418", email: "tsion.g@orointbank.com" }
 ];
 
 let operators = JSON.parse(localStorage.getItem('operators') || '[]');
@@ -7432,10 +7032,8 @@ const DEFAULT_OPERATOR_PWD = 'op123';
 
 const SHIFT_LENGTH = 10; 
 
-// 'today' is refreshed every minute by the periodic interval below.
-// Using 'let' so it can be updated without page reload.
-let today = getCleanDate(new Date());
-const DEFAULT_SCHEDULE_START_DATE = '2025-09-01';    
+const today = getCleanDate(new Date());    
+const DEFAULT_SCHEDULE_START_DATE = '2025-10-08';    
 
 // --- Core Helper Functions ---
 
@@ -7520,30 +7118,21 @@ function getOperatorForDate(date) {
 
 // --- Audit Log Module Functions ---
 
-/**
- * Logs an audit action with optional structured metadata (SRS §18).
- * @param {string} actionType  - e.g. 'SCHEDULE_GEN', 'MASTER_OP_EDIT'
- * @param {string} description - Human-readable narrative
- * @param {object} [meta]      - Optional: { referenceId, oldValue, newValue }
- */
-function logAuditAction(actionType, description, meta = {}) {
+function logAuditAction(actionType, description) {
     const log = JSON.parse(localStorage.getItem(AUDIT_LOG_KEY) || '[]');
     const user = loggedInUser || 'SYSTEM';
 
     const newEntry = {
-        timestamp:   new Date().toISOString(),
-        user:        user,
-        actionType:  actionType,
-        description: description,
-        referenceId: meta.referenceId || null,   // SRS §18: FK to affected record
-        oldValue:    meta.oldValue    || null,   // SRS §18: before value
-        newValue:    meta.newValue    || null    // SRS §18: after value
+        timestamp: new Date().toISOString(),
+        user: user,
+        actionType: actionType,
+        description: description
     };
 
-    log.unshift(newEntry);
-
-    // SRS §18: increased cap from 100 → 1000 entries for audit compliance
-    while (log.length > 1000) {
+    log.unshift(newEntry); // Add to the front
+    
+    // Keep log limited to last 100 entries for performance
+    while (log.length > 100) {
         log.pop();
     }
 
@@ -7557,18 +7146,11 @@ function renderAuditLog() {
 
     log.forEach(entry => {
         const tr = document.createElement('tr');
-        // Show oldValue → newValue if present
-        const changeInfo = (entry.oldValue || entry.newValue)
-            ? `<br><small style="color:#888;">Before: <em>${entry.oldValue || '—'}</em> → After: <em>${entry.newValue || '—'}</em></small>`
-            : '';
-        const refInfo = entry.referenceId
-            ? `<br><small style="color:#999;">Ref: ${entry.referenceId}</small>`
-            : '';
         tr.innerHTML = `
             <td>${formatTimestamp(entry.timestamp)}</td>
             <td>${entry.user}</td>
             <td><strong>${entry.actionType}</strong></td>
-            <td>${entry.description}${changeInfo}${refInfo}</td>
+            <td>${entry.description}</td>
         `;
         tbody.appendChild(tr);
     });
@@ -8115,44 +7697,20 @@ function renderNotificationLog() {
 
     notificationLog.forEach(entry => {
         const tr = document.createElement('tr');
-
+        
         const emailStatus = entry.emailStatus || 'Unknown';
         const smsStatus   = entry.smsStatus   || 'Unknown';
-
-        // Status badge with color coding for all 5 states
-        const statusConfig = {
-            'Success': { bg: '#d4edda', color: '#155724', icon: '✅' },
-            'Failure': { bg: '#f8d7da', color: '#721c24', icon: '❌' },
-            'Skipped': { bg: '#fff3cd', color: '#856404', icon: '⏭️' },
-            'Pending': { bg: '#cce5ff', color: '#004085', icon: '⏳' },
-            'Cancelled':{ bg: '#e2e3e5', color: '#383d41', icon: '🚫' }
-        };
-        const cfg = statusConfig[emailStatus] || { bg: '#e9ecef', color: '#495057', icon: '❓' };
-        const statusBadge = `<span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;background:${cfg.bg};color:${cfg.color};">${cfg.icon} ${emailStatus}</span>`;
-
-        const retryBadge = (entry.retryCount && entry.retryCount > 0)
-            ? `<span style="font-size:10px;background:#e9ecef;color:#495057;border-radius:8px;padding:1px 6px;margin-left:4px;">retry #${entry.retryCount}</span>`
-            : '';
-
-        const smsIcon = smsStatus === 'Success' ? '✅📱' : (smsStatus === 'N/A' ? '' : '❌📱');
-
-        // Row tinting
-        if (emailStatus === 'Failure') tr.style.background = '#fff5f5';
-        else if (emailStatus === 'Skipped') tr.style.background = '#fffdf0';
-
-        const sentDateTime = entry.sentDate
-            ? `${entry.sentDate}<br><small>${entry.sentTime || ''}</small>`
-            : '—';
-
+        const emailIcon   = emailStatus === 'Success' ? '✅📧' : '❌📧';
+        const smsIcon     = smsStatus   === 'Success' ? '✅📱' : (smsStatus === 'N/A' ? '—' : '❌📱');
+        
         tr.innerHTML = `
-            <td><small>${formatTimestamp(entry.timestamp)}</small></td>
-            <td><strong>${entry.operatorName}</strong></td>
-            <td>${formatDate(entry.dutyDate || entry.shiftStart)}</td>
-            <td><small style="font-family:monospace;color:#666;">${entry.scheduleId || '—'}</small></td>
-            <td><small>${entry.type || '—'}</small></td>
-            <td><small>${entry.email || 'N/A'}</small></td>
-            <td><small>${sentDateTime}</small></td>
-            <td>${statusBadge}${retryBadge} ${smsIcon}${entry.error ? `<br><small style="color:#888;">${entry.error}</small>` : ''}</td>
+            <td>${formatTimestamp(entry.timestamp)}</td>
+            <td>${entry.operatorName}</td>
+            <td>${formatDate(entry.shiftStart)}</td>
+            <td>${entry.type}</td>
+            <td>${entry.email || 'N/A'}</td>
+            <td>${entry.mobile || 'N/A'}</td>
+            <td>${emailIcon} ${smsIcon}</td>
         `;
         tbody.appendChild(tr);
     });
@@ -8186,177 +7744,126 @@ function clearNotificationLog() {
 }
 
 async function checkAndSendNotifications(manualTrigger = false) {
-    // ── Reload log fresh every run — handles multi-tab / app-restart scenarios ──
+    // Always reload log fresh so deduplication works across sessions
     notificationLog = JSON.parse(localStorage.getItem(NOTIFICATION_LOG_KEY) || '[]');
 
     let notificationsSent = 0;
-    const now    = getCleanDate(new Date());
-    const nowStr = now.toISOString().split('T')[0];
+    const now = getCleanDate(new Date());
 
-    console.log(`[NotifEngine] Run at ${nowStr} | manual=${manualTrigger}`);
+    console.log(`[Notification Check] Date: ${now.toISOString().split('T')[0]} | Manual: ${manualTrigger}`);
 
     for (const op of operators) {
-        // ── Only process Active shift slots ──────────────────────────────────────
         if (op.status !== 'Active') continue;
 
-        // ── BR-11: Skip if master operator is Inactive ───────────────────────────
-        const masterOp = initialOperators.find(io => io.name === op.name) || op;
-        if ((masterOp.status || 'Active') === 'Inactive') {
-            console.log(`[NotifEngine] Inactive — skip: ${op.name}`);
-            continue;
-        }
-
-        const shiftStart     = getCleanDate(op.start);
+        const shiftStart    = getCleanDate(op.start);
         const daysUntilStart = daysBetween(now, shiftStart);
 
-        // ── Window: AUTO = exactly 2 days | MANUAL = 0–2 days ──────────────────
+        // AUTO: fire ONLY when exactly 2 days away
+        // MANUAL: fire for 0–2 days window
         const inWindow = manualTrigger
             ? (daysUntilStart >= 0 && daysUntilStart <= 2)
             : (daysUntilStart === 2);
 
         if (!inWindow) continue;
 
-        // ── SRS Business Key: OPERATOR + SCHEDULE_ID + DUTY_DATE + TYPE ─────────
-        const scheduleId = op.scheduleId || op.start;   // use scheduleId if present
-        const dutyDate   = op.start;
-        const notifType  = daysUntilStart === 0 ? 'TODAY'
-                         : daysUntilStart === 1 ? 'URGENT'
-                         : 'SEND_NOTIFICATIONS';        // SRS canonical type name
+        const notificationID = `${op.start}-${op.name.toUpperCase()}`;
 
-        // Unique business key — prevents all duplicates regardless of restarts
-        const businessKey = `${op.name.toUpperCase()}|${scheduleId}|${dutyDate}|${notifType}`;
-
-        // ── SRS One-Time Rule: if a SUCCESS exists for this business key → SKIP ──
-        const alreadySentSuccessfully = notificationLog.some(
-            l => l.businessKey === businessKey && l.emailStatus === 'Success'
-        );
-
-        if (alreadySentSuccessfully) {
-            console.log(`[NotifEngine] Already SENT — skip: ${op.name} (${dutyDate})`);
-            // SRS: do not log anything extra — a clean SENT record already exists
+        // Duplicate prevention — skip if already logged (auto only)
+        if (!manualTrigger && notificationLog.some(l => l.id === notificationID)) {
+            console.log(`[Notification Check] Duplicate skipped: ${op.name}`);
             continue;
         }
 
-        // ── FAILURE-on-same-day check: auto mode only ────────────────────────────
-        // If it already FAILED today (not a retry request), don't spam the log.
-        if (!manualTrigger) {
-            const failedToday = notificationLog.some(
-                l => l.businessKey === businessKey
-                  && l.emailStatus === 'Failure'
-                  && (l.timestamp || '').startsWith(nowStr)
-            );
-            if (failedToday) {
-                console.log(`[NotifEngine] Already FAILED today — skip: ${op.name}`);
-                continue;
-            }
-        }
+        const masterOp     = initialOperators.find(io => io.name === op.name) || op;
+        const operatorData = masterOp;
 
-        // ── Guard: no email (SRS §20 Scenario 2) ────────────────────────────────
-        if (!masterOp.email || masterOp.email === 'N/A') {
-            const noEmailEntry = {
-                businessKey,
-                id:           businessKey,
-                notifId:      `${businessKey}-${Date.now()}`,
+        // Guard: no email
+        if (!operatorData.email || operatorData.email === 'N/A') {
+            const failEntry = {
+                id: notificationID,
                 timestamp:    new Date().toISOString(),
-                operatorName: masterOp.name,
-                scheduleId,
-                dutyDate,
-                email:        masterOp.email || '',
-                mobile:       masterOp.mobile || '',
+                operatorName: operatorData.name,
+                email:        operatorData.email || '',
+                mobile:       operatorData.mobile || '',
                 shiftStart:   op.start,
-                shiftEnd:     op.end,
-                type:         notifType,
+                type:         'reminder',
                 emailStatus:  'Failure',
                 smsStatus:    'N/A',
-                sentDate:     null,
-                sentTime:     null,
-                error:        'No valid email address — administrator action required',
-                retryCount:   0
+                error:        'No valid email address'
             };
-            _pushNotifLog(noEmailEntry);
-            showToast(`⚠️ ADMIN ACTION REQUIRED: ${masterOp.name} has no email — notification not sent`, 'warning');
-            logAuditAction('NOTIF_NO_EMAIL',
-                `Notification NOT sent to ${masterOp.name} — no valid email. Admin must update email address.`,
-                { referenceId: scheduleId, oldValue: null, newValue: 'Failure:NoEmail' });
+            // Cap at 500
+            if (notificationLog.length >= 500) notificationLog.pop();
+            notificationLog.unshift(failEntry);
+            try {
+                localStorage.setItem(NOTIFICATION_LOG_KEY, JSON.stringify(notificationLog));
+            } catch (e) {
+                showToast('Notification log could not be saved', 'error');
+            }
+            showToast(`⚠️ No email for ${operatorData.name}`, 'warning');
             continue;
         }
 
-        // ── Send the notification ────────────────────────────────────────────────
-        // Map SRS canonical types → email template types
-        const emailType = notifType === 'SEND_NOTIFICATIONS' ? 'reminder'
-                        : notifType === 'URGENT'              ? 'urgent'
-                        : notifType === 'TODAY'               ? 'today'
+        // Determine type (always 'reminder' for 2-day; 'urgent'=1 day; 'today'=0 days)
+        const notifType = daysUntilStart === 0 ? 'today'
+                        : daysUntilStart === 1 ? 'urgent'
                         : 'reminder';
-        try {
-            const results  = await sendNotificationToOperator(masterOp, op, emailType);
-            const emailOK  = results.email.success;
-            const sentNow  = new Date();
 
+        try {
+            const results = await sendNotificationToOperator(operatorData, op, notifType);
+            const emailOK = results.email.success;
+
+            // Build log entry
             const logEntry = {
-                businessKey,
-                id:           businessKey,           // backward-compat alias
-                notifId:      `${businessKey}-${sentNow.getTime()}`,
-                timestamp:    sentNow.toISOString(),
-                operatorName: masterOp.name,
-                scheduleId,
-                dutyDate,
-                email:        masterOp.email,
-                mobile:       masterOp.mobile || '',
+                id:           notificationID,
+                timestamp:    new Date().toISOString(),
+                operatorName: operatorData.name,
+                email:        operatorData.email,
+                mobile:       operatorData.mobile || '',
                 shiftStart:   op.start,
-                shiftEnd:     op.end,
                 type:         notifType,
                 emailStatus:  emailOK ? 'Success' : 'Failure',
-                smsStatus:    'N/A',
-                sentDate:     emailOK ? sentNow.toISOString().split('T')[0]   : null,
-                sentTime:     emailOK ? sentNow.toTimeString().split(' ')[0]  : null,
-                error:        (!emailOK && results.email.error) ? results.email.error : null,
-                retryCount:   0
+                smsStatus:    'N/A'
             };
+            if (!emailOK && results.email.error) logEntry.error = results.email.error;
 
-            _pushNotifLog(logEntry);
+            // Cap at 500
+            if (notificationLog.length >= 500) notificationLog.pop();
+            notificationLog.unshift(logEntry);
+
+            try {
+                localStorage.setItem(NOTIFICATION_LOG_KEY, JSON.stringify(notificationLog));
+            } catch (e) {
+                showToast('Notification log could not be saved', 'error');
+            }
 
             if (emailOK) {
                 notificationsSent++;
-                console.log(`[NotifEngine] ✅ SENT: ${masterOp.name} | ${dutyDate}`);
-                logAuditAction('NOTIF_SENT',
-                    `Notification SENT to ${masterOp.name} for duty date ${dutyDate}.`,
-                    { referenceId: scheduleId, oldValue: 'Pending', newValue: 'Success' });
+                console.log(`[Notification Check] ✅ Sent to ${operatorData.name}`);
             } else {
-                showToast(`❌ Email failed for ${masterOp.name}: ${results.email.error || 'Unknown'}`, 'error');
-                console.warn(`[NotifEngine] ❌ FAILED: ${masterOp.name}`, results.email.error);
+                // Always surface failure — not just for manual runs
+                showToast(`❌ Email failed for ${operatorData.name}: ${results.email.error || 'Unknown error'}`, 'error');
+                console.warn(`[Notification Check] ❌ Failed: ${operatorData.name}`, results.email.error);
             }
 
         } catch (err) {
-            console.error(`[NotifEngine] Exception for ${masterOp.name}:`, err);
-            showToast(`❌ Notification error for ${masterOp.name}`, 'error');
+            console.error(`[Notification Check] Exception for ${operatorData.name}:`, err);
+            showToast(`❌ Notification error for ${operatorData.name}`, 'error');
         }
     }
 
-    // ── Summary feedback ─────────────────────────────────────────────────────────
     if (manualTrigger) {
         setTimeout(() => {
             if (notificationsSent > 0) {
                 showToast(`✅ ${notificationsSent} notification(s) sent!`, 'success');
-                alert(`Manual check complete.\n\n✅ ${notificationsSent} notification(s) sent.\n\nCheck the Notification Log for details.`);
+                alert(`Manual check complete.\n\n${notificationsSent} notification(s) sent.\n\nCheck the Notification Log for details.`);
             } else {
-                showToast('No notifications sent — see log for details.', 'info');
-                alert('Manual check complete.\n\nNo notifications sent. Reasons may include:\n• No shifts start in exactly 2 days\n• Already sent successfully (one-time rule)\n• Email addresses missing\n• Operators inactive');
+                showToast('No notifications sent — check log for details.', 'info');
+                alert('Manual check complete.\n\nNo notifications sent. This may be because:\n• No shifts start in exactly 2 days\n• Notifications already sent (check log)\n• Email addresses missing');
             }
         }, 1500);
     } else if (notificationsSent > 0) {
-        showToast(`📧 ${notificationsSent} automatic SEND_NOTIFICATIONS email(s) sent`, 'success');
-        console.log(`[NotifEngine] ${notificationsSent} notification(s) sent.`);
-    }
-}
-
-/** Helper — push a log entry respecting the 500-cap, then persist to localStorage. */
-function _pushNotifLog(entry) {
-    if (notificationLog.length >= 500) notificationLog.pop();
-    notificationLog.unshift(entry);
-    try {
-        localStorage.setItem(NOTIFICATION_LOG_KEY, JSON.stringify(notificationLog));
-    } catch (e) {
-        showToast('Notification log could not be saved to storage', 'error');
+        showToast(`📧 ${notificationsSent} automatic 2-day reminder(s) sent`, 'success');
+        console.log(`[Automatic Check] ${notificationsSent} notification(s) sent.`);
     }
 }
 
@@ -8371,19 +7878,11 @@ function generateFullSchedule(officialStartDate) {
 
     let scheduleInputDate = getCleanDate(officialStartDate || DEFAULT_SCHEDULE_START_DATE);
 
-    const uniqueOperators = initialOperators
-        .filter(op => (op.status || 'Active') === 'Active')  // skip Inactive operators
-        .map(op => ({
-            name:   op.name,
-            mobile: op.mobile,
-            email:  op.email
-        }));
-
-    if (uniqueOperators.length === 0) {
-        operators = [];
-        localStorage.setItem('operators', JSON.stringify(operators));
-        return;
-    }
+    const uniqueOperators = initialOperators.map(op => ({    
+        name: op.name,    
+        mobile: op.mobile,
+        email: op.email // ADDED
+    }));
 
     const targetEnd = new Date(scheduleInputDate);
     targetEnd.setFullYear(targetEnd.getFullYear() + 1);
@@ -8392,8 +7891,7 @@ function generateFullSchedule(officialStartDate) {
 
     operators = [];
     
-    let opIndex    = 0;
-    let sequenceNo = 1;  // SRS: SEQUENCE_NO field
+    let opIndex = 0;
     let nextShiftStart = new Date(scheduleInputDate);
     nextShiftStart.setDate(nextShiftStart.getDate() + 1);
     nextShiftStart.setHours(0, 0, 0, 0);
@@ -8407,20 +7905,15 @@ function generateFullSchedule(officialStartDate) {
         
         if (shiftStart.getTime() <= targetEnd.getTime()) {
               const newShift = {
-                  scheduleId:  `SCH-${shiftStart.toISOString().split('T')[0]}-${opDetails.name.replace(/\s+/g,'')}`,
-                  sequenceNo:  sequenceNo,
-                  createdBy:   loggedInUser || 'SYSTEM',
-                  createdDate: new Date().toISOString(),
-                  name:        opDetails.name,
-                  checkedBy:   opDetails.name,    
-                  mobile:      opDetails.mobile,
-                  email:       opDetails.email,
-                  start:       shiftStart.toISOString().split('T')[0],
-                  end:         shiftEnd.toISOString().split('T')[0],
-                  status:      'Active' 
+                  name: opDetails.name,
+                  checkedBy: opDetails.name,    
+                  mobile: opDetails.mobile,
+                  email: opDetails.email, // ADDED EMAIL
+                  start: shiftStart.toISOString().split('T')[0],
+                  end: shiftEnd.toISOString().split('T')[0],
+                  status: 'Active' 
               };
               operators.push(newShift);
-              sequenceNo++;
         } else {
             break;    
         }
@@ -9200,8 +8693,31 @@ function createRippleEffect(element) {
     }, 600);
 }
 
-// Enhanced biometric simulation — delegates to main simulateBiometric above
-// (duplicate removed; showBiometricSuccess kept for visual feedback)
+// Enhanced biometric simulation
+function simulateBiometric(type) {
+    const btn = event.target;
+    btn.classList.add('active');
+    
+    // Create scanning effect
+    const scanLine = document.createElement('div');
+    scanLine.style.position = 'absolute';
+    scanLine.style.top = '0';
+    scanLine.style.left = '0';
+    scanLine.style.right = '0';
+    scanLine.style.height = '2px';
+    scanLine.style.background = 'linear-gradient(90deg, transparent, #94C83D, transparent)';
+    scanLine.style.animation = 'scanLine 2s ease-in-out';
+    btn.appendChild(scanLine);
+    
+    // Simulate authentication process
+    setTimeout(() => {
+        btn.classList.remove('active');
+        scanLine.remove();
+        
+        // Show success feedback
+        showBiometricSuccess(type);
+    }, 2000);
+}
 
 function showBiometricSuccess(type) {
     const message = document.createElement('div');
@@ -9956,119 +9472,10 @@ function confirmLogout() {
     logout();
 }
 
-// ── _runDataMigrations: runs BEFORE session restore and BEFORE init body ──
-// Fixes: timezone-safe schedule reset, status sync, email migration.
-// Called unconditionally so a cached session never blocks config changes.
-function _runDataMigrations() {
-
-    // ── SCHEDULE_VERSION guard ─────────────────────────────────────────────
-    // Bump this string whenever operator list, start date, or rotation changes.
-    // Any browser with an older saved version will automatically get a full
-    // schedule wipe and regeneration — no manual admin action needed.
-    const CURRENT_SCHEDULE_VERSION = '2025-09-01-v4ops';
-    const savedVersion = localStorage.getItem('scheduleVersion');
-    if (savedVersion !== CURRENT_SCHEDULE_VERSION) {
-        // Wipe stale schedule and operator cache so everything rebuilds fresh
-        localStorage.removeItem('operators');
-        localStorage.removeItem(INITIAL_OPERATORS_DATA_KEY);
-        operators = [];
-        // Re-seed initialOperators from the hardcoded defaults below
-        initialOperators = [
-            { name: "ABRAHAM CHALA",  mobile: "0913564114", email: "abraham.chala@oromiabank.com",  status: "Active" },
-            { name: "BERISO SHIBIRU", mobile: "0902911411", email: "bariso.s@orointbank.com",        status: "Active" },
-            { name: "HAMBISA ADAMU",  mobile: "0913456466", email: "hambisa.adamu@oromiabank.com",  status: "Active" },
-            { name: "DAME TERFASSA",  mobile: "0911117524", email: "dame.terfassa@oromiabank.com",  status: "Active" }
-        ];
-        localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
-        localStorage.setItem('scheduleVersion', CURRENT_SCHEDULE_VERSION);
-        // Generate the schedule immediately so it's ready before init() continues
-        generateFullSchedule(DEFAULT_SCHEDULE_START_DATE);
-        console.log(`[Migration] Version mismatch (${savedVersion} → ${CURRENT_SCHEDULE_VERSION}). Full reset + schedule regenerated.`);
-        return; // skip further migration steps — data is already clean
-    }
-    // ── End version guard ──────────────────────────────────────────────────
-
-    // 1. Email migration
-    const officialEmails = {
-        'ABRAHAM CHALA':  'abraham.chala@oromiabank.com',
-        'BERISO SHIBIRU': 'bariso.s@orointbank.com',
-        'HAMBISA ADAMU':  'hambisa.adamu@oromiabank.com',
-        'DAME TERFASSA':  'dame.terfassa@oromiabank.com'
-    };
-    let emailsMigrated = false;
-    initialOperators = initialOperators.map(op => {
-        const correct = officialEmails[op.name.toUpperCase()];
-        if (correct && op.email !== correct) { op.email = correct; emailsMigrated = true; }
-        return op;
-    });
-    if (emailsMigrated) {
-        operators = operators.map(op => {
-            const correct = officialEmails[op.name.toUpperCase()];
-            if (correct && op.email !== correct) op.email = correct;
-            return op;
-        });
-        localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
-        localStorage.setItem('operators', JSON.stringify(operators));
-        console.log('[Migration] Emails synced.');
-    }
-
-    // 2. Operator status migration (Active per hardcoded defaults)
-    const defaultStatuses = {
-        'ABRAHAM CHALA':  'Active',
-        'BERISO SHIBIRU': 'Active',
-        'HAMBISA ADAMU':  'Active',
-        'DAME TERFASSA':  'Active'
-    };
-    let statusMigrated = false;
-    initialOperators = initialOperators.map(op => {
-        const canonical = defaultStatuses[op.name.toUpperCase()];
-        if (canonical !== undefined && op.status !== canonical) {
-            op.status = canonical; statusMigrated = true;
-        }
-        return op;
-    });
-    if (statusMigrated) {
-        localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
-        console.log('[Migration] Operator statuses corrected.');
-    }
-
-    // 3. Schedule reset — timezone-safe date comparison
-    // Build the expected first-shift date string using LOCAL date math, not UTC.
-    const dsBase = DEFAULT_SCHEDULE_START_DATE; // 'YYYY-MM-DD'
-    const [sy, sm, sd] = dsBase.split('-').map(Number);
-    const expectedFirstShiftDate = new Date(sy, sm - 1, sd + 1); // +1 day, LOCAL
-    const pad = n => String(n).padStart(2,'0');
-    const expectedFirstShiftStr =
-        `${expectedFirstShiftDate.getFullYear()}-${pad(expectedFirstShiftDate.getMonth()+1)}-${pad(expectedFirstShiftDate.getDate())}`;
-
-    const savedFirstShift = operators.length > 0 ? operators[0].start : null;
-
-    if (statusMigrated || (savedFirstShift && savedFirstShift !== expectedFirstShiftStr)) {
-        localStorage.removeItem('operators');
-        operators = [];
-        console.log(`[Migration] Schedule cleared — saved first=${savedFirstShift}, expected first=${expectedFirstShiftStr}`);
-    }
-}
-
 function init() {
-    // ── Run data migrations FIRST (before any session restore) ────────────
-    // This ensures schedule/operator changes in code always take effect,
-    // even when a saved session exists in localStorage.
-    _runDataMigrations();
-    // ── End pre-session migrations ─────────────────────────────────────────
-
     // Check for existing session first
     if (restoreSessionState()) {
-        // Session restored successfully, user is already logged in.
-        // But if operators is empty (e.g. after a version reset), regenerate now.
-        if (operators.length === 0) {
-            generateFullSchedule(DEFAULT_SCHEDULE_START_DATE);
-            document.getElementById('startDate').value = DEFAULT_SCHEDULE_START_DATE;
-            populateFilter();
-            renderTable();
-            renderNextShifts();
-            updateKpiBar();
-        }
+        // Session restored successfully, user is already logged in
         document.body.classList.remove('login-active');
         return;
     }
@@ -10076,12 +9483,44 @@ function init() {
     // Migrate old cyber security username if exists
     migrateCyberSecurityUsername();
 
-    // ── All other migrations are now handled by _runDataMigrations() ───────
-    // (already called above, before session restore)
-    // ── End migration section ─────────────────────────────────────────────
+    // ── Migrate operator emails to official addresses ──────────────────────
+    // Replaces any old Gmail addresses with the correct official emails
+    const officialEmails = {
+        'ABRAHAM CHALA':  'abraham.chala@oromiabank.com',
+        'BERISO SHIBIRU': 'bariso.s@orointbank.com',
+        'HAMBISA ADAMU':  'hambisa.adamu@oromiabank.com',
+        'DAME TERFASSA':  'dame.terfassa@oromiabank.com',
+        'TSION GIRMA':    'tsion.g@orointbank.com'
+    };
+    let emailsMigrated = false;
+    initialOperators = initialOperators.map(op => {
+        const correctEmail = officialEmails[op.name.toUpperCase()];
+        if (correctEmail && op.email !== correctEmail) {
+            op.email = correctEmail;
+            emailsMigrated = true;
+        }
+        return op;
+    });
+    if (emailsMigrated) {
+        localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
+        // Also update emails in scheduled shifts
+        let shiftUpdated = false;
+        operators = operators.map(op => {
+            const correctEmail = officialEmails[op.name.toUpperCase()];
+            if (correctEmail && op.email !== correctEmail) {
+                op.email = correctEmail;
+                shiftUpdated = true;
+            }
+            return op;
+        });
+        if (shiftUpdated) localStorage.setItem('operators', JSON.stringify(operators));
+        console.log('✅ Operator emails migrated to official addresses');
+    }
+    // ── End email migration ────────────────────────────────────────────────
 
     // Set initial body class for login state
     document.body.classList.add('login-active');
+    
     let passwordUpdated = false;
     initialOperators.forEach(op => {
         if (!operatorPasswords[op.name.toUpperCase()]) {
@@ -10094,15 +9533,11 @@ function init() {
     }
     
     let initialDataCheck = false; 
-    // Ensure all master operators have an email field AND a status field (backward compatibility)
+    // Ensure all master operators have an email field for the new feature (for backward compatibility)
     initialOperators = initialOperators.map(op => {
         if (!op.email) {
+            // Generate placeholder email if missing
             op.email = `${op.name.toLowerCase().replace(/\s/g, '.')}@oromiabank.com`;
-            initialDataCheck = true;
-        }
-        // Migrate: add status field if missing (existing operators default to Active)
-        if (!op.status) {
-            op.status = 'Active';
             initialDataCheck = true;
         }
         return op;
@@ -10191,12 +9626,10 @@ function checkAndRenderNotification(isInitialAdminLogin = false) {
     const banner = document.getElementById('notificationBanner');
     const adminStatus = document.getElementById('adminMonitoringStatus');
 
-    const liveToday = getCleanDate(new Date());
-
     const activeShiftIndex = operators.findIndex(op => {
         const opStart = getCleanDate(op.start);
         const opEnd = getCleanDate(op.end);
-        return (liveToday.getTime() >= opStart.getTime() && liveToday.getTime() <= opEnd.getTime() && op.status === 'Active');
+        return (today.getTime() >= opStart.getTime() && today.getTime() <= opEnd.getTime() && op.status === 'Active');
     });
 
     if (activeShiftIndex === -1) {
@@ -10214,7 +9647,7 @@ function checkAndRenderNotification(isInitialAdminLogin = false) {
 
     const activeShift = operators[activeShiftIndex];
     const activeShiftEnd = getCleanDate(activeShift.end);
-    const daysLeft = daysBetween(liveToday, activeShiftEnd);
+    const daysLeft = daysBetween(today, activeShiftEnd);
 
     let notificationIsActive = false;
 
@@ -10278,17 +9711,15 @@ function markShiftFinished(globalIndex) {
     // Check if the current date is within the shift period (allows marking finished before the very end)
     const shiftStart = getCleanDate(shift.start);
     const shiftEnd = getCleanDate(shift.end);
-    const liveToday = getCleanDate(new Date());
 
-    if (liveToday.getTime() < shiftStart.getTime()) {
+    if (today.getTime() < shiftStart.getTime()) {
         return alert('Cannot mark shift as finished: The shift has not started yet.');
     }
     
     if (confirm(`Are you sure you want to mark your shift (${formatDate(shift.start)} - ${formatDate(shift.end)}) as FINISHED?`)) {
         operators[globalIndex].status = 'Finished';
         localStorage.setItem('operators', JSON.stringify(operators));
-        logAuditAction('SHIFT_STATUS', `Operator ${shift.name} marked shift (Start: ${shift.start}) as FINISHED.`,
-            { referenceId: shift.scheduleId || shift.start, oldValue: 'Active', newValue: 'Finished' });
+        logAuditAction('SHIFT_STATUS', `Operator ${shift.name} marked shift (Start: ${shift.start}) as FINISHED.`);
         renderTable();
         alert('Shift successfully marked as Finished. Thank you!');
     }
@@ -10303,8 +9734,7 @@ function resetShiftStatus(globalIndex) {
     if (confirm(`Are you sure you want the shift for ${shift.name} starting ${formatDate(shift.start)} back to ACTIVE?`)) {
         operators[globalIndex].status = 'Active';
         localStorage.setItem('operators', JSON.stringify(operators));
-        logAuditAction('SHIFT_STATUS_RESET', `Admin reset shift status for ${shift.name} (Start: ${shift.start}) from Finished to ACTIVE.`,
-            { referenceId: shift.scheduleId || shift.start, oldValue: 'Finished', newValue: 'Active' });
+        logAuditAction('SHIFT_STATUS_RESET', `Admin reset shift status for ${shift.name} (Start: ${shift.start}) from Finished to ACTIVE.`);
         renderTable();
         alert('Shift status successfully reset to Active.');
     }
@@ -10335,14 +9765,11 @@ function renderTable() {
     let activeShiftIndexInFilteredList = -1;
     let nextShiftIndexInFilteredList = -1;
 
-    // Always use a fresh live date for all comparisons
-    const liveToday = getCleanDate(new Date());
-
     if (isTodayFilterActive) {
         const activeShiftGlobalIndex = operators.findIndex(op => {
             const opStart = getCleanDate(op.start);
             const opEnd = getCleanDate(op.end);
-            return (liveToday.getTime() >= opStart.getTime() && liveToday.getTime() <= opEnd.getTime() && op.status === 'Active');
+            return (today.getTime() >= opStart.getTime() && today.getTime() <= opEnd.getTime() && op.status === 'Active');
         });
         
         if (activeShiftGlobalIndex !== -1) {
@@ -10350,7 +9777,7 @@ function renderTable() {
             activeShiftIndexInFilteredList = 0;
             nextShiftIndexInFilteredList = 1;
         } else {
-            const upcomingShiftGlobalIndex = operators.findIndex(op => getCleanDate(op.start).getTime() > liveToday.getTime() && op.status === 'Active');
+            const upcomingShiftGlobalIndex = operators.findIndex(op => getCleanDate(op.start).getTime() > today.getTime() && op.status === 'Active');
             if (upcomingShiftGlobalIndex !== -1) {
                 filteredOperators = operators.slice(upcomingShiftGlobalIndex, upcomingShiftGlobalIndex + 5);
                 activeShiftIndexInFilteredList = -1; 
@@ -10491,21 +9918,19 @@ function renderNextShifts() {
         return;
     }
 
-    const liveToday = getCleanDate(new Date());
-
     let startIndex = operators.findIndex(op => {
         const opStart = getCleanDate(op.start);
         const opEnd = getCleanDate(op.end);
-        return (liveToday.getTime() >= opStart.getTime() && liveToday.getTime() <= opEnd.getTime() && op.status === 'Active');
+        return (today.getTime() >= opStart.getTime() && today.getTime() <= opEnd.getTime() && op.status === 'Active');
     });
 
     if (startIndex === -1) {
-        // No active shift today — find the next upcoming one
-        startIndex = operators.findIndex(op => getCleanDate(op.start).getTime() > liveToday.getTime() && op.status === 'Active');
+        startIndex = operators.findIndex(op => getCleanDate(op.start).getTime() > today.getTime() && op.status === 'Active');
         if (startIndex === -1) startIndex = 0;
+    } else {
+        startIndex += 1;
     }
-    // startIndex stays at the active shift so current operator is shown first
-
+    
     const shiftsToShow = operators.slice(startIndex, startIndex + 5).filter(op => op.status === 'Active');
 
     if (shiftsToShow.length === 0) {
@@ -10517,18 +9942,11 @@ function renderNextShifts() {
         const shiftStart = getCleanDate(op.start);
         const shiftEnd = getCleanDate(op.end);
         const workingDays = countWorkingDays(shiftStart, shiftEnd);
-        const isCurrentShift = liveToday.getTime() >= shiftStart.getTime() && liveToday.getTime() <= shiftEnd.getTime();
 
         const card = document.createElement('div');
         card.className = 'shift-card';
-        if (isCurrentShift) {
-            card.style.borderLeftColor = '#28a745'; // green = currently active
-            card.style.background = 'linear-gradient(135deg,#f0fae0,#e6f7d0)';
-        } else if (index === 1 || (!shiftsToShow.some(s => {
-            const ss=getCleanDate(s.start),se=getCleanDate(s.end);
-            return liveToday.getTime()>=ss.getTime()&&liveToday.getTime()<=se.getTime();
-        }) && index === 0)) {
-            card.style.borderLeftColor = '#FF5733'; // orange = next up
+        if (index === 0) {
+            card.style.borderLeftColor = '#FF5733'; // Highlight the very next shift
         }
         
         // Find most current contact from master list (in case of rename/swap)
@@ -10536,12 +9954,9 @@ function renderNextShifts() {
         const mobile = masterOp ? masterOp.mobile : op.mobile;
         const email = masterOp ? masterOp.email : op.email;
 
-        const statusLabel = isCurrentShift
-            ? '<span style="display:inline-block;background:#28a745;color:#fff;border-radius:8px;padding:1px 8px;font-size:11px;font-weight:700;margin-left:6px;">● ON DUTY</span>'
-            : '';
 
         card.innerHTML = `
-            <div class="shift-card-header">${op.name}${statusLabel}</div>
+            <div class="shift-card-header">${op.name}</div>
             <p>Starts: <span class="date-range">${formatDate(op.start)}</span></p>
             <p>Ends: <span class="date-range">${formatDate(op.end)}</span></p>
             <p>Working Days: ${workingDays}</p>
@@ -10562,26 +9977,10 @@ function renderOperatorManagementTable() {
     initialOperators.forEach((op, index) => {
         const tr = document.createElement('tr');
         const opNameUpper = op.name.toUpperCase();
-        const opStatus = op.status || 'Active';
-        const isActive = opStatus === 'Active';
-
-        // Dim the row for inactive operators
-        if (!isActive) tr.style.opacity = '0.55';
-
-        const statusBadge = isActive
-            ? `<span style="display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;background:#d4edda;color:#155724;border:1px solid #c3e6cb;">● Active</span>`
-            : `<span style="display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;background:#f8d7da;color:#721c24;border:1px solid #f5c6cb;">● Inactive</span>`;
-
-        const toggleLabel = isActive ? 'Deactivate' : 'Activate';
-        const toggleStyle = isActive
-            ? 'background:#ffc107;color:#333;'
-            : 'background:#28a745;color:#fff;';
-
+        
         let actionButtons = `
             <button class="reset-btn" onclick="event.stopPropagation(); resetOperatorPasswordMaster('${opNameUpper}')">Reset Pwd</button>
             <button class="rename-btn" onclick="event.stopPropagation(); openEditOperatorModal(${index})">Edit</button>
-            <button style="padding:4px 8px;border:none;border-radius:3px;cursor:pointer;margin:2px;font-size:13px;${toggleStyle}"
-                    onclick="event.stopPropagation(); toggleOperatorStatus(${index})">${toggleLabel}</button>
             <button class="delete-btn" onclick="event.stopPropagation(); deleteMasterOperator(${index})">Delete</button>
         `;
 
@@ -10590,41 +9989,10 @@ function renderOperatorManagementTable() {
             <td>${op.name}</td>
             <td>${op.mobile}</td>
             <td>${op.email}</td>
-            <td>${statusBadge}</td>
             <td>${actionButtons}</td>
         `;
         tbody.appendChild(tr);
     });
-}
-
-/** Toggles an operator between Active and Inactive without deleting them.
- *  Inactive operators are excluded from future schedule generation. */
-function toggleOperatorStatus(index) {
-    if (!isAdmin) return;
-    const op = initialOperators[index];
-    const currentStatus = op.status || 'Active';
-    const newStatus = currentStatus === 'Active' ? 'Inactive' : 'Active';
-    const action = newStatus === 'Inactive' ? 'DEACTIVATE' : 'ACTIVATE';
-
-    const warning = newStatus === 'Inactive'
-        ? `\n\nNote: ${op.name} will be excluded from future schedule slots but existing shifts are preserved.`
-        : '';
-
-    if (!confirm(`${action} operator ${op.name}?${warning}`)) return;
-
-    initialOperators[index].status = newStatus;
-    localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
-
-    logAuditAction(`OPERATOR_${action}`,
-        `Operator ${op.name} status changed from ${currentStatus} to ${newStatus}.`,
-        { referenceId: op.name, oldValue: currentStatus, newValue: newStatus });
-
-    // Rebuild only future shifts so existing active/finished shifts are unaffected
-    const startDate = document.getElementById('startDate').value;
-    regenerateFromCurrentPosition(startDate);
-
-    renderOperatorManagementTable();
-    showToast(`${newStatus === 'Active' ? '✅' : '⏸️'} ${op.name} is now ${newStatus}`, 'success');
 }
 
 function addOperator() {
@@ -10640,7 +10008,7 @@ function addOperator() {
     const exists = initialOperators.some(op => op.name.toLowerCase() === name.toLowerCase());
     if (exists) return alert('This operator name already exists.');
 
-    initialOperators.push({ name, mobile, email, status: 'Active' });
+    initialOperators.push({ name, mobile, email }); // ADD EMAIL
     localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
     
     if (!operatorPasswords[name]) {
@@ -10659,143 +10027,6 @@ function addOperator() {
     alert(`Operator ${name} added and schedule regenerated.`);
 }
 
-/**
- * Smart schedule regeneration used after an operator is deleted or added.
- *
- * Strategy:
- *  1. Keep ALL shifts that have already started on or before today
- *     (status = Finished, or the currently active shift) — unchanged.
- *  2. Find the cutoff: the last shift that started on or before today.
- *     Everything from the shift AFTER that is discarded.
- *  3. Rebuild future shifts starting from the day after that cutoff
- *     shift ends, using the updated initialOperators list and picking
- *     up the rotation at the operator that comes AFTER the cutoff
- *     operator in the new list.
- *  4. If no shifts exist yet, falls back to a full generateFullSchedule.
- */
-function regenerateFromCurrentPosition(officialStartDate) {
-    if (initialOperators.length === 0) {
-        operators = [];
-        localStorage.setItem('operators', JSON.stringify(operators));
-        return;
-    }
-
-    const todayMs = getCleanDate(new Date()).getTime();
-
-    // Step 1: Find the index of the last shift that has already started
-    // (start date <= today). This covers both Finished and the current active shift.
-    let cutoffIndex = -1;
-    for (let i = 0; i < operators.length; i++) {
-        const shiftStart = getCleanDate(operators[i].start).getTime();
-        if (shiftStart <= todayMs) {
-            cutoffIndex = i;
-        } else {
-            break; // operators[] is chronological — stop once we pass today
-        }
-    }
-
-    // No shifts started yet — full rebuild
-    if (cutoffIndex === -1) {
-        generateFullSchedule(officialStartDate);
-        return;
-    }
-
-    // Step 2: Keep shifts 0..cutoffIndex, discard the rest
-    const preservedShifts = operators.slice(0, cutoffIndex + 1);
-    const cutoffShift = preservedShifts[cutoffIndex];
-
-    // Step 3: Determine next start date (day after cutoff shift ends)
-    const nextStart = new Date(getCleanDate(cutoffShift.end));
-    nextStart.setDate(nextStart.getDate() + 1);
-    nextStart.setHours(0, 0, 0, 0);
-
-    // Step 4: Determine which operator comes next in the rotation.
-    // Find the cutoff operator's position in the NEW initialOperators list.
-    // If they were deleted, find the operator that was AFTER them in the
-    // original list who still exists.
-    const uniqueOperators = initialOperators
-        .filter(op => (op.status || 'Active') === 'Active')  // skip Inactive operators
-        .map(op => ({
-            name:   op.name,
-            mobile: op.mobile,
-            email:  op.email
-        }));
-
-    if (uniqueOperators.length === 0) {
-        // All operators inactive — keep preserved shifts, clear future
-        operators = [...preservedShifts];
-        localStorage.setItem('operators', JSON.stringify(operators));
-        renderTable(); renderNextShifts();
-        return;
-    }
-
-    // Walk backwards through preserved shifts to find the first one whose
-    // operator still exists in the new list — that determines rotation position.
-    let nextOpIndex = 0;
-    for (let i = preservedShifts.length - 1; i >= 0; i--) {
-        const pos = uniqueOperators.findIndex(u => u.name === preservedShifts[i].name);
-        if (pos !== -1) {
-            // Start rotation at the operator AFTER this one
-            nextOpIndex = (pos + 1) % uniqueOperators.length;
-            break;
-        }
-    }
-
-    // Step 5: Generate future shifts from nextStart onward (1 year from original start)
-    const scheduleInputDate = getCleanDate(officialStartDate || DEFAULT_SCHEDULE_START_DATE);
-    const targetEnd = new Date(scheduleInputDate);
-    targetEnd.setFullYear(targetEnd.getFullYear() + 1);
-    targetEnd.setDate(targetEnd.getDate() - 1);
-    targetEnd.setHours(0, 0, 0, 0);
-
-    const futureShifts = [];
-    let current    = new Date(nextStart);
-    let opIndex    = nextOpIndex;
-    // Continue sequenceNo from last preserved shift (or 1 if none have it)
-    let sequenceNo = preservedShifts.length > 0
-        ? ((preservedShifts[preservedShifts.length - 1].sequenceNo || preservedShifts.length) + 1)
-        : 1;
-
-    while (current.getTime() <= targetEnd.getTime() && futureShifts.length < 500) {
-        const opDetails  = uniqueOperators[opIndex];
-        const shiftStart = new Date(current);
-        const shiftEnd   = calculateEndDate(shiftStart);
-        shiftEnd.setHours(0, 0, 0, 0);
-
-        if (shiftStart.getTime() <= targetEnd.getTime()) {
-            futureShifts.push({
-                scheduleId:  `SCH-${shiftStart.toISOString().split('T')[0]}-${opDetails.name.replace(/\s+/g,'')}`,
-                sequenceNo:  sequenceNo,
-                createdBy:   loggedInUser || 'SYSTEM',
-                createdDate: new Date().toISOString(),
-                name:        opDetails.name,
-                checkedBy:   opDetails.name,
-                mobile:      opDetails.mobile,
-                email:       opDetails.email,
-                start:       shiftStart.toISOString().split('T')[0],
-                end:         shiftEnd.toISOString().split('T')[0],
-                status:      'Active'
-            });
-            sequenceNo++;
-        } else {
-            break;
-        }
-
-        current = new Date(shiftEnd);
-        current.setDate(current.getDate() + 1);
-        current.setHours(0, 0, 0, 0);
-        opIndex = (opIndex + 1) % uniqueOperators.length;
-    }
-
-    // Step 6: Merge and save
-    operators = [...preservedShifts, ...futureShifts];
-    localStorage.setItem('operators', JSON.stringify(operators));
-
-    renderTable();
-    renderNextShifts();
-    checkAndSendNotifications();
-}
-
 function deleteMasterOperator(index) {
     if (!isAdmin) return;
     const opToDelete = initialOperators[index];
@@ -10803,24 +10034,19 @@ function deleteMasterOperator(index) {
         return alert('Cannot delete: You must have at least one operator in the master list.');
     }
 
-    if (confirm(`Are you sure you want to DELETE the master operator ${opToDelete.name}?\n\nThis will:\n• Remove them from the master list\n• Keep all past and current shifts unchanged\n• Rebuild only future shifts (after today's active shift)\n\nContinue?`)) {
+    if (confirm(`Are you sure you want to DELETE the master operator ${opToDelete.name}? This will remove them from the list and regenerate the entire schedule.`)) {
         initialOperators.splice(index, 1);
         delete operatorPasswords[opToDelete.name.toUpperCase()];
         localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
         localStorage.setItem('operatorPasswords', JSON.stringify(operatorPasswords));
-
+        
         const startDate = document.getElementById('startDate').value;
 
-        logAuditAction('MASTER_OP_DEL', `Master operator ${opToDelete.name} deleted. Future schedule regenerated from current position.`,
-            { referenceId: opToDelete.name, oldValue: 'Active', newValue: 'Deleted' });
-
-        // Smart regeneration: preserve all shifts up to and including the current
-        // active shift, then rebuild only the future tail with the remaining operators.
-        regenerateFromCurrentPosition(startDate);
-
+        logAuditAction('MASTER_OP_DEL', `Master operator ${opToDelete.name} deleted. Schedule regenerated.`);
+        generateFullSchedule(startDate);
         renderTable();
         renderOperatorManagementTable();
-        alert(`Operator ${opToDelete.name} deleted.\n\nToday's operator is unchanged.\nFuture schedule has been rebuilt with the remaining operators.`);
+        alert(`Operator ${opToDelete.name} deleted and schedule regenerated.`);
     }
 }
 
@@ -10874,14 +10100,7 @@ function confirmEditOperator() {
     }
     
     const startDate = document.getElementById('startDate').value;
-    logAuditAction('MASTER_OP_EDIT',
-        `Master operator ${oldOperator.name} edited (New Name: ${newName}, New Mobile: ${newMobile}, New Email: ${newEmail}). Schedule regenerated.`,
-        {
-            referenceId: newName,
-            oldValue: `Name:${oldOperator.name} Mobile:${oldOperator.mobile} Email:${oldOperator.email}`,
-            newValue: `Name:${newName} Mobile:${newMobile} Email:${newEmail}`
-        }
-    );
+    logAuditAction('MASTER_OP_EDIT', `Master operator ${oldOperator.name} edited (New Name: ${newName}, New Mobile: ${newMobile}, New Email: ${newEmail}). Schedule regenerated.`); // UPDATED LOG
     generateFullSchedule(startDate);
     renderTable();
     renderOperatorManagementTable();
@@ -10910,8 +10129,7 @@ function deleteOperatorShift(globalIndex) {
     if (confirm(`Are you sure you want to DELETE the shift starting ${formatDate(shiftToDelete.start)} for ${shiftToDelete.name}?`)) {
         operators.splice(globalIndex, 1);
         localStorage.setItem('operators', JSON.stringify(operators));
-        logAuditAction('SHIFT_DELETE', `Shift deleted for ${shiftToDelete.name} (Start: ${shiftToDelete.start}).`,
-            { referenceId: shiftToDelete.scheduleId || shiftToDelete.start, oldValue: shiftToDelete.status, newValue: 'Deleted' });
+        logAuditAction('SHIFT_DELETE', `Shift deleted for ${shiftToDelete.name} (Start: ${shiftToDelete.start}).`);
         renderTable();
         alert('Shift deleted.');
     }
@@ -10928,10 +10146,11 @@ function resetAll() {
         localStorage.removeItem(NOTIFICATION_SETTINGS_KEY); // NEW
 
         initialOperators = [ // Reset to initial state with correct official emails
-            { name: "ABRAHAM CHALA",  mobile: "0913564114", email: "abraham.chala@oromiabank.com",  status: "Active" },
-            { name: "BERISO SHIBIRU", mobile: "0902911411", email: "bariso.s@orointbank.com",        status: "Active" },
-            { name: "HAMBISA ADAMU",  mobile: "0913456466", email: "hambisa.adamu@oromiabank.com",  status: "Active" },
-            { name: "DAME TERFASSA",  mobile: "0911117524", email: "dame.terfassa@oromiabank.com",  status: "Active" }
+            { name: "ABRAHAM CHALA",  mobile: "0913564114", email: "abraham.chala@oromiabank.com" },
+            { name: "BERISO SHIBIRU", mobile: "0902911411", email: "bariso.s@orointbank.com" },
+            { name: "HAMBISA ADAMU",  mobile: "0913456466", email: "hambisa.adamu@oromiabank.com" },
+            { name: "DAME TERFASSA",  mobile: "0911117524", email: "dame.terfassa@oromiabank.com" },
+            { name: "TSION GIRMA",    mobile: "0946700418", email: "tsion.g@orointbank.com" }
         ];
         localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
 
@@ -10979,8 +10198,7 @@ function confirmRename() {
     oldShift.status = 'Active';
 
     localStorage.setItem('operators', JSON.stringify(operators));
-    logAuditAction('SHIFT_RENAME', `Shift (Start: ${oldShift.start}) renamed from ${oldName} to ${newName}.`,
-        { referenceId: oldShift.scheduleId || oldShift.start, oldValue: oldName, newValue: newName });
+    logAuditAction('SHIFT_RENAME', `Shift (Start: ${oldShift.start}) renamed from ${oldName} to ${newName}.`);
     renderTable();
     closeRenameModal();
     alert(`Shift successfully renamed to ${newName}.`);
@@ -11236,10 +10454,19 @@ function downloadPdf() {
     
     const finalY = doc.lastAutoTable.finalY + 10;
     doc.setFontSize(8);
-    doc.text("© 2025 Oromia Bank Backup Operators Schedule | Designed and developed by Database and Analytics Division. ", 148, finalY, null, null, "center");
+    doc.text("© 2025 Oromia Bank Backup Operators Schedule | Designed and developed by Database and Analytics Division. Hambisa Adamu", 148, finalY, null, null, "center");
     
     doc.save("Backup_Operators_Schedule.pdf");
     logAuditAction('DOWNLOAD', `PDF schedule downloaded by ${loggedInUser}.`);
+}
+
+// --- HELP MODAL FUNCTIONS ---
+function showHelpModal() {
+    document.getElementById('helpModal').style.display = 'block';
+}
+
+function closeHelpModal() {
+    document.getElementById('helpModal').style.display = 'none';
 }
 
 // --- NOTIFICATION CONFIGURATION FUNCTIONS ---
@@ -11342,24 +10569,19 @@ function debugNotificationSystem() {
     let alreadySentCount = 0;
     
     operators.forEach((op, index) => {
-        const shiftStart     = getCleanDate(op.start);
+        const shiftStart = getCleanDate(op.start);
         const daysUntilStart = daysBetween(now, shiftStart);
-        const scheduleId     = op.scheduleId || op.start;
-        const businessKey    = `${op.name.toUpperCase()}|${scheduleId}|${op.start}|SEND_NOTIFICATIONS`;
-        const alreadySent    = notificationLog.some(
-            l => (l.businessKey === businessKey || l.id === businessKey) && l.emailStatus === 'Success'
-        );
-
+        const notificationID = `${op.start}-${op.name.toUpperCase()}`;
+        const alreadySent = notificationLog.some(log => log.id === notificationID);
+        
         debugInfo += `\n${index + 1}. ${op.name}:\n`;
         debugInfo += `   Status: ${op.status}\n`;
         debugInfo += `   Shift Start: ${op.start}\n`;
-        debugInfo += `   Schedule ID: ${scheduleId}\n`;
-        debugInfo += `   Business Key: ${businessKey}\n`;
         debugInfo += `   Days Until: ${daysUntilStart}\n`;
         debugInfo += `   Auto-trigger (exactly 2 days): ${daysUntilStart === 2 ? 'YES' : 'NO'}\n`;
-        debugInfo += `   Already SENT: ${alreadySent ? 'YES' : 'NO'}\n`;
+        debugInfo += `   Already Sent: ${alreadySent ? 'YES' : 'NO'}\n`;
         debugInfo += `   Will Auto-Send: ${op.status === 'Active' && daysUntilStart === 2 && !alreadySent ? 'YES' : 'NO'}\n`;
-
+        
         if (op.status === 'Active' && daysUntilStart >= 1) upcomingCount++;
         if (op.status === 'Active' && daysUntilStart === 2) inWindowCount++;
         if (alreadySent) alreadySentCount++;
@@ -11392,11 +10614,8 @@ function check3DayNotifications() {
         
         // Check specifically for 2-day notifications (matching the auto-send engine)
         if (daysUntilStart === 2) {
-            const scheduleId  = op.scheduleId || op.start;
-            const businessKey = `${op.name.toUpperCase()}|${scheduleId}|${op.start}|SEND_NOTIFICATIONS`;
-            const alreadySent = notificationLog.some(
-                l => (l.businessKey === businessKey || l.id === businessKey) && l.emailStatus === 'Success'
-            );
+            const notificationID = `${op.start}-${op.name.toUpperCase()}`;
+            const alreadySent = notificationLog.some(log => log.id === notificationID);
             
             twoDayNotifications.push({
                 name: op.name,
@@ -11450,11 +10669,8 @@ function showUpcomingNotificationsSummary() {
         
         // Check if shift is within the next 7 days (to show upcoming notifications)
         if (daysUntilStart >= 1 && daysUntilStart <= 7) {
-            const scheduleId  = op.scheduleId || op.start;
-            const businessKey = `${op.name.toUpperCase()}|${scheduleId}|${op.start}|SEND_NOTIFICATIONS`;
-            const alreadySent = notificationLog.some(
-                l => (l.businessKey === businessKey || l.id === businessKey) && l.emailStatus === 'Success'
-            );
+            const notificationID = `${op.start}-${op.name.toUpperCase()}`;
+            const alreadySent = notificationLog.some(log => log.id === notificationID);
             
             upcomingNotifications.push({
                 name: op.name,
@@ -11565,25 +10781,22 @@ function updateKpiBar() {
         const completedShifts = operators.filter(op => op.status === 'Finished').length;
         const totalOps = initialOperators.length;
 
-        // Always use a fresh live date — never rely on the stale global 'today'
-        const liveToday = getCleanDate(new Date());
-
         // Find today's operator
         const todayOp = operators.find(op => {
             const s = getCleanDate(op.start), e = getCleanDate(op.end);
-            return liveToday.getTime() >= s.getTime() && liveToday.getTime() <= e.getTime() && op.status === 'Active';
+            return today.getTime() >= s.getTime() && today.getTime() <= e.getTime() && op.status === 'Active';
         });
 
         // Find next operator
         const nextOp = operators.find(op => {
             const s = getCleanDate(op.start);
-            return s.getTime() > liveToday.getTime() && op.status === 'Active';
+            return s.getTime() > today.getTime() && op.status === 'Active';
         });
 
         // Days remaining in current shift
         let daysLeft = '—';
         if (todayOp) {
-            daysLeft = daysBetween(liveToday, getCleanDate(todayOp.end));
+            daysLeft = daysBetween(today, getCleanDate(todayOp.end));
         }
 
         const kpiBar = document.getElementById('kpiBar');
@@ -11591,18 +10804,8 @@ function updateKpiBar() {
 
         const el = id => document.getElementById(id);
         if (el('kpiActiveShifts')) el('kpiActiveShifts').textContent = activeShifts;
-        if (el('kpiTodayOp')) {
-            el('kpiTodayOp').textContent = todayOp ? todayOp.name.split(' ')[0] : '—';
-            el('kpiTodayOp').title = todayOp
-                ? `${todayOp.name}\n${formatDate(todayOp.start)} – ${formatDate(todayOp.end)}`
-                : 'No active operator today';
-        }
-        if (el('kpiNextOp')) {
-            el('kpiNextOp').textContent = nextOp ? nextOp.name.split(' ')[0] : '—';
-            el('kpiNextOp').title = nextOp
-                ? `${nextOp.name}\n${formatDate(nextOp.start)} – ${formatDate(nextOp.end)}`
-                : 'No upcoming operator';
-        }
+        if (el('kpiTodayOp')) el('kpiTodayOp').textContent = todayOp ? todayOp.name.split(' ')[0] : '—';
+        if (el('kpiNextOp')) el('kpiNextOp').textContent = nextOp ? nextOp.name.split(' ')[0] : '—';
         if (el('kpiTotalOps')) el('kpiTotalOps').textContent = totalOps;
         if (el('kpiCompletedShifts')) el('kpiCompletedShifts').textContent = completedShifts;
         if (el('kpiDaysLeft')) el('kpiDaysLeft').textContent = daysLeft;
@@ -12120,10 +11323,9 @@ function startCountdownTimer() {
     const nameEl  = document.getElementById('countdownOperatorName');
 
     function tick() {
-        const liveToday = getCleanDate(new Date());
         const activeOp = operators.find(op => {
             const s = getCleanDate(op.start), e = getCleanDate(op.end);
-            return liveToday.getTime() >= s.getTime() && liveToday.getTime() <= e.getTime() && op.status === 'Active';
+            return today.getTime() >= s.getTime() && today.getTime() <= e.getTime() && op.status === 'Active';
         });
 
         if (!activeOp) {
@@ -12315,13 +11517,7 @@ function renderDailyCheckView(dateStr) {
 
     html += `
         <div class="daily-check-field">
-            <span class="daily-check-field-label">� Schedule Ref</span>
-            <span><small style="color:#888;font-family:monospace;">${op.scheduleId || '—'}</small>
-                &nbsp;<small style="color:#aaa;">Seq #${op.sequenceNo || '—'}</small>
-            </span>
-        </div>
-        <div class="daily-check-field">
-            <span class="daily-check-field-label">�👤 Assigned Operator</span>
+            <span class="daily-check-field-label">👤 Assigned Operator</span>
             <strong>${op.name}</strong>
         </div>
         <div class="daily-check-field">
@@ -12376,135 +11572,6 @@ function filterNotificationLog(term) {
         const text = tr.textContent.toLowerCase();
         tr.style.display = (!t || text.includes(t)) ? '' : 'none';
     });
-}
-
-/**
- * Retry mechanism — re-attempts all FAILED notification entries.
- * Only retries entries where emailStatus === 'Failure' AND no
- * subsequent 'Success' entry exists for the same Notification ID.
- * Never creates a duplicate if a success was already recorded.
- */
-async function retryFailedNotifications() {
-    if (!isAdmin && !isManager) return;
-
-    notificationLog = JSON.parse(localStorage.getItem(NOTIFICATION_LOG_KEY) || '[]');
-
-    // Build set of businessKeys that already have a Success entry — never retry those
-    const successKeys = new Set(
-        notificationLog
-            .filter(e => e.emailStatus === 'Success')
-            .map(e => e.businessKey || e.id)
-    );
-
-    // Find unique failed entries that have no success entry
-    const retryTargets = [];
-    const seen = new Set();
-    for (const entry of notificationLog) {
-        const key = entry.businessKey || entry.id;
-        if (entry.emailStatus === 'Failure' && !successKeys.has(key) && !seen.has(key)) {
-            seen.add(key);
-            retryTargets.push(entry);
-        }
-    }
-
-    if (retryTargets.length === 0) {
-        showToast('No failed notifications to retry.', 'info');
-        alert('No failed notifications found that need retrying.\n\nAll failures either already succeeded on a later attempt, or there are no failures in the log.');
-        return;
-    }
-
-    if (!confirm(`Retry ${retryTargets.length} failed notification(s)?\n\n${retryTargets.map(e => `• ${e.operatorName} (${formatDate(e.shiftStart)})`).join('\n')}`)) return;
-
-    showToast(`🔄 Retrying ${retryTargets.length} failed notification(s)...`, 'info');
-    showLoading(true);
-
-    let retried = 0, succeeded = 0, stillFailed = 0;
-
-    for (const failedEntry of retryTargets) {
-        // Find the corresponding operator and shift
-        const masterOp = initialOperators.find(io => io.name === failedEntry.operatorName);
-        const op = operators.find(o =>
-            o.name === failedEntry.operatorName && o.start === failedEntry.shiftStart
-        );
-
-        if (!masterOp || !op) {
-            console.warn(`[Retry] Operator or shift not found for: ${failedEntry.operatorName}`);
-            continue;
-        }
-
-        // Skip inactive operators (BR-11)
-        if ((masterOp.status || 'Active') === 'Inactive') {
-            console.log(`[Retry] Skipping inactive operator: ${masterOp.name}`);
-            continue;
-        }
-
-        if (!masterOp.email || masterOp.email === 'N/A') {
-            showToast(`⚠️ No email for ${masterOp.name} — cannot retry`, 'warning');
-            continue;
-        }
-
-        retried++;
-        try {
-            const daysUntil  = daysBetween(getCleanDate(new Date()), getCleanDate(op.start));
-            const notifType  = daysUntil <= 0 ? 'TODAY' : daysUntil === 1 ? 'URGENT' : 'SEND_NOTIFICATIONS';
-            const emailType  = notifType === 'SEND_NOTIFICATIONS' ? 'reminder'
-                             : notifType === 'URGENT'              ? 'urgent'
-                             : 'today';
-            const bKey       = failedEntry.businessKey || failedEntry.id;
-            const sentNow    = new Date();
-
-            const results = await sendNotificationToOperator(masterOp, op, emailType);
-            const emailOK = results.email.success;
-
-            const retryEntry = {
-                businessKey:  bKey,
-                id:           bKey,
-                notifId:      `${bKey}-retry-${sentNow.getTime()}`,
-                timestamp:    sentNow.toISOString(),
-                operatorName: masterOp.name,
-                scheduleId:   failedEntry.scheduleId || op.start,
-                dutyDate:     op.start,
-                email:        masterOp.email,
-                mobile:       masterOp.mobile || '',
-                shiftStart:   op.start,
-                shiftEnd:     op.end,
-                type:         `${notifType} (retry)`,
-                emailStatus:  emailOK ? 'Success' : 'Failure',
-                smsStatus:    'N/A',
-                sentDate:     emailOK ? sentNow.toISOString().split('T')[0]  : null,
-                sentTime:     emailOK ? sentNow.toTimeString().split(' ')[0] : null,
-                error:        (!emailOK && results.email.error) ? results.email.error : null,
-                retryCount:   (failedEntry.retryCount || 0) + 1
-            };
-
-            // Reload log fresh before writing (another retry may have run)
-            notificationLog = JSON.parse(localStorage.getItem(NOTIFICATION_LOG_KEY) || '[]');
-            _pushNotifLog(retryEntry);
-
-            if (emailOK) {
-                succeeded++;
-                console.log(`[Retry] ✅ Success: ${masterOp.name}`);
-            } else {
-                stillFailed++;
-                console.warn(`[Retry] ❌ Still failed: ${masterOp.name}`);
-            }
-        } catch (err) {
-            stillFailed++;
-            console.error(`[Retry] Exception for ${masterOp.name}:`, err);
-        }
-
-        // Small delay between retries to avoid rate limiting
-        await new Promise(r => setTimeout(r, 600));
-    }
-
-    showLoading(false);
-    renderNotificationLog();
-
-    const msg = `🔄 Retry Complete\n\n• Retried: ${retried}\n• Succeeded: ${succeeded}\n• Still failed: ${stillFailed}\n\nCheck the Notification Log for details.`;
-    alert(msg);
-    showToast(succeeded > 0 ? `✅ ${succeeded} retry(ies) succeeded` : '❌ All retries failed — check email config', succeeded > 0 ? 'success' : 'error');
-
-    logAuditAction('NOTIF_RETRY', `Retry attempted for ${retried} failed notification(s). ${succeeded} succeeded, ${stillFailed} still failed.`);
 }
 
 // ================================================================
@@ -12843,39 +11910,53 @@ function updateTopbarTodayBadge() {
         const actions = document.getElementById('topbarActions');
         if (actions) actions.insertBefore(badge, actions.firstChild);
     }
-    const liveToday = getCleanDate(new Date());
     const todayOp = operators.find(op => {
         const s = getCleanDate(op.start), e = getCleanDate(op.end);
-        return liveToday.getTime() >= s.getTime() && liveToday.getTime() <= e.getTime() && op.status === 'Active';
+        return today.getTime() >= s.getTime() && today.getTime() <= e.getTime() && op.status === 'Active';
     });
-    const dateStr = liveToday.toLocaleDateString('en-US', { month:'short', day:'numeric' });
+    const dateStr = today.toLocaleDateString('en-US', { month:'short', day:'numeric' });
     badge.textContent = todayOp ? `📅 ${dateStr} · ${todayOp.name.split(' ')[0]}` : `📅 ${dateStr}`;
 }
 
 // ================================================================
 // HOOK INTO EXISTING FLOW — inject into setupUserInterface
 // ================================================================
+const _origSetupUI = typeof setupUserInterface === 'function' ? setupUserInterface : null;
 
-// Patch showStickyTopbar to also show role-specific topbar buttons and today badge
+// Patch showStickyTopbar to also add dark mode button and today badge
 const _origShowStickyTopbar = showStickyTopbar;
 showStickyTopbar = function() {
     _origShowStickyTopbar();
-
-    // Dark mode button — sync text with current state
-    const dmBtn = document.getElementById('darkModeBtn');
-    if (dmBtn) {
+    // Add dark mode button if missing
+    let dmBtn = document.getElementById('darkModeBtn');
+    if (!dmBtn) {
+        dmBtn = document.createElement('button');
+        dmBtn.id = 'darkModeBtn';
+        dmBtn.className = 'topbar-btn';
+        dmBtn.onclick = toggleDarkMode;
         const isDark = document.body.classList.contains('dark-mode');
         dmBtn.textContent = isDark ? '☀️ Light' : '🌙 Dark';
-        if (isDark) dmBtn.classList.add('active'); else dmBtn.classList.remove('active');
+        if (isDark) dmBtn.classList.add('active');
+        const actions = document.getElementById('topbarActions');
+        if (actions) {
+            const logoutBtn = document.getElementById('topbarLogoutBtn');
+            actions.insertBefore(dmBtn, logoutBtn || null);
+        }
     }
 
-    // Show backup overview button only for admin
-    const ovBtn = document.getElementById('topbarOverviewBtn');
-    if (ovBtn) ovBtn.style.display = isAdmin ? '' : 'none';
-
-    // Show cyber security reset button only for cyber security role
-    const csBtn = document.getElementById('cyberSecResetBtn');
-    if (csBtn) csBtn.style.display = isCyberSecurity ? '' : 'none';
+    // Add backup overview button for admin
+    if (isAdmin && !document.getElementById('topbarOverviewBtn')) {
+        const ovBtn = document.createElement('button');
+        ovBtn.id = 'topbarOverviewBtn';
+        ovBtn.className = 'topbar-btn';
+        ovBtn.textContent = '📋 Overview';
+        ovBtn.onclick = showBackupOverview;
+        const actions = document.getElementById('topbarActions');
+        if (actions) {
+            const logoutBtn = document.getElementById('topbarLogoutBtn');
+            actions.insertBefore(ovBtn, logoutBtn || null);
+        }
+    }
 
     updateTopbarTodayBadge();
     startSessionTimeoutWatcher();
@@ -12889,6 +11970,46 @@ hideStickyTopbar = function() {
     hideMobileBottomNav();
     clearTimeout(sessionTimeoutWarningTimer);
     clearInterval(sessionCountdownTimer);
+};
+
+// Override renderTable to add progress bars and copy buttons
+const _origRenderTable = renderTable;
+renderTable = function() {
+    _origRenderTable();
+
+    // Post-process: add shift progress bars
+    const tbody = document.querySelector('#scheduleTable tbody');
+    if (!tbody || !loggedInUser) return;
+
+    const searchTerm = (document.getElementById('searchOperatorName') ? document.getElementById('searchOperatorName').value : '').toLowerCase();
+
+    tbody.querySelectorAll('tr').forEach((tr, idx) => {
+        const cells = tr.querySelectorAll('td');
+        if (cells.length < 5) return;
+
+        // Cell index 4 is Date Range — add progress bar after it
+        const dateCell = cells[4];
+        if (dateCell && !dateCell.querySelector('.shift-progress-wrap')) {
+            // Find matching operator
+            const nameCell = cells[1];
+            if (nameCell) {
+                const opName = nameCell.textContent.trim();
+                const op = operators.find(o => o.name === opName);
+                if (op) {
+                    const progressHTML = buildShiftProgressBar(op);
+                    dateCell.insertAdjacentHTML('beforeend', progressHTML);
+                }
+            }
+        }
+
+        // Highlight search term in operator name cell
+        if (searchTerm && searchTerm.length >= 2 && cells[1]) {
+            const original = cells[1].textContent;
+            if (original.toLowerCase().includes(searchTerm)) {
+                cells[1].innerHTML = highlightSearchText(original, searchTerm);
+            }
+        }
+    });
 };
 
 // Override renderNextShifts to add copy-phone buttons in shift cards
@@ -12923,326 +12044,13 @@ document.addEventListener('DOMContentLoaded', function() {
 // Also run dark mode init immediately (before DOMContentLoaded fires)
 initDarkMode();
 
-// Update topbar badge periodically and refresh 'today' so the page
-// never shows stale dates if left open overnight.
+// Update topbar badge periodically
 setInterval(() => {
-    today = getCleanDate(new Date()); // Task 2: keep 'today' current
     if (loggedInUser) {
         updateTopbarTodayBadge();
         updateKpiBar();
     }
 }, 60000); // every minute
-
-// ================================================================
-// COMPREHENSIVE FIXES & ENHANCEMENTS BLOCK
-// Fixes: #6 pagination, #7 wiring, #9 pwd toggle, #11 op mgmt search,
-//        #12 badges, #13 notif log search, #14 progress, #15 dark mode,
-//        #17 startDate visibility
-// ================================================================
-
-/* ---------- #6  Pagination state ---------- */
-let _tablePage = 0;  // current page index (0-based)
-
-function tablePageChange(delta) {
-    const sel = document.getElementById('tableRowsPerPage');
-    if (!sel || sel.value === 'all') return;
-    _tablePage = Math.max(0, _tablePage + delta);
-    renderTable();
-}
-
-/* ---------- #9  Password show/hide ---------- */
-function togglePasswordVisibility() {
-    const input = document.getElementById('adminPassword');
-    const btn   = document.getElementById('pwdToggleBtn');
-    if (!input) return;
-    if (input.type === 'password') {
-        input.type = 'text';
-        if (btn) btn.textContent = '🙈';
-    } else {
-        input.type = 'password';
-        if (btn) btn.textContent = '👁';
-    }
-}
-
-/* ---------- #11 Operator management table with search/filter ---------- */
-// Override renderOperatorManagementTable to support search + status filter
-const _origRenderOpMgmt = typeof renderOperatorManagementTable === 'function' ? renderOperatorManagementTable : null;
-renderOperatorManagementTable = function() {
-    const tbody = document.querySelector('#operatorManagementTable tbody');
-    if (!tbody) return;
-    tbody.innerHTML = '';
-
-    const searchTerm = ((document.getElementById('opMgmtSearch') || {}).value || '').toLowerCase().trim();
-    const statusFilter = (document.getElementById('opMgmtStatusFilter') || {}).value || '';
-
-    let filtered = initialOperators.filter((op, idx) => {
-        const matchSearch = !searchTerm ||
-            op.name.toLowerCase().includes(searchTerm) ||
-            (op.mobile || '').includes(searchTerm) ||
-            (op.email || '').toLowerCase().includes(searchTerm);
-        const matchStatus = !statusFilter || (op.status || 'Active') === statusFilter;
-        return matchSearch && matchStatus;
-    });
-
-    if (filtered.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#999;padding:20px;">No operators found.</td></tr>';
-        return;
-    }
-
-    filtered.forEach((op) => {
-        const idx = initialOperators.indexOf(op);
-        const status = op.status || 'Active';
-        const statusStyle = status === 'Active'
-            ? 'background:#d4edda;color:#155724;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:700;'
-            : 'background:#f8d7da;color:#721c24;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:700;';
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${idx + 1}</td>
-            <td><strong>${op.name}</strong></td>
-            <td>
-                <span style="display:inline-flex;align-items:center;gap:4px;">
-                    ${op.mobile || 'N/A'}
-                    <button class="copy-phone-btn" onclick="event.stopPropagation();copyPhoneNumber('${op.mobile}',this)" title="Copy"
-                            style="background:none;border:none;cursor:pointer;font-size:12px;opacity:0.6;">📋</button>
-                </span>
-            </td>
-            <td>${op.email || 'N/A'}</td>
-            <td><span style="${statusStyle}">${status}</span></td>
-            <td>
-                <button onclick="toggleOperatorStatus(${idx})" style="padding:4px 10px;border:none;border-radius:5px;cursor:pointer;font-size:12px;background:${status==='Active'?'#ffc107':'#28a745'};color:${status==='Active'?'#333':'#fff'};">
-                    ${status === 'Active' ? '⏸ Deactivate' : '▶ Activate'}
-                </button>
-                <button onclick="openEditOperatorModal(${idx})" style="padding:4px 10px;border:none;border-radius:5px;cursor:pointer;font-size:12px;background:#007bff;color:#fff;margin-left:4px;">✏️ Edit</button>
-                <button onclick="resetOperatorPasswordMaster('${op.name}')" style="padding:4px 10px;border:none;border-radius:5px;cursor:pointer;font-size:12px;background:#6c757d;color:#fff;margin-left:4px;">🔑 Reset Pwd</button>
-                <button onclick="deleteMasterOperator(${idx})" style="padding:4px 10px;border:none;border-radius:5px;cursor:pointer;font-size:12px;background:#dc3545;color:#fff;margin-left:4px;">🗑 Delete</button>
-            </td>
-        `;
-        tbody.appendChild(tr);
-    });
-};
-
-/* ---------- #12 Enhanced renderTable with badges + pagination ---------- */
-const __origRenderTable = typeof renderTable === 'function' ? renderTable : null;
-renderTable = (function(_orig) {
-    return function enhancedRenderTable() {
-
-        // Run original first
-        if (_orig) _orig();
-
-        const tbody = document.querySelector('#scheduleTable tbody');
-        if (!tbody || !loggedInUser) return;
-
-        // --- Apply pagination (#6) ---
-        const sel = document.getElementById('tableRowsPerPage');
-        const rowsPerPage = sel ? sel.value : 'all';
-        const allRows = Array.from(tbody.querySelectorAll('tr'));
-        const total = allRows.length;
-
-        if (rowsPerPage === 'all') {
-            _tablePage = 0;
-            allRows.forEach(r => r.style.display = '');
-            const lbl = document.getElementById('tableRowCountLabel');
-            if (lbl) lbl.textContent = `Showing ${total} row${total !== 1 ? 's' : ''}`;
-            const prev = document.getElementById('tablePrevBtn');
-            const next = document.getElementById('tableNextBtn');
-            const pg   = document.getElementById('tablePageLabel');
-            if (prev) prev.style.display = 'none';
-            if (next) next.style.display = 'none';
-            if (pg)   pg.style.display   = 'none';
-        } else {
-            const rpp = parseInt(rowsPerPage);
-            const maxPage = Math.max(0, Math.ceil(total / rpp) - 1);
-            _tablePage = Math.min(_tablePage, maxPage);
-            const start = _tablePage * rpp;
-            const end   = start + rpp;
-            allRows.forEach((r, i) => { r.style.display = (i >= start && i < end) ? '' : 'none'; });
-
-            const lbl  = document.getElementById('tableRowCountLabel');
-            const prev = document.getElementById('tablePrevBtn');
-            const next = document.getElementById('tableNextBtn');
-            const pg   = document.getElementById('tablePageLabel');
-            if (lbl)  lbl.textContent = `Showing ${Math.min(end, total)} of ${total} rows`;
-            if (pg)   { pg.textContent = `Page ${_tablePage + 1} / ${maxPage + 1}`; pg.style.display = ''; }
-            if (prev) { prev.style.display = ''; prev.disabled = _tablePage === 0; }
-            if (next) { next.style.display = ''; next.disabled = _tablePage >= maxPage; }
-        }
-
-        // --- Upgrade status cells to badges (#12) ---
-        tbody.querySelectorAll('tr').forEach(tr => {
-            const cells = tr.querySelectorAll('td');
-            if (cells.length < 6) return;
-            const statusCell = cells[5];
-            if (statusCell && !statusCell.querySelector('.badge-active, .badge-finished')) {
-                const raw = statusCell.textContent.trim().replace(/[●✓]/g, '').trim();
-                if (raw === 'Active' || raw === 'Finished') {
-                    const indicator = statusCell.querySelector('.status-indicator');
-                    const badge = document.createElement('span');
-                    badge.className = raw === 'Active' ? 'badge-active' : 'badge-finished';
-                    badge.textContent = raw;
-                    statusCell.innerHTML = '';
-                    if (indicator) statusCell.appendChild(indicator);
-                    statusCell.appendChild(badge);
-                }
-            }
-
-            // --- Add progress bar to date cell (#14) ---
-            const dateCell = cells[4];
-            if (dateCell && !dateCell.querySelector('.shift-progress-wrap')) {
-                const nameCell = cells[1];
-                if (nameCell) {
-                    const opName = nameCell.textContent.trim();
-                    const op = operators.find(o => o.name === opName);
-                    if (op && op.status !== 'Finished') {
-                        const start = getCleanDate(op.start);
-                        const end   = getCleanDate(op.end);
-                        const now   = getCleanDate(new Date());
-                        const total_d = Math.max(1, daysBetween(start, end) + 1);
-                        const elapsed = Math.max(0, daysBetween(start, now));
-                        const pct     = Math.min(100, Math.round((elapsed / total_d) * 100));
-                        const dLeft   = Math.max(0, daysBetween(now, end));
-                        dateCell.insertAdjacentHTML('beforeend',
-                            `<div class="shift-progress-wrap" title="${elapsed}/${total_d} days (${pct}%)">
-                                <div class="shift-progress-fill" style="width:${pct}%"></div>
-                             </div>
-                             <span class="shift-days-badge">${dLeft}d left (${pct}%)</span>`
-                        );
-                    }
-                }
-            }
-        });
-
-        // --- Search highlight (#13 / bonus for schedule search) ---
-        const searchTerm = (document.getElementById('searchOperatorName') || {}).value || '';
-        if (searchTerm.length >= 2) {
-            tbody.querySelectorAll('tr td:nth-child(2)').forEach(cell => {
-                const t = cell.textContent;
-                if (t.toLowerCase().includes(searchTerm.toLowerCase())) {
-                    cell.innerHTML = highlightSearchText(t, searchTerm);
-                }
-            });
-        }
-    };
-})(__origRenderTable);
-
-/* ---------- #15 Dark mode — ensure initDarkMode runs ---------- */
-// initDarkMode is defined in the existing code; call it safely here too
-(function() {
-    try { if (typeof initDarkMode === 'function') initDarkMode(); } catch(e) {}
-})();
-
-/* ---------- #17 Hide startDate from non-admin users ---------- */
-// Patch setupUserInterface to also manage startDate visibility
-const __origSetupUI = typeof setupUserInterface === 'function' ? setupUserInterface : null;
-if (__origSetupUI) {
-    setupUserInterface = (function(_orig) {
-        return function patchedSetupUI() {
-            _orig();
-            const lbl   = document.getElementById('startDateLabel');
-            const input = document.getElementById('startDate');
-            const show  = isAdmin;
-            if (lbl)   { lbl.style.display   = show ? '' : 'none'; }
-            if (input) { input.style.display  = show ? '' : 'none'; }
-        };
-    })(__origSetupUI);
-}
-
-// Also patch logout to hide it
-const __origLogout = typeof logout === 'function' ? logout : null;
-if (__origLogout) {
-    logout = (function(_orig) {
-        return function patchedLogout() {
-            _orig();
-            const lbl   = document.getElementById('startDateLabel');
-            const input = document.getElementById('startDate');
-            if (lbl)   lbl.style.display   = 'none';
-            if (input) input.style.display  = 'none';
-        };
-    })(__origLogout);
-}
-
-// Hide on page load (before login)
-(function() {
-    const lbl   = document.getElementById('startDateLabel');
-    const input = document.getElementById('startDate');
-    if (lbl)   lbl.style.display   = 'none';
-    if (input) input.style.display  = 'none';
-})();
-
-/* ---------- Wiring check — ensure getConvertedStatus null-safety ---------- */
-// The first definition at ~L6228 did not have a null guard; fix it inline:
-(function() {
-    const _orig = getConvertedStatus;
-    getConvertedStatus = function(operatorStatus) {
-        if (!operatorStatus) return 'Pending';
-        return _orig(operatorStatus);
-    };
-})();
-
-/* ---------- Reset page to 0 when filter changes ---------- */
-(function() {
-    const sel = document.getElementById('tableRowsPerPage');
-    if (sel) sel.addEventListener('change', function() { _tablePage = 0; });
-    const opFilter = document.getElementById('operatorFilter');
-    if (opFilter) opFilter.addEventListener('change', function() { _tablePage = 0; });
-})();
-
-// ================================================================
-// END COMPREHENSIVE FIXES
-// ================================================================
-
-// ================================================================
-// MODERN ADMIN PANEL — Tab switching + header meta counts
-// ================================================================
-
-function switchAdminTab(tabId, btnEl) {
-    // Hide all sections
-    document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
-    // Deactivate all tabs
-    document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-    // Show target section
-    const section = document.getElementById('adminTab-' + tabId);
-    if (section) section.classList.add('active');
-    // Activate clicked tab
-    if (btnEl) btnEl.classList.add('active');
-}
-
-function updateAdminHeaderMeta() {
-    const opCount = document.getElementById('adminOperatorCount');
-    const shiftCount = document.getElementById('adminShiftCount');
-    if (opCount) {
-        const active = initialOperators.filter(o => (o.status || 'Active') === 'Active').length;
-        opCount.textContent = `${active} Operator${active !== 1 ? 's' : ''}`;
-    }
-    if (shiftCount) {
-        const active = operators.filter(o => o.status === 'Active').length;
-        shiftCount.textContent = `${active} Active Shifts`;
-    }
-}
-
-// Hook into setupUserInterface to update meta counts
-const __origSetupUIForMeta = typeof setupUserInterface === 'function' ? setupUserInterface : null;
-if (__origSetupUIForMeta) {
-    setupUserInterface = (function(_orig) {
-        return function() {
-            _orig();
-            setTimeout(updateAdminHeaderMeta, 100);
-        };
-    })(__origSetupUIForMeta);
-}
-
-// Also update after schedule generation
-const __origGenForMeta = typeof generateFullSchedule === 'function' ? generateFullSchedule : null;
-if (__origGenForMeta) {
-    generateFullSchedule = (function(_orig) {
-        return function(d) {
-            _orig(d);
-            setTimeout(updateAdminHeaderMeta, 100);
-        };
-    })(__origGenForMeta);
-}
-// ================================================================
-// END MODERN ADMIN PANEL
-// ================================================================
 </script>
 </body>
 </html>

@@ -5869,6 +5869,17 @@ tr.operator-deactivated td:last-child {
         
         <label for="emailPublicKey">Public Key:</label>
         <input type="text" id="emailPublicKey" placeholder="your_public_key" style="width: 100%; margin-bottom: 15px;">
+
+        <div style="background:#e8f5e9; border:1px solid #a5d6a7; border-radius:6px; padding:12px 14px; margin-bottom:15px;">
+            <h4 style="margin:0 0 8px 0; color:#1b5e20; font-size:14px;">🔔 Admin / Supervisor Alert Email</h4>
+            <p style="margin:0 0 8px 0; font-size:12px; color:#388e3c;">
+                This email receives automatic alerts when an operator is deactivated and shifts need reassignment.
+                Can be a distribution list or supervisor address.
+            </p>
+            <label for="adminAlertEmail" style="font-size:13px; font-weight:600;">Admin Alert Email Address:</label>
+            <input type="email" id="adminAlertEmail" placeholder="supervisor@oromiabank.com"
+                   style="width:100%; margin-top:5px; padding:8px 10px; border:1px solid #a5d6a7; border-radius:4px; font-size:13px; box-sizing:border-box;">
+        </div>
         
         <h4>📱 SMS Configuration (Twilio)</h4>
         <label for="smsAccountSid">Account SID:</label>
@@ -7398,6 +7409,7 @@ const AUDIT_LOG_KEY = 'auditLog';
 const NOTIFICATION_LOG_KEY = 'notificationLog'; // NEW
 const NOTIFICATION_SETTINGS_KEY = 'notificationSettings'; // NEW
 const DEACTIVATION_AUDIT_KEY = 'deactivationAudit'; // USER DEACTIVATION
+const ADMIN_ALERT_EMAIL_KEY  = 'adminAlertEmail';    // Admin alert recipient for deactivation emails
 
 // Email and SMS API Configuration
 // ✅ EmailJS credentials — fully configured
@@ -10594,6 +10606,16 @@ function confirmDeactivation() {
 
     showToast(`🚫 ${opName} deactivated — ${pendingCount} shift(s) flagged for reassignment.`,
         pendingCount > 0 ? 'warning' : 'success');
+
+    // 8. Send alert email to admin/supervisor
+    sendDeactivationAlertEmail(opName, actor, fullLabel, reasonText, pendingCount, pendingShifts)
+        .then(result => {
+            if (result.success) {
+                showToast(`📧 Deactivation alert email sent to administrator.`, 'success');
+            } else if (result.error !== 'No admin alert email configured') {
+                showToast(`⚠️ Alert email failed: ${result.error}`, 'warning');
+            }
+        });
 }
 
 // ── Core: reactivate an operator ─────────────────────────────
@@ -10858,6 +10880,112 @@ function initDeactivationModule() {
     deactivationAuditLog = JSON.parse(localStorage.getItem(DEACTIVATION_AUDIT_KEY) || '[]');
     // Small delay so banner DOM is ready
     setTimeout(() => checkDeactivatedPendingShifts(), 800);
+}
+
+// ── Email alert to admin/supervisor on deactivation ──────────
+
+async function sendDeactivationAlertEmail(opName, actor, fullLabel, reasonText, pendingCount, pendingShifts) {
+    if (typeof emailjs === 'undefined') {
+        console.warn('[Deactivation Alert] EmailJS not loaded — skipping alert email.');
+        return { success: false, error: 'EmailJS not loaded' };
+    }
+
+    const adminEmail = localStorage.getItem(ADMIN_ALERT_EMAIL_KEY) || '';
+    if (!adminEmail || !adminEmail.includes('@')) {
+        console.warn('[Deactivation Alert] No admin alert email configured. Set one in ⚙️ Configure APIs.');
+        showToast('⚠️ No admin alert email configured — deactivation alert not sent. Set one in ⚙️ Configure APIs.', 'warning');
+        return { success: false, error: 'No admin alert email configured' };
+    }
+
+    // Re-init EmailJS
+    emailjs.init({ publicKey: EMAIL_API_CONFIG.publicKey });
+
+    // Build a shift list summary
+    const shiftLines = pendingShifts.length > 0
+        ? pendingShifts.map((s, i) =>
+            `  ${i + 1}. ${s.name} — ${formatDate(s.start)} to ${formatDate(s.end)} [${s.status}]`
+          ).join('\n')
+        : '  None';
+
+    const now         = new Date();
+    const dateTimeStr = now.toLocaleString('en-US', {
+        day: '2-digit', month: 'short', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', hour12: true
+    });
+
+    const subject = `🚫 ALERT: Backup Operator Deactivated — ${opName} [${pendingCount} Shift(s) Need Reassignment]`;
+
+    const message =
+`OROMIA BANK — BACKUP OPERATIONS MANAGEMENT SYSTEM
+════════════════════════════════════════════════════
+
+🚫 OPERATOR DEACTIVATION ALERT
+
+An operator has been deactivated from the Backup Operator roster. Immediate action may be required to reassign pending backup shifts.
+
+────────────────────────────────────────────────────
+DEACTIVATION DETAILS
+────────────────────────────────────────────────────
+Operator Name   : ${opName}
+Deactivated By  : ${actor}
+Date & Time     : ${dateTimeStr}
+Reason Category : ${fullLabel}
+Additional Notes: ${reasonText}
+
+────────────────────────────────────────────────────
+PENDING SHIFTS FLAGGED FOR REASSIGNMENT: ${pendingCount}
+────────────────────────────────────────────────────
+${shiftLines}
+
+────────────────────────────────────────────────────
+REQUIRED ACTIONS
+────────────────────────────────────────────────────
+${pendingCount > 0
+    ? `⚠️  ${pendingCount} active/pending shift(s) are now flagged and MUST be reassigned to an authorised, active operator to maintain operational continuity.\n\n   → Log in to the portal as Administrator\n   → Go to the schedule table\n   → Locate rows marked ⚠️ REASSIGN\n   → Use Swap / Rename to assign an active operator`
+    : '✅  No pending shifts were found. No reassignment action is required at this time.'}
+
+This operator's portal account has been deactivated and they can no longer log in or access backup-related functions. Their historical backup records remain available for audit and compliance purposes.
+
+────────────────────────────────────────────────────
+This is an automated alert from the Backup Operations Management System.
+Oromia Bank IT Department`;
+
+    const templateParams = {
+        name:              'System Administrator',
+        email:             adminEmail,
+        to_email:          adminEmail,
+        to_name:           'System Administrator',
+        subject:           subject,
+        message:           message,
+        operator_name:     opName,
+        shift_start_date:  pendingShifts.length > 0 ? formatDate(pendingShifts[0].start) : 'N/A',
+        shift_end_date:    pendingShifts.length > 0 ? formatDate(pendingShifts[0].end)   : 'N/A',
+        mobile_number:     '',
+        notification_type: 'deactivation_alert',
+        days_until_shift:  0,
+        bank_name:         'Oromia Bank',
+        system_name:       'Backup Operations Management System'
+    };
+
+    try {
+        const response = await emailjs.send(
+            EMAIL_API_CONFIG.serviceId,
+            EMAIL_API_CONFIG.templateId,
+            templateParams,
+            { publicKey: EMAIL_API_CONFIG.publicKey }
+        );
+        console.log('[Deactivation Alert] ✅ Alert email sent to', adminEmail);
+        logAuditAction('DEACTIVATION_ALERT_EMAIL',
+            `Alert email sent to ${adminEmail} for deactivation of ${opName} (${pendingCount} pending shifts).`
+        );
+        return { success: true, response };
+    } catch (error) {
+        console.error('[Deactivation Alert] ❌ Failed to send alert email:', error);
+        logAuditAction('DEACTIVATION_ALERT_EMAIL_FAIL',
+            `Alert email FAILED for deactivation of ${opName}. Error: ${error.text || error.message || 'Unknown'}`
+        );
+        return { success: false, error: error.text || error.message || 'Unknown error' };
+    }
 }
 
 // =============================================================
@@ -11397,6 +11525,7 @@ function openNotificationConfigModal() {
     document.getElementById('smsAccountSid').value = savedConfig.smsAccountSid || '';
     document.getElementById('smsAuthToken').value = savedConfig.smsAuthToken || '';
     document.getElementById('smsFromNumber').value = savedConfig.smsFromNumber || '';
+    document.getElementById('adminAlertEmail').value = localStorage.getItem(ADMIN_ALERT_EMAIL_KEY) || '';
     
     document.getElementById('notificationConfigModal').style.display = 'block';
 }
@@ -11416,6 +11545,12 @@ function saveNotificationConfig() {
         smsAuthToken: document.getElementById('smsAuthToken').value.trim(),
         smsFromNumber: document.getElementById('smsFromNumber').value.trim()
     };
+
+    // Save admin alert email separately (plain string, not part of API config)
+    const adminAlertEmail = document.getElementById('adminAlertEmail').value.trim();
+    if (adminAlertEmail) {
+        localStorage.setItem(ADMIN_ALERT_EMAIL_KEY, adminAlertEmail);
+    }
     
     // Update global configuration
     EMAIL_API_CONFIG.serviceId = config.emailServiceId;

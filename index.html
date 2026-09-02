@@ -4844,6 +4844,216 @@ body.dark-mode .daily-check-field-label { color: #aaa; }
     .notif-days-row { flex-direction: column; align-items: flex-start; }
 }
 /* ===== END ADMIN PANEL REDESIGN ===== */
+
+/* ===== USER DEACTIVATION STYLES ===== */
+.deactivation-alert-banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+    border: 2px solid #f39c12;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #856404;
+    box-shadow: 0 2px 8px rgba(243,156,18,0.2);
+    animation: deactivBannerPulse 2s ease-in-out infinite;
+}
+@keyframes deactivBannerPulse {
+    0%,100% { box-shadow: 0 2px 8px rgba(243,156,18,0.2); }
+    50%      { box-shadow: 0 4px 16px rgba(243,156,18,0.5); }
+}
+.deactivation-modal-content {
+    max-width: 560px;
+    border-radius: 16px;
+    overflow: hidden;
+}
+.deactivation-modal-header {
+    background: linear-gradient(135deg, #c0392b, #e74c3c);
+    color: #fff;
+    padding: 24px 28px 18px;
+    text-align: center;
+    border-bottom: 3px solid rgba(0,0,0,0.1);
+}
+.deactivation-modal-header h3 {
+    margin: 10px 0 6px;
+    font-size: 20px;
+    font-weight: 800;
+}
+.deactivation-modal-header p {
+    margin: 0;
+    font-size: 13px;
+    opacity: 0.9;
+}
+.deactivation-modal-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    font-size: 26px;
+    border: 2px solid rgba(255,255,255,0.4);
+}
+.deactivation-form {
+    padding: 22px 28px;
+}
+.deactivation-field {
+    margin-bottom: 16px;
+}
+.deactivation-field > label {
+    display: block;
+    font-weight: 700;
+    font-size: 13px;
+    color: #333;
+    margin-bottom: 6px;
+}
+.deactivation-select,
+.deactivation-textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+    background: #fff;
+    color: #333;
+}
+.deactivation-select:focus,
+.deactivation-textarea:focus {
+    border-color: #e74c3c;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(231,76,60,0.15);
+}
+.deactivation-textarea { resize: vertical; }
+.deactivation-confirm-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: #fff8f8;
+    border: 1px solid #f5c6cb;
+    border-radius: 8px;
+    padding: 10px 14px;
+}
+.deactivation-confirm-row input[type="checkbox"] {
+    margin-top: 2px;
+    transform: scale(1.3);
+    accent-color: #e74c3c;
+    flex-shrink: 0;
+}
+.deactivation-modal-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    justify-content: flex-end;
+}
+.deactivation-btn-cancel {
+    padding: 10px 22px;
+    background: #6c757d;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+.deactivation-btn-cancel:hover { background: #545b62; }
+.deactivation-btn-confirm {
+    padding: 10px 22px;
+    background: linear-gradient(135deg, #c0392b, #e74c3c);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+    transition: all 0.2s;
+    box-shadow: 0 3px 10px rgba(192,57,43,0.4);
+}
+.deactivation-btn-confirm:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px rgba(192,57,43,0.5);
+}
+/* Deactivation status table inside admin panel */
+.deactivation-status-tbl {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.deactivation-status-tbl th {
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    color: #fff;
+    padding: 9px 10px;
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.deactivation-status-tbl td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+}
+.deactivation-status-tbl tr:last-child td { border-bottom: none; }
+.deactivation-status-tbl tr:nth-child(even) td { background: #fafafa; }
+.deact-badge-active {
+    display: inline-block;
+    padding: 2px 10px;
+    background: #d4edda;
+    color: #155724;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    border: 1px solid #c3e6cb;
+}
+.deact-badge-inactive {
+    display: inline-block;
+    padding: 2px 10px;
+    background: #f8d7da;
+    color: #721c24;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    border: 1px solid #f5c6cb;
+}
+.deact-flag-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    background: #fff3cd;
+    color: #856404;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    border: 1px solid #ffc107;
+}
+/* Flagged reassignment rows in main schedule table */
+tr.shift-needs-reassignment td {
+    background: #fff8e1 !important;
+    border-left: 4px solid #f39c12;
+}
+tr.shift-needs-reassignment td:first-child {
+    position: relative;
+}
+/* Deactivated operator rows in operator management table */
+tr.operator-deactivated td {
+    opacity: 0.6;
+    background: #fdf2f2 !important;
+    text-decoration: line-through;
+    text-decoration-color: #e74c3c;
+}
+tr.operator-deactivated td:last-child {
+    opacity: 1;
+    text-decoration: none;
+}
+/* ===== END USER DEACTIVATION STYLES ===== */
 </style>
 
 <div class="controls" id="adminControls" style="display:none; padding:0; background:transparent; box-shadow:none; border-radius:14px; overflow:hidden;">
@@ -4966,7 +5176,197 @@ body.dark-mode .daily-check-field-label { color: #aaa; }
             </div>
         </div>
 
+        <div class="admin-divider"></div>
+
+        <!-- ── Section 5: User Deactivation & Operator Removal ── -->
+        <div class="admin-section" data-section="deactivation">
+            <div class="admin-section-title">
+                <span class="section-icon icon-red">🚫</span>
+                User Deactivation &amp; Operator Removal
+            </div>
+            <!-- Alert banner for deactivated operators with pending shifts -->
+            <div id="deactivationAlertBanner" style="display:none;" class="deactivation-alert-banner">
+                <span>⚠️</span>
+                <span id="deactivationAlertText"></span>
+            </div>
+            <div class="admin-btn-grid">
+                <button class="admin-btn btn-red"    onclick="openDeactivationModal()">🚫 Deactivate Operator</button>
+                <button class="admin-btn btn-green"  onclick="openReactivationModal()">✅ Reactivate Operator</button>
+                <button class="admin-btn btn-dark"   onclick="openDeactivationAuditView()">📋 Deactivation Audit Log</button>
+                <button class="admin-btn btn-orange" onclick="checkDeactivatedPendingShifts()">⚠️ Check Pending Shifts</button>
+                <button class="admin-btn btn-indigo" onclick="openDeactivatedOperatorsView()">👁️ View Deactivated Users</button>
+            </div>
+            <!-- Live status table -->
+            <div id="deactivationStatusTable" style="margin-top:14px; display:none;">
+                <table class="deactivation-status-tbl">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Operator</th>
+                            <th>Status</th>
+                            <th>Deactivated By</th>
+                            <th>Date</th>
+                            <th>Reason</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="deactivationStatusTbody"></tbody>
+                </table>
+            </div>
+            <div style="margin-top:10px; text-align:right;">
+                <button class="admin-btn btn-gray" onclick="toggleDeactivationTable()" id="toggleDeactivTblBtn" style="font-size:12px; padding:5px 12px;">
+                    👁 Show All Operator Status
+                </button>
+            </div>
+        </div>
+
     </div><!-- end .admin-panel -->
+</div>
+
+<!-- ============================================================
+     DEACTIVATION MODAL
+     ============================================================ -->
+<div id="deactivationModal" class="modal" style="display:none;">
+    <div class="modal-content deactivation-modal-content">
+        <span class="close" onclick="closeDeactivationModal()">&times;</span>
+        <div class="deactivation-modal-header">
+            <span class="deactivation-modal-icon">🚫</span>
+            <h3>Deactivate Backup Operator</h3>
+            <p>This action will immediately remove the operator from active backup assignments and prevent future logins. A full audit trail will be recorded.</p>
+        </div>
+        <div class="deactivation-form">
+            <div class="deactivation-field">
+                <label for="deactivateOperatorSelect">Select Operator to Deactivate</label>
+                <select id="deactivateOperatorSelect" class="deactivation-select">
+                    <option value="">-- Select Active Operator --</option>
+                </select>
+            </div>
+            <div class="deactivation-field" id="deactivateReasonTypeField">
+                <label for="deactivateReasonType">Reason for Deactivation</label>
+                <select id="deactivateReasonType" class="deactivation-select" onchange="handleDeactivationReasonType()">
+                    <option value="">-- Select Reason --</option>
+                    <option value="resignation">Employee Resignation / Left Organisation</option>
+                    <option value="transfer">Transfer — No Longer Requires Backup Role</option>
+                    <option value="termination">Employment Termination</option>
+                    <option value="suspension">Temporary Suspension</option>
+                    <option value="role_change">Role Change / Re-assignment</option>
+                    <option value="security">Security / Compliance Issue</option>
+                    <option value="other">Other (specify below)</option>
+                </select>
+            </div>
+            <div class="deactivation-field">
+                <label for="deactivateReasonText">Additional Details / Notes <span style="color:#999; font-size:12px;">(required)</span></label>
+                <textarea id="deactivateReasonText" class="deactivation-textarea"
+                    placeholder="Provide specific details about why this operator is being deactivated..." rows="3"></textarea>
+            </div>
+            <div class="deactivation-field">
+                <label for="deactivateAdminConfirm">Administrator Confirmation</label>
+                <div class="deactivation-confirm-row">
+                    <input type="checkbox" id="deactivateAdminConfirm">
+                    <label for="deactivateAdminConfirm" style="font-weight:normal; color:#555; font-size:13px;">
+                        I confirm I am authorised to deactivate this operator and understand this action is fully audited.
+                    </label>
+                </div>
+            </div>
+            <div class="deactivation-modal-actions">
+                <button class="deactivation-btn-cancel" onclick="closeDeactivationModal()">Cancel</button>
+                <button class="deactivation-btn-confirm" onclick="confirmDeactivation()">🚫 Confirm Deactivation</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================
+     REACTIVATION MODAL
+     ============================================================ -->
+<div id="reactivationModal" class="modal" style="display:none;">
+    <div class="modal-content deactivation-modal-content">
+        <span class="close" onclick="closeReactivationModal()">&times;</span>
+        <div class="deactivation-modal-header" style="border-color:#28a745;">
+            <span class="deactivation-modal-icon" style="background:linear-gradient(135deg,#28a745,#1e7e34);">✅</span>
+            <h3>Reactivate Backup Operator</h3>
+            <p>This action will restore the operator's access and re-add them to the backup rotation. A full audit trail will be recorded.</p>
+        </div>
+        <div class="deactivation-form">
+            <div class="deactivation-field">
+                <label for="reactivateOperatorSelect">Select Operator to Reactivate</label>
+                <select id="reactivateOperatorSelect" class="deactivation-select">
+                    <option value="">-- Select Deactivated Operator --</option>
+                </select>
+            </div>
+            <div class="deactivation-field">
+                <label for="reactivateReasonText">Reason for Reactivation <span style="color:#999; font-size:12px;">(required)</span></label>
+                <textarea id="reactivateReasonText" class="deactivation-textarea"
+                    placeholder="Provide authorisation details or reason for reactivating this operator..." rows="3"></textarea>
+            </div>
+            <div class="deactivation-field">
+                <label for="reactivateAdminConfirm">Administrator Confirmation</label>
+                <div class="deactivation-confirm-row">
+                    <input type="checkbox" id="reactivateAdminConfirm">
+                    <label for="reactivateAdminConfirm" style="font-weight:normal; color:#555; font-size:13px;">
+                        I confirm I am authorised to reactivate this operator and this complies with access-control policy.
+                    </label>
+                </div>
+            </div>
+            <div class="deactivation-modal-actions">
+                <button class="deactivation-btn-cancel" onclick="closeReactivationModal()">Cancel</button>
+                <button class="deactivation-btn-confirm" style="background:linear-gradient(135deg,#28a745,#1e7e34);" onclick="confirmReactivation()">✅ Confirm Reactivation</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================
+     DEACTIVATION AUDIT LOG VIEW
+     ============================================================ -->
+<div class="table-container" id="deactivationAuditView" style="display:none;">
+    <h3 style="text-align:center;">🚫 User Deactivation &amp; Reactivation Audit Log</h3>
+    <p style="text-align:center; color:#666; font-size:13px;">Complete audit trail of all operator deactivation and reactivation actions. Retained indefinitely for compliance.</p>
+    <table id="deactivationAuditTable">
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Action</th>
+                <th>Operator</th>
+                <th>Performed By</th>
+                <th>Reason Type</th>
+                <th>Details</th>
+                <th>Pending Shifts</th>
+            </tr>
+        </thead>
+        <tbody id="deactivationAuditTbody"></tbody>
+    </table>
+    <div style="text-align:center; margin-top:15px;">
+        <button onclick="exportDeactivationAuditCSV()" style="background-color:#28a745; color:#fff; padding:7px 16px; border:none; border-radius:4px; cursor:pointer; margin:3px;">📥 Export CSV</button>
+        <button onclick="closeDeactivationAuditView()" style="background-color:#5bc0de; color:#fff; padding:7px 16px; border:none; border-radius:4px; cursor:pointer; margin:3px;">Close</button>
+    </div>
+</div>
+
+<!-- ============================================================
+     DEACTIVATED OPERATORS VIEW
+     ============================================================ -->
+<div class="table-container" id="deactivatedOperatorsView" style="display:none;">
+    <h3 style="text-align:center;">👁️ Deactivated Operators — Historical Record</h3>
+    <p style="text-align:center; color:#666; font-size:13px;">Operators deactivated from backup duty. Historical backup activities remain available for compliance and accountability.</p>
+    <table id="deactivatedOperatorsTable">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Operator Name</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th>Deactivated On</th>
+                <th>Deactivated By</th>
+                <th>Reason</th>
+                <th>Pending Shifts Flagged</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="deactivatedOperatorsTbody"></tbody>
+    </table>
+    <div style="text-align:center; margin-top:15px;">
+        <button onclick="closeDeactivatedOperatorsView()" style="background-color:#5bc0de; color:#fff; padding:7px 16px; border:none; border-radius:4px; cursor:pointer;">Close</button>
+    </div>
 </div>
 
 <!-- Daily Backup Status Tracking Section -->
@@ -5089,7 +5489,9 @@ body.dark-mode .daily-check-field-label { color: #aaa; }
                 <th>S/N</th>
                 <th>Operator Name</th>
                 <th>Mobile Number</th>
-                <th>Email Address</th> <th>Actions</th>
+                <th>Email Address</th>
+                <th>Status</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -6974,6 +7376,7 @@ const INITIAL_OPERATORS_DATA_KEY = 'initialOperators';
 const AUDIT_LOG_KEY = 'auditLog'; 
 const NOTIFICATION_LOG_KEY = 'notificationLog'; // NEW
 const NOTIFICATION_SETTINGS_KEY = 'notificationSettings'; // NEW
+const DEACTIVATION_AUDIT_KEY = 'deactivationAudit'; // USER DEACTIVATION
 
 // Email and SMS API Configuration
 // ✅ EmailJS credentials — fully configured
@@ -7003,6 +7406,7 @@ let operators = JSON.parse(localStorage.getItem('operators') || '[]');
 let operatorPasswords = JSON.parse(localStorage.getItem('operatorPasswords') || '{}');
 let notificationLog = JSON.parse(localStorage.getItem(NOTIFICATION_LOG_KEY) || '[]'); // NEW
 let notificationSettings = JSON.parse(localStorage.getItem(NOTIFICATION_SETTINGS_KEY) || '{"notifyDays": 3}'); // NEW
+let deactivationAuditLog = JSON.parse(localStorage.getItem(DEACTIVATION_AUDIT_KEY) || '[]'); // USER DEACTIVATION
 
 let isAdmin = false;    
 let isRestrictedAdmin = false;
@@ -7758,19 +8162,14 @@ async function checkAndSendNotifications(manualTrigger = false) {
         const shiftStart    = getCleanDate(op.start);
         const daysUntilStart = daysBetween(now, shiftStart);
 
-        // AUTO: fire ONLY when exactly 2 days away
-        // MANUAL: fire for 0–2 days window
-        const inWindow = manualTrigger
-            ? (daysUntilStart >= 0 && daysUntilStart <= 2)
-            : (daysUntilStart === 2);
-
-        if (!inWindow) continue;
+        // Fire ONLY when exactly 2 days away (both auto and manual)
+        if (daysUntilStart !== 2) continue;
 
         const notificationID = `${op.start}-${op.name.toUpperCase()}`;
 
-        // Duplicate prevention — skip if already logged (auto only)
-        if (!manualTrigger && notificationLog.some(l => l.id === notificationID)) {
-            console.log(`[Notification Check] Duplicate skipped: ${op.name}`);
+        // Duplicate prevention — skip if already sent (auto and manual)
+        if (notificationLog.some(l => l.id === notificationID && l.emailStatus === 'Success')) {
+            console.log(`[Notification Check] Duplicate skipped (already sent): ${op.name}`);
             continue;
         }
 
@@ -7855,10 +8254,10 @@ async function checkAndSendNotifications(manualTrigger = false) {
         setTimeout(() => {
             if (notificationsSent > 0) {
                 showToast(`✅ ${notificationsSent} notification(s) sent!`, 'success');
-                alert(`Manual check complete.\n\n${notificationsSent} notification(s) sent.\n\nCheck the Notification Log for details.`);
+                alert(`Manual check complete.\n\n${notificationsSent} notification(s) sent to operators whose shift starts in exactly 2 days.\n\nCheck the Notification Log for details.`);
             } else {
                 showToast('No notifications sent — check log for details.', 'info');
-                alert('Manual check complete.\n\nNo notifications sent. This may be because:\n• No shifts start in exactly 2 days\n• Notifications already sent (check log)\n• Email addresses missing');
+                alert('Manual check complete.\n\nNo notifications sent. This may be because:\n• No shifts start in exactly 2 days\n• Notifications already sent to those operators (check log)\n• Email addresses missing');
             }
         }, 1500);
     } else if (notificationsSent > 0) {
@@ -7878,11 +8277,19 @@ function generateFullSchedule(officialStartDate) {
 
     let scheduleInputDate = getCleanDate(officialStartDate || DEFAULT_SCHEDULE_START_DATE);
 
-    const uniqueOperators = initialOperators.map(op => ({    
-        name: op.name,    
-        mobile: op.mobile,
-        email: op.email // ADDED
-    }));
+    const uniqueOperators = initialOperators
+        .filter(op => !op.deactivated)  // DEACTIVATION: exclude deactivated operators
+        .map(op => ({    
+            name: op.name,    
+            mobile: op.mobile,
+            email: op.email // ADDED
+        }));
+
+    // DEACTIVATION: guard if all operators are deactivated
+    if (uniqueOperators.length === 0) {
+        alert('⚠️ Cannot generate schedule: all operators are deactivated. Please reactivate at least one operator first.');
+        return;
+    }
 
     const targetEnd = new Date(scheduleInputDate);
     targetEnd.setFullYear(targetEnd.getFullYear() + 1);
@@ -9263,6 +9670,21 @@ function authenticate() {
     }
     // 5. Check Regular Operator
     else if (operatorPasswords[normalizedUsername] && operatorPasswords[normalizedUsername] === password) {
+        // Block login for deactivated operators
+        const opRecord = initialOperators.find(o => o.name.toUpperCase() === normalizedUsername);
+        if (opRecord && opRecord.deactivated) {
+            showLoginError('Your account has been deactivated. Please contact the system administrator.');
+            logAuditAction('LOGIN_BLOCKED',
+                `Deactivated operator ${normalizedUsername} attempted login and was blocked.`);
+            document.getElementById('usernameGroup').classList.add('error');
+            document.getElementById('passwordGroup').classList.add('error');
+            setTimeout(() => {
+                document.getElementById('usernameGroup').classList.remove('error');
+                document.getElementById('passwordGroup').classList.remove('error');
+            }, 3000);
+            resetLoginButton();
+            return;
+        }
         isOperator = true;
         loggedInUser = normalizedUsername;
         saveSessionState(); // Save session
@@ -9805,6 +10227,10 @@ function renderTable() {
             highlightClass = 'highlight-next';
         }
         tr.className = highlightClass;
+        // DEACTIVATION: mark shifts that need reassignment
+        if (op.needsReassignment) {
+            tr.className = (highlightClass ? highlightClass + ' ' : '') + 'shift-needs-reassignment';
+        }
 
         const globalIndex = operators.findIndex(o => o.start === op.start && o.name === op.name);
         let serialNumber = globalIndex !== -1 ? globalIndex + 1 : index + 1;
@@ -9888,8 +10314,8 @@ function renderTable() {
         }
         
         tr.innerHTML = `
-            <td>${serialNumber}</td>
-            <td>${op.name}</td>
+            <td>${serialNumber}${op.needsReassignment ? '<br><span class="deact-flag-badge" title="Deactivated operator — reassignment required">⚠️ Reassign</span>' : ''}</td>
+            <td>${op.name}${op.needsReassignment ? ' <span style="color:#e74c3c; font-size:11px; font-weight:700;">[DEACTIVATED]</span>' : ''}</td>
             <td>${op.checkedBy}</td>
             <td>${op.mobile}</td>
             <td>${formatDate(op.start)} - ${formatDate(op.end)}</td>
@@ -9967,6 +10393,456 @@ function renderNextShifts() {
     });
 }
 
+// =============================================================
+// USER DEACTIVATION & BACKUP OPERATOR REMOVAL MODULE
+// Covers: deactivation, reactivation, login block, schedule
+// filtering, shift flagging, alerts, audit trail, reporting.
+// =============================================================
+
+// ── Helpers ──────────────────────────────────────────────────
+
+function isOperatorDeactivated(operatorName) {
+    const op = initialOperators.find(o => o.name.toUpperCase() === operatorName.toUpperCase());
+    return op ? !!op.deactivated : false;
+}
+
+function logDeactivationAudit(entry) {
+    deactivationAuditLog = JSON.parse(localStorage.getItem(DEACTIVATION_AUDIT_KEY) || '[]');
+    deactivationAuditLog.unshift(entry);
+    localStorage.setItem(DEACTIVATION_AUDIT_KEY, JSON.stringify(deactivationAuditLog));
+}
+
+// ── Modal open/close ─────────────────────────────────────────
+
+function openDeactivationModal() {
+    if (!isAdmin) return alert('Full Administrator privileges required to deactivate operators.');
+    const sel = document.getElementById('deactivateOperatorSelect');
+    sel.innerHTML = '<option value="">-- Select Active Operator --</option>';
+    initialOperators.forEach(op => {
+        if (!op.deactivated) {
+            const opt = document.createElement('option');
+            opt.value = op.name;
+            opt.textContent = op.name;
+            sel.appendChild(opt);
+        }
+    });
+    document.getElementById('deactivateReasonType').value = '';
+    document.getElementById('deactivateReasonText').value = '';
+    document.getElementById('deactivateAdminConfirm').checked = false;
+    document.getElementById('deactivationModal').style.display = 'block';
+}
+
+function closeDeactivationModal() {
+    document.getElementById('deactivationModal').style.display = 'none';
+}
+
+function openReactivationModal() {
+    if (!isAdmin) return alert('Full Administrator privileges required to reactivate operators.');
+    const sel = document.getElementById('reactivateOperatorSelect');
+    sel.innerHTML = '<option value="">-- Select Deactivated Operator --</option>';
+    const deactivated = initialOperators.filter(op => op.deactivated);
+    if (deactivated.length === 0) {
+        alert('There are no deactivated operators to reactivate.');
+        return;
+    }
+    deactivated.forEach(op => {
+        const opt = document.createElement('option');
+        opt.value = op.name;
+        opt.textContent = op.name;
+        sel.appendChild(opt);
+    });
+    document.getElementById('reactivateReasonText').value = '';
+    document.getElementById('reactivateAdminConfirm').checked = false;
+    document.getElementById('reactivationModal').style.display = 'block';
+}
+
+function closeReactivationModal() {
+    document.getElementById('reactivationModal').style.display = 'none';
+}
+
+function handleDeactivationReasonType() {
+    // No extra action needed — textarea is always visible
+}
+
+// ── Core: deactivate an operator ─────────────────────────────
+
+function confirmDeactivation() {
+    if (!isAdmin) return;
+
+    const opName     = document.getElementById('deactivateOperatorSelect').value;
+    const reasonType = document.getElementById('deactivateReasonType').value;
+    const reasonText = document.getElementById('deactivateReasonText').value.trim();
+    const confirmed  = document.getElementById('deactivateAdminConfirm').checked;
+
+    if (!opName)     return alert('Please select an operator to deactivate.');
+    if (!reasonType) return alert('Please select a reason type.');
+    if (!reasonText) return alert('Please provide additional details / notes.');
+    if (!confirmed)  return alert('Please tick the administrator confirmation checkbox.');
+
+    const reasonLabels = {
+        resignation: 'Employee Resignation / Left Organisation',
+        transfer:    'Transfer — No Longer Requires Backup Role',
+        termination: 'Employment Termination',
+        suspension:  'Temporary Suspension',
+        role_change: 'Role Change / Re-assignment',
+        security:    'Security / Compliance Issue',
+        other:       'Other'
+    };
+
+    const opIndex = initialOperators.findIndex(o => o.name === opName);
+    if (opIndex === -1) return alert('Operator not found.');
+
+    const now       = new Date().toISOString();
+    const actor     = loggedInUser;
+    const fullLabel = reasonLabels[reasonType] || reasonType;
+
+    // 1. Find pending/active shifts for this operator BEFORE deactivating
+    const today        = getCleanDate(new Date());
+    const pendingShifts = operators.filter(s =>
+        s.name.toUpperCase() === opName.toUpperCase() &&
+        s.status !== 'Finished' &&
+        getCleanDate(s.end).getTime() >= today.getTime()
+    );
+    const pendingCount = pendingShifts.length;
+
+    // 2. Flag those shifts as needing reassignment
+    operators.forEach(s => {
+        if (s.name.toUpperCase() === opName.toUpperCase() &&
+            s.status !== 'Finished' &&
+            getCleanDate(s.end).getTime() >= today.getTime()) {
+            s.needsReassignment = true;
+            s.deactivationNote  = `Operator deactivated (${fullLabel}) on ${now.split('T')[0]} by ${actor}`;
+        }
+    });
+    localStorage.setItem('operators', JSON.stringify(operators));
+
+    // 3. Mark operator as deactivated in initialOperators
+    const history = initialOperators[opIndex].deactivationHistory || [];
+    history.push({
+        action:     'DEACTIVATED',
+        timestamp:  now,
+        by:         actor,
+        reasonType: reasonType,
+        reasonText: reasonText,
+        pendingShiftsFlagged: pendingCount
+    });
+
+    initialOperators[opIndex].deactivated           = true;
+    initialOperators[opIndex].deactivatedAt         = now;
+    initialOperators[opIndex].deactivatedBy         = actor;
+    initialOperators[opIndex].deactivationReason    = `${fullLabel}: ${reasonText}`;
+    initialOperators[opIndex].deactivationHistory   = history;
+    localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
+
+    // 4. Deactivation audit entry
+    const auditEntry = {
+        timestamp:           now,
+        action:              'DEACTIVATED',
+        operatorName:        opName,
+        performedBy:         actor,
+        reasonType:          fullLabel,
+        details:             reasonText,
+        pendingShiftsFlagged: pendingCount
+    };
+    logDeactivationAudit(auditEntry);
+
+    // 5. Main system audit
+    logAuditAction('OPERATOR_DEACTIVATED',
+        `Operator ${opName} deactivated by ${actor}. Reason: ${fullLabel} — ${reasonText}. ${pendingCount} pending shift(s) flagged for reassignment.`
+    );
+
+    closeDeactivationModal();
+
+    // 6. Refresh UI
+    renderOperatorManagementTable();
+    renderTable();
+    renderNextShifts();
+    checkDeactivatedPendingShifts();
+
+    // 7. User feedback
+    let msg = `✅ Operator ${opName} has been deactivated successfully.\n\n`;
+    msg += `📋 Action recorded by: ${actor}\n`;
+    msg += `📌 Reason: ${fullLabel}\n`;
+    if (pendingCount > 0) {
+        msg += `\n⚠️ ${pendingCount} pending/active shift(s) have been FLAGGED for reassignment.\n`;
+        msg += `   Use "Check Pending Shifts" to review and reassign.`;
+    } else {
+        msg += `\n✅ No pending shifts found — no reassignment required.`;
+    }
+    alert(msg);
+
+    showToast(`🚫 ${opName} deactivated — ${pendingCount} shift(s) flagged for reassignment.`,
+        pendingCount > 0 ? 'warning' : 'success');
+}
+
+// ── Core: reactivate an operator ─────────────────────────────
+
+function confirmReactivation() {
+    if (!isAdmin) return;
+
+    const opName     = document.getElementById('reactivateOperatorSelect').value;
+    const reasonText = document.getElementById('reactivateReasonText').value.trim();
+    const confirmed  = document.getElementById('reactivateAdminConfirm').checked;
+
+    if (!opName)     return alert('Please select a deactivated operator to reactivate.');
+    if (!reasonText) return alert('Please provide a reason / authorisation details for reactivation.');
+    if (!confirmed)  return alert('Please tick the administrator confirmation checkbox.');
+
+    const opIndex = initialOperators.findIndex(o => o.name === opName);
+    if (opIndex === -1) return alert('Operator not found.');
+
+    const now   = new Date().toISOString();
+    const actor = loggedInUser;
+
+    const history = initialOperators[opIndex].deactivationHistory || [];
+    history.push({
+        action:     'REACTIVATED',
+        timestamp:  now,
+        by:         actor,
+        reasonText: reasonText
+    });
+
+    initialOperators[opIndex].deactivated         = false;
+    initialOperators[opIndex].deactivatedAt       = null;
+    initialOperators[opIndex].deactivatedBy       = null;
+    initialOperators[opIndex].deactivationReason  = null;
+    initialOperators[opIndex].deactivationHistory = history;
+    localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
+
+    // Deactivation audit
+    const auditEntry = {
+        timestamp:           now,
+        action:              'REACTIVATED',
+        operatorName:        opName,
+        performedBy:         actor,
+        reasonType:          'Reactivation',
+        details:             reasonText,
+        pendingShiftsFlagged: 0
+    };
+    logDeactivationAudit(auditEntry);
+
+    // Main audit
+    logAuditAction('OPERATOR_REACTIVATED',
+        `Operator ${opName} reactivated by ${actor}. Authorisation: ${reasonText}`
+    );
+
+    closeReactivationModal();
+    renderOperatorManagementTable();
+    renderTable();
+    checkDeactivatedPendingShifts();
+
+    alert(`✅ Operator ${opName} has been reactivated.\n\nThey can now log in and will be included in future schedule generation.\n\nAction recorded by: ${actor}`);
+    showToast(`✅ ${opName} reactivated successfully.`, 'success');
+}
+
+// ── Check pending shifts for deactivated operators ───────────
+
+function checkDeactivatedPendingShifts() {
+    const today   = getCleanDate(new Date());
+    const flagged = operators.filter(s =>
+        s.needsReassignment &&
+        getCleanDate(s.end).getTime() >= today.getTime()
+    );
+
+    const banner = document.getElementById('deactivationAlertBanner');
+    const text   = document.getElementById('deactivationAlertText');
+    if (!banner || !text) return;
+
+    if (flagged.length > 0) {
+        const names = [...new Set(flagged.map(s => s.name))].join(', ');
+        text.textContent =
+            `${flagged.length} active/pending shift(s) belonging to deactivated operator(s) require reassignment: ${names}`;
+        banner.style.display = 'flex';
+    } else {
+        banner.style.display = 'none';
+    }
+    return flagged.length;
+}
+
+// ── Toggle full status table in admin panel ──────────────────
+
+function toggleDeactivationTable() {
+    const tbl = document.getElementById('deactivationStatusTable');
+    const btn = document.getElementById('toggleDeactivTblBtn');
+    if (!tbl) return;
+    if (tbl.style.display === 'none') {
+        renderDeactivationStatusTable();
+        tbl.style.display = 'block';
+        btn.textContent = '👁 Hide Operator Status';
+    } else {
+        tbl.style.display = 'none';
+        btn.textContent = '👁 Show All Operator Status';
+    }
+}
+
+function renderDeactivationStatusTable() {
+    if (!isAdmin) return;
+    const tbody = document.getElementById('deactivationStatusTbody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    const today = getCleanDate(new Date());
+
+    initialOperators.forEach((op, i) => {
+        const isDeact = !!op.deactivated;
+        const pendingCount = isDeact ? operators.filter(s =>
+            s.name.toUpperCase() === op.name.toUpperCase() &&
+            s.needsReassignment &&
+            getCleanDate(s.end).getTime() >= today.getTime()
+        ).length : 0;
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${i + 1}</td>
+            <td><strong>${op.name}</strong></td>
+            <td>${isDeact
+                ? '<span class="deact-badge-inactive">🚫 Deactivated</span>'
+                : '<span class="deact-badge-active">✅ Active</span>'}</td>
+            <td>${isDeact ? (op.deactivatedBy || '—') : '—'}</td>
+            <td>${isDeact && op.deactivatedAt
+                ? new Date(op.deactivatedAt).toLocaleDateString('en-US', {day:'2-digit', month:'short', year:'numeric'})
+                : '—'}</td>
+            <td style="max-width:180px; white-space:normal; font-size:11px;">${isDeact ? (op.deactivationReason || '—') : '—'}</td>
+            <td>${pendingCount > 0
+                ? `<span class="deact-flag-badge">⚠️ ${pendingCount} shift(s)</span>`
+                : '—'}
+                ${isDeact
+                    ? `<button onclick="openReactivationModal()" style="padding:2px 8px; font-size:11px; background:#28a745; color:#fff; border:none; border-radius:4px; cursor:pointer; margin-left:4px;">Reactivate</button>`
+                    : `<button onclick="openDeactivationModal()" style="padding:2px 8px; font-size:11px; background:#e74c3c; color:#fff; border:none; border-radius:4px; cursor:pointer; margin-left:4px;">Deactivate</button>`
+                }</td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+// ── Deactivation Audit Log view ──────────────────────────────
+
+function openDeactivationAuditView() {
+    if (!isAdmin) return;
+    deactivationAuditLog = JSON.parse(localStorage.getItem(DEACTIVATION_AUDIT_KEY) || '[]');
+    const tbody = document.getElementById('deactivationAuditTbody');
+    tbody.innerHTML = '';
+    if (deactivationAuditLog.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#999; padding:20px;">No deactivation records found.</td></tr>';
+    } else {
+        deactivationAuditLog.forEach(entry => {
+            const tr = document.createElement('tr');
+            const actionBadge = entry.action === 'DEACTIVATED'
+                ? '<span class="deact-badge-inactive">🚫 Deactivated</span>'
+                : '<span class="deact-badge-active">✅ Reactivated</span>';
+            tr.innerHTML = `
+                <td>${new Date(entry.timestamp).toLocaleString('en-US', {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}</td>
+                <td>${actionBadge}</td>
+                <td><strong>${entry.operatorName}</strong></td>
+                <td>${entry.performedBy}</td>
+                <td>${entry.reasonType}</td>
+                <td style="max-width:200px; white-space:normal; font-size:12px;">${entry.details}</td>
+                <td>${entry.pendingShiftsFlagged > 0
+                    ? `<span class="deact-flag-badge">⚠️ ${entry.pendingShiftsFlagged}</span>`
+                    : '—'}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+    document.getElementById('scheduleView').style.display = 'none';
+    document.getElementById('operatorManagementView').style.display = 'none';
+    document.getElementById('auditLogView').style.display = 'none';
+    document.getElementById('deactivatedOperatorsView').style.display = 'none';
+    document.getElementById('deactivationAuditView').style.display = 'block';
+}
+
+function closeDeactivationAuditView() {
+    document.getElementById('deactivationAuditView').style.display = 'none';
+    document.getElementById('scheduleView').style.display = 'block';
+}
+
+function exportDeactivationAuditCSV() {
+    deactivationAuditLog = JSON.parse(localStorage.getItem(DEACTIVATION_AUDIT_KEY) || '[]');
+    if (deactivationAuditLog.length === 0) return alert('No deactivation audit records to export.');
+    const rows = [['Timestamp','Action','Operator','Performed By','Reason Type','Details','Pending Shifts Flagged']];
+    deactivationAuditLog.forEach(e => {
+        rows.push([
+            new Date(e.timestamp).toLocaleString(),
+            e.action, e.operatorName, e.performedBy,
+            e.reasonType, `"${(e.details||'').replace(/"/g,'""')}"`,
+            e.pendingShiftsFlagged
+        ]);
+    });
+    const csv  = rows.map(r => r.join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = `Deactivation_Audit_${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    logAuditAction('DEACTIVATION_AUDIT_EXPORT', 'Deactivation audit log exported to CSV.');
+}
+
+// ── Deactivated Operators historical view ───────────────────
+
+function openDeactivatedOperatorsView() {
+    if (!isAdmin) return;
+    const deactivated = initialOperators.filter(op => op.deactivated);
+    const tbody       = document.getElementById('deactivatedOperatorsTbody');
+    tbody.innerHTML   = '';
+    const today       = getCleanDate(new Date());
+
+    if (deactivated.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:#999; padding:20px;">No deactivated operators found.</td></tr>';
+    } else {
+        deactivated.forEach((op, i) => {
+            const pending = operators.filter(s =>
+                s.name.toUpperCase() === op.name.toUpperCase() &&
+                s.needsReassignment &&
+                getCleanDate(s.end).getTime() >= today.getTime()
+            ).length;
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${i + 1}</td>
+                <td><strong>${op.name}</strong></td>
+                <td style="font-size:12px;">${op.email || '—'}</td>
+                <td>${op.mobile || '—'}</td>
+                <td>${op.deactivatedAt
+                    ? new Date(op.deactivatedAt).toLocaleDateString('en-US', {day:'2-digit',month:'short',year:'numeric'})
+                    : '—'}</td>
+                <td>${op.deactivatedBy || '—'}</td>
+                <td style="max-width:180px; white-space:normal; font-size:12px;">${op.deactivationReason || '—'}</td>
+                <td>${pending > 0
+                    ? `<span class="deact-flag-badge">⚠️ ${pending} shift(s) pending</span>`
+                    : '<span style="color:#28a745; font-size:12px;">✅ None</span>'}</td>
+                <td>
+                    <button onclick="openReactivationModal()" style="padding:4px 10px; font-size:12px; background:#28a745; color:#fff; border:none; border-radius:4px; cursor:pointer;">
+                        ✅ Reactivate
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+    document.getElementById('scheduleView').style.display = 'none';
+    document.getElementById('operatorManagementView').style.display = 'none';
+    document.getElementById('auditLogView').style.display = 'none';
+    document.getElementById('deactivationAuditView').style.display = 'none';
+    document.getElementById('deactivatedOperatorsView').style.display = 'block';
+}
+
+function closeDeactivatedOperatorsView() {
+    document.getElementById('deactivatedOperatorsView').style.display = 'none';
+    document.getElementById('scheduleView').style.display = 'block';
+}
+
+// ── Run startup check for deactivated pending shifts ─────────
+
+function initDeactivationModule() {
+    deactivationAuditLog = JSON.parse(localStorage.getItem(DEACTIVATION_AUDIT_KEY) || '[]');
+    // Small delay so banner DOM is ready
+    setTimeout(() => checkDeactivatedPendingShifts(), 800);
+}
+
+// =============================================================
+// END USER DEACTIVATION MODULE
+// =============================================================
+
 // --- Operator Management ---
 
 function renderOperatorManagementTable() {
@@ -9977,11 +10853,26 @@ function renderOperatorManagementTable() {
     initialOperators.forEach((op, index) => {
         const tr = document.createElement('tr');
         const opNameUpper = op.name.toUpperCase();
-        
+        const isDeact = !!op.deactivated;
+
+        // DEACTIVATION: visually dim deactivated rows
+        if (isDeact) tr.classList.add('operator-deactivated');
+
+        const statusBadge = isDeact
+            ? '<span class="deact-badge-inactive">🚫 Deactivated</span>'
+            : '<span class="deact-badge-active">✅ Active</span>';
+
+        const deactivationBtn = isDeact
+            ? `<button style="padding:3px 8px; font-size:11px; background:#28a745; color:#fff; border:none; border-radius:4px; cursor:pointer; margin:1px;"
+                       onclick="event.stopPropagation(); openReactivationModal()">✅ Reactivate</button>`
+            : `<button style="padding:3px 8px; font-size:11px; background:#e74c3c; color:#fff; border:none; border-radius:4px; cursor:pointer; margin:1px;"
+                       onclick="event.stopPropagation(); openDeactivationModal()">🚫 Deactivate</button>`;
+
         let actionButtons = `
             <button class="reset-btn" onclick="event.stopPropagation(); resetOperatorPasswordMaster('${opNameUpper}')">Reset Pwd</button>
             <button class="rename-btn" onclick="event.stopPropagation(); openEditOperatorModal(${index})">Edit</button>
             <button class="delete-btn" onclick="event.stopPropagation(); deleteMasterOperator(${index})">Delete</button>
+            ${deactivationBtn}
         `;
 
         tr.innerHTML = `
@@ -9989,6 +10880,7 @@ function renderOperatorManagementTable() {
             <td>${op.name}</td>
             <td>${op.mobile}</td>
             <td>${op.email}</td>
+            <td>${statusBadge}</td>
             <td>${actionButtons}</td>
         `;
         tbody.appendChild(tr);
@@ -10144,6 +11036,7 @@ function resetAll() {
         localStorage.removeItem('operatorPasswords');
         localStorage.removeItem(NOTIFICATION_LOG_KEY); // NEW
         localStorage.removeItem(NOTIFICATION_SETTINGS_KEY); // NEW
+        localStorage.removeItem(DEACTIVATION_AUDIT_KEY); // DEACTIVATION
 
         initialOperators = [ // Reset to initial state with correct official emails
             { name: "ABRAHAM CHALA",  mobile: "0913564114", email: "abraham.chala@oromiabank.com" },
@@ -10153,6 +11046,7 @@ function resetAll() {
             { name: "TSION GIRMA",    mobile: "0946700418", email: "tsion.g@orointbank.com" }
         ];
         localStorage.setItem(INITIAL_OPERATORS_DATA_KEY, JSON.stringify(initialOperators));
+        deactivationAuditLog = [];
 
         // Re-run init to restore default passwords and regenerate schedule
         init();
@@ -11374,6 +12268,8 @@ function initNewFeatures() {
     initPushNotifications();
     detectShiftConflicts();
     startCountdownTimer();
+    // DEACTIVATION: initialise deactivation module and check for pending alerts
+    if (isAdmin || isManager) initDeactivationModule();
 }
 
 function refreshNewFeatures() {

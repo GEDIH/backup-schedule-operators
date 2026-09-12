@@ -4490,7 +4490,7 @@ body.dark-mode .daily-check-field-label { color: #aaa; }
             </div>
             
             <!-- Multi-Factor Authentication Section -->
-            <div class="mfa-section" id="mfaSection" style="display: none;">
+            <div class="mfa-section" id="mfaSection">
                 <div class="mfa-title">🔐 Multi-Factor Authentication</div>
                 <p style="font-size: 14px; color: #666; margin-bottom: 15px;">
                     Enter the 6-digit verification code sent to your registered device
@@ -5638,7 +5638,7 @@ tr.operator-deactivated td:last-child {
 <!-- ============================================================
      FEATURE 8: COUNTDOWN TIMER ON ACTIVE SHIFT (injected via JS into table)
      ============================================================ -->
-<div id="countdownBanner" style="display:none; max-width:1000px; margin:0 auto 15px auto; background:linear-gradient(135deg,#e8f5e9,#c8e6c9); border:2px solid #4caf50; border-radius:12px; padding:14px 20px; display:none; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+<div id="countdownBanner" style="display:none; max-width:1000px; margin:0 auto 15px auto; background:linear-gradient(135deg,#e8f5e9,#c8e6c9); border:2px solid #4caf50; border-radius:12px; padding:14px 20px; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
     <div>
         <div style="font-weight:800; color:#1b5e20; font-size:14px;">⏰ Active Shift Countdown</div>
         <div id="countdownOperatorName" style="font-size:13px; color:#2e7d32; margin-top:3px;"></div>
@@ -13489,7 +13489,7 @@ function injectRoleDashboard() {
     let actions = '';
     if (isAdmin) {
         const pending = proGetSwaps().filter(s => s.status === 'pending').length;
-        const gaps    = detectCoverageGaps().length;
+        const gaps    = operators.length >= 2 ? detectCoverageGaps().length : 0;
         actions = `
             <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;">
                 <button onclick="openSwapApprovals()" style="padding:7px 14px;border:none;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;background:linear-gradient(135deg,#00A8E8,#0087b8);color:#fff;">
@@ -13566,6 +13566,9 @@ function openHandoverModal(globalIndex) {
 function closeHandoverModal() { document.getElementById('handoverModal').style.display = 'none'; }
 
 function confirmHandover() {
+    if (_handoverTargetIndex === null || !operators[_handoverTargetIndex]) {
+        return showToast('Invalid shift target. Please try again.', 'error');
+    }
     const notes    = document.getElementById('handoverNotes').value.trim();
     const toOp     = document.getElementById('handoverToOperator').value;
     const checked  = document.getElementById('handoverConfirmCheck').checked;
@@ -13698,10 +13701,13 @@ function resolveSwap(swapId, decision) {
     proSet(PRO_KEYS.swapRequests, swaps);
 
     if (decision === 'approved') {
-        // Execute the swap in the schedule
-        const s           = swaps[idx];
-        const shiftIndex  = s.shiftIndex;
-        if (operators[shiftIndex]) {
+        const s = swaps[idx];
+        // Match by shiftStart + original requestedBy name — avoids stale index bug
+        const shiftIndex = operators.findIndex(op =>
+            op.start === s.shiftStart &&
+            op.name.toUpperCase() === s.requestedBy.toUpperCase()
+        );
+        if (shiftIndex !== -1) {
             const oldName = operators[shiftIndex].name;
             operators[shiftIndex].name      = s.swapWith;
             operators[shiftIndex].checkedBy = s.swapWith;
@@ -13714,6 +13720,9 @@ function resolveSwap(swapId, decision) {
             logAuditAction('SWAP_APPROVED', `Swap approved: ${oldName} → ${s.swapWith} for shift ${s.shiftStart}–${s.shiftEnd}`);
             renderTable();
             showToast(`✅ Swap approved & executed — ${s.swapWith} now covers the shift.`, 'success');
+        } else {
+            showToast('⚠️ Could not locate the original shift — it may have been reassigned. Please swap manually.', 'warning');
+            logAuditAction('SWAP_APPROVED_NOTFOUND', `Swap approved but shift for ${s.requestedBy} on ${s.shiftStart} not found.`);
         }
     } else {
         logAuditAction('SWAP_REJECTED', `Swap rejected for ${swaps[idx].requestedBy} (shift ${swaps[idx].shiftStart})`);
@@ -13799,15 +13808,49 @@ function saveDailyLogEntry() {
     const dur    = (eh*60+em)-(sh*60+sm);
     const slaBreached = start > sla.startBy || end > sla.endBy || dur > sla.maxMinutes;
 
+    // --- Write to new proBackupLog store ---
     const all    = proGetLog();
     const opKey  = loggedInUser;
     if (!all[opKey]) all[opKey] = {};
-    all[opKey][date] = { startTime:start, endTime:end, outcome, notes, slaBreached, savedAt:new Date().toISOString() };
+    all[opKey][date] = {
+        startTime: start, endTime: end, outcome, notes,
+        slaBreached, savedAt: new Date().toISOString()
+    };
     proSet(PRO_KEYS.dailyLog, all);
-    logAuditAction('DAILY_LOG_SAVED', `${opKey} logged backup for ${date}: ${outcome}, ${start}–${end}${slaBreached?' [SLA BREACH]':''}`);
+
+    // --- Also write to existing backup_ key format so charts/reports stay in sync ---
+    const outcomeMap = {
+        'Completed': 'Completely Backed Up',
+        'Partial':   'Issue Encountered',
+        'Failed':    'Issue Encountered',
+        'Holiday':   'Holiday',
+        'Weekend':   'Weekend / Day Off'
+    };
+    const legacyStatus  = outcomeMap[outcome] || outcome;
+    const confirmed     = (outcome === 'Completed' || outcome === 'Partial');
+    const legacyPayload = {
+        status:      legacyStatus,
+        startTime:   start,
+        endTime:     end,
+        notes:       notes,
+        confirmed:   confirmed,
+        lastUpdated: new Date().toLocaleString(),
+        operator:    opKey,
+        date:        date
+    };
+    if (typeof saveBackupData === 'function') {
+        saveBackupData(opKey, new Date(date), legacyPayload);
+    }
+
+    logAuditAction('DAILY_LOG_SAVED',
+        `${opKey} logged backup for ${date}: ${outcome}, ${start}–${end}${slaBreached ? ' [SLA BREACH]' : ''}`
+    );
 
     closeDailyLogModal();
-    showToast(slaBreached ? '⚠️ Log saved — SLA breach flagged.' : '✅ Daily log saved successfully.', slaBreached ? 'warning' : 'success');
+    showToast(
+        slaBreached ? '⚠️ Log saved — SLA breach flagged.' : '✅ Daily log saved successfully.',
+        slaBreached ? 'warning' : 'success'
+    );
     injectRoleDashboard();
 }
 
@@ -14020,6 +14063,10 @@ function exportReportCSV() {
 function renderBackupTrendChart() {
     const section = document.getElementById('backupTrendSection');
     if (!section) return;
+    if (typeof Chart === 'undefined') {
+        showToast('Chart library not loaded yet. Try again in a moment.', 'warning');
+        return;
+    }
     section.style.display = 'block';
     const all     = proGetLog();
     const opNames = initialOperators.map(io => io.name);
@@ -14238,7 +14285,10 @@ function printSchedule() {
     if (_existingRender) {
         renderTable = function() {
             selectedRow = -1;
-            rows.forEach(r => { try { r.style.outline = ''; } catch(e){} });
+            // Clear outlines on currently visible rows before re-render
+            document.querySelectorAll('#scheduleTable tbody tr').forEach(r => {
+                try { r.style.outline = ''; } catch(e) {}
+            });
             _existingRender.apply(this, arguments);
         };
     }
@@ -14476,4 +14526,4 @@ function openHandoverHistory() {
 console.log('✅ Professional advancement features loaded (13 features).');
 </script>
 </body>
-</html>
+</html> 

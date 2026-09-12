@@ -10206,30 +10206,64 @@ function renderTable() {
 
     let filteredOperators = baseOperators;
 
-    const isTodayFilterActive = !isOperator && !selectedOperator;
+    // Highlight today/next for all non-operator views (admin, viewer, manager, filtered)
+    const isTodayFilterActive = !isOperator;
     let activeShiftIndexInFilteredList = -1;
     let nextShiftIndexInFilteredList = -1;
 
     if (isTodayFilterActive) {
+        // Find the shift whose date range covers today (regardless of status so we
+        // can still colour it; status check is done separately during row render)
         const activeShiftGlobalIndex = operators.findIndex(op => {
             const opStart = getCleanDate(op.start);
-            const opEnd = getCleanDate(op.end);
-            return (today.getTime() >= opStart.getTime() && today.getTime() <= opEnd.getTime() && op.status === 'Active');
+            const opEnd   = getCleanDate(op.end);
+            return today.getTime() >= opStart.getTime() && today.getTime() <= opEnd.getTime();
         });
-        
-        if (activeShiftGlobalIndex !== -1) {
-            filteredOperators = operators.slice(activeShiftGlobalIndex, activeShiftGlobalIndex + 5);
-            activeShiftIndexInFilteredList = 0;
-            nextShiftIndexInFilteredList = 1;
-        } else {
-            const upcomingShiftGlobalIndex = operators.findIndex(op => getCleanDate(op.start).getTime() > today.getTime() && op.status === 'Active');
-            if (upcomingShiftGlobalIndex !== -1) {
-                filteredOperators = operators.slice(upcomingShiftGlobalIndex, upcomingShiftGlobalIndex + 5);
-                activeShiftIndexInFilteredList = -1; 
-                nextShiftIndexInFilteredList = 0; // The first upcoming one is the 'next'
+
+        if (!selectedOperator) {
+            // Default view — show a window of shifts centred on today
+            if (activeShiftGlobalIndex !== -1) {
+                filteredOperators = operators.slice(activeShiftGlobalIndex, activeShiftGlobalIndex + 5);
+                activeShiftIndexInFilteredList = 0;
+
+                // Find the first Active shift AFTER the current one for "next" highlight
+                const nextActive = filteredOperators.findIndex(
+                    (op, i) => i > 0 && op.status === 'Active'
+                );
+                nextShiftIndexInFilteredList = nextActive !== -1 ? nextActive : 1;
             } else {
-                // If no active or upcoming shifts, show the last 5 finished ones
-                filteredOperators = operators.filter(op => op.status === 'Finished').slice(-5);
+                // No shift covering today — find the next upcoming Active shift
+                const upcomingShiftGlobalIndex = operators.findIndex(
+                    op => getCleanDate(op.start).getTime() > today.getTime() && op.status === 'Active'
+                );
+                if (upcomingShiftGlobalIndex !== -1) {
+                    filteredOperators = operators.slice(upcomingShiftGlobalIndex, upcomingShiftGlobalIndex + 5);
+                    activeShiftIndexInFilteredList = -1;
+                    nextShiftIndexInFilteredList   = 0; // first upcoming is "next"
+                } else {
+                    // All shifts finished — show last 5
+                    filteredOperators = operators.filter(op => op.status === 'Finished').slice(-5);
+                }
+            }
+        } else {
+            // Operator filter is active — highlight within the filtered list
+            activeShiftIndexInFilteredList = filteredOperators.findIndex(op => {
+                const opStart = getCleanDate(op.start);
+                const opEnd   = getCleanDate(op.end);
+                return today.getTime() >= opStart.getTime() && today.getTime() <= opEnd.getTime();
+            });
+
+            if (activeShiftIndexInFilteredList !== -1) {
+                // Next = first Active entry after today's shift in filtered list
+                const nextActive = filteredOperators.findIndex(
+                    (op, i) => i > activeShiftIndexInFilteredList && op.status === 'Active'
+                );
+                nextShiftIndexInFilteredList = nextActive;
+            } else {
+                // No active today — first upcoming Active is "next"
+                nextShiftIndexInFilteredList = filteredOperators.findIndex(
+                    op => getCleanDate(op.start).getTime() > today.getTime() && op.status === 'Active'
+                );
             }
         }
     }
@@ -10242,12 +10276,14 @@ function renderTable() {
         tr.onclick = () => showDetailModal(op);
 
         let highlightClass = '';
-        if (op.status === 'Finished') {
-            highlightClass = 'highlight-finished';
-        } else if (index === activeShiftIndexInFilteredList) {
+        if (index === activeShiftIndexInFilteredList) {
+            // Today's shift always gets yellow, even if marked Finished
             highlightClass = 'highlight-today';
-        } else if (index === nextShiftIndexInFilteredList) {
+        } else if (index === nextShiftIndexInFilteredList && op.status === 'Active') {
+            // Next shift only highlighted when it's actually Active
             highlightClass = 'highlight-next';
+        } else if (op.status === 'Finished') {
+            highlightClass = 'highlight-finished';
         }
         tr.className = highlightClass;
         // DEACTIVATION: mark shifts that need reassignment
@@ -10369,18 +10405,29 @@ function renderNextShifts() {
 
     let startIndex = operators.findIndex(op => {
         const opStart = getCleanDate(op.start);
-        const opEnd = getCleanDate(op.end);
-        return (today.getTime() >= opStart.getTime() && today.getTime() <= opEnd.getTime() && op.status === 'Active');
+        const opEnd   = getCleanDate(op.end);
+        return today.getTime() >= opStart.getTime() && today.getTime() <= opEnd.getTime() && op.status === 'Active';
     });
 
-    if (startIndex === -1) {
-        startIndex = operators.findIndex(op => getCleanDate(op.start).getTime() > today.getTime() && op.status === 'Active');
-        if (startIndex === -1) startIndex = 0;
+    // Start collecting from AFTER the currently active shift (or from the
+    // first upcoming Active shift if nothing is active today)
+    let searchFrom;
+    if (startIndex !== -1) {
+        searchFrom = startIndex + 1;
     } else {
-        startIndex += 1;
+        searchFrom = operators.findIndex(
+            op => getCleanDate(op.start).getTime() > today.getTime() && op.status === 'Active'
+        );
+        if (searchFrom === -1) searchFrom = 0;
     }
-    
-    const shiftsToShow = operators.slice(startIndex, startIndex + 5).filter(op => op.status === 'Active');
+
+    // Collect up to 5 Active shifts from searchFrom onwards (skip Finished ones)
+    const shiftsToShow = [];
+    for (let i = searchFrom; i < operators.length && shiftsToShow.length < 5; i++) {
+        if (operators[i].status === 'Active') {
+            shiftsToShow.push(operators[i]);
+        }
+    }
 
     if (shiftsToShow.length === 0) {
         container.innerHTML = '<p style="padding: 0 15px; color:#999;">No active upcoming shifts found.</p>';
@@ -13084,6 +13131,1349 @@ setInterval(() => {
         updateKpiBar();
     }
 }, 60000); // every minute
+</script>
+
+<!-- ============================================================
+     PROFESSIONAL ADVANCEMENT — ALL 13 FEATURES
+     ============================================================ -->
+
+<!-- MODALS: Handover, Swap Request, Daily Log, Issues, SLA Config, Monthly Report -->
+<div id="handoverModal" class="modal">
+  <div class="modal-content" style="max-width:500px;border-radius:14px;padding:0;overflow:hidden;">
+    <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);padding:20px 24px;color:#fff;display:flex;align-items:center;gap:12px;">
+      <span style="font-size:28px;">🤝</span>
+      <div><div style="font-weight:800;font-size:16px;">Shift Handover Confirmation</div>
+           <div style="font-size:12px;opacity:.7;">Formally confirm shift completion &amp; handover</div></div>
+      <span class="close" onclick="closeHandoverModal()" style="margin-left:auto;color:#fff;font-size:24px;cursor:pointer;">&times;</span>
+    </div>
+    <div style="padding:22px 24px;">
+      <div id="handoverShiftInfo" style="background:#f8f9fa;border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:13px;border-left:4px solid #94C83D;"></div>
+      <label style="font-weight:700;font-size:13px;color:#333;">Handover Notes <span style="color:#999;font-weight:400;">(required)</span></label>
+      <textarea id="handoverNotes" rows="4" placeholder="Describe what was completed, any pending items, or issues to pass to the next operator..." style="width:100%;margin-top:6px;padding:10px;border:2px solid #dee2e6;border-radius:8px;font-size:13px;resize:vertical;box-sizing:border-box;"></textarea>
+      <label style="font-weight:700;font-size:13px;color:#333;margin-top:12px;display:block;">Handover To</label>
+      <select id="handoverToOperator" style="width:100%;margin-top:6px;padding:10px;border:2px solid #dee2e6;border-radius:8px;font-size:13px;box-sizing:border-box;"></select>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:14px;padding:12px;background:#fff3cd;border-radius:8px;border-left:4px solid #ffc107;">
+        <input type="checkbox" id="handoverConfirmCheck" style="width:18px;height:18px;accent-color:#94C83D;">
+        <label for="handoverConfirmCheck" style="font-size:13px;color:#333;cursor:pointer;">I confirm all backup tasks have been completed and this shift is ready for handover.</label>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:16px;justify-content:flex-end;">
+        <button onclick="closeHandoverModal()" style="padding:10px 20px;background:#6c757d;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Cancel</button>
+        <button onclick="confirmHandover()" style="padding:10px 24px;background:linear-gradient(135deg,#94C83D,#7DAE2F);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;">✅ Confirm Handover</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="swapRequestModal" class="modal">
+  <div class="modal-content" style="max-width:480px;border-radius:14px;padding:0;overflow:hidden;">
+    <div style="background:linear-gradient(135deg,#00A8E8,#0087b8);padding:20px 24px;color:#fff;display:flex;align-items:center;gap:12px;">
+      <span style="font-size:28px;">🔄</span>
+      <div><div style="font-weight:800;font-size:16px;">Request Shift Swap</div>
+           <div style="font-size:12px;opacity:.7;">Submit a swap request — admin will approve or reject</div></div>
+      <span class="close" onclick="closeSwapRequestModal()" style="margin-left:auto;color:#fff;font-size:24px;cursor:pointer;">&times;</span>
+    </div>
+    <div style="padding:22px 24px;">
+      <div id="swapReqShiftInfo" style="background:#e8f4fd;border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:13px;border-left:4px solid #00A8E8;"></div>
+      <label style="font-weight:700;font-size:13px;">Swap with Operator</label>
+      <select id="swapReqTarget" style="width:100%;margin-top:6px;padding:10px;border:2px solid #dee2e6;border-radius:8px;font-size:13px;box-sizing:border-box;"></select>
+      <label style="font-weight:700;font-size:13px;margin-top:12px;display:block;">Reason for Swap <span style="color:#999;font-weight:400;">(required)</span></label>
+      <textarea id="swapReqReason" rows="3" placeholder="Explain why you need to swap this shift..." style="width:100%;margin-top:6px;padding:10px;border:2px solid #dee2e6;border-radius:8px;font-size:13px;resize:vertical;box-sizing:border-box;"></textarea>
+      <div style="display:flex;gap:10px;margin-top:16px;justify-content:flex-end;">
+        <button onclick="closeSwapRequestModal()" style="padding:10px 20px;background:#6c757d;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Cancel</button>
+        <button onclick="submitSwapRequest()" style="padding:10px 24px;background:linear-gradient(135deg,#00A8E8,#0087b8);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;">📤 Submit Request</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="dailyLogModal" class="modal">
+  <div class="modal-content" style="max-width:560px;border-radius:14px;padding:0;overflow:hidden;">
+    <div style="background:linear-gradient(135deg,#28a745,#20c997);padding:20px 24px;color:#fff;display:flex;align-items:center;gap:12px;">
+      <span style="font-size:28px;">📓</span>
+      <div><div style="font-weight:800;font-size:16px;">Daily Backup Log</div>
+           <div style="font-size:12px;opacity:.7;">Record start time, end time &amp; outcome for each day</div></div>
+      <span class="close" onclick="closeDailyLogModal()" style="margin-left:auto;color:#fff;font-size:24px;cursor:pointer;">&times;</span>
+    </div>
+    <div style="padding:22px 24px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+        <label style="font-weight:700;font-size:13px;">Date:</label>
+        <input type="date" id="dailyLogDate" style="padding:7px 10px;border:2px solid #dee2e6;border-radius:8px;font-size:13px;" onchange="loadDailyLogEntry()">
+        <button onclick="setDailyLogToday()" style="background:linear-gradient(135deg,#94C83D,#7DAE2F);color:#fff;border:none;padding:7px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;">📅 Today</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+        <div>
+          <label style="font-weight:700;font-size:13px;display:block;margin-bottom:4px;">🕐 Start Time</label>
+          <input type="time" id="dailyLogStart" style="width:100%;padding:9px;border:2px solid #dee2e6;border-radius:8px;font-size:14px;box-sizing:border-box;">
+        </div>
+        <div>
+          <label style="font-weight:700;font-size:13px;display:block;margin-bottom:4px;">🕐 End Time</label>
+          <input type="time" id="dailyLogEnd" style="width:100%;padding:9px;border:2px solid #dee2e6;border-radius:8px;font-size:14px;box-sizing:border-box;">
+        </div>
+      </div>
+      <label style="font-weight:700;font-size:13px;display:block;margin-bottom:4px;">Outcome</label>
+      <select id="dailyLogOutcome" style="width:100%;padding:10px;border:2px solid #dee2e6;border-radius:8px;font-size:13px;margin-bottom:12px;box-sizing:border-box;">
+        <option value="Completed">✅ Completed Successfully</option>
+        <option value="Partial">⚠️ Partially Completed</option>
+        <option value="Failed">❌ Failed</option>
+        <option value="Holiday">🎉 Public Holiday — No Backup</option>
+        <option value="Weekend">📅 Weekend — No Backup</option>
+      </select>
+      <label style="font-weight:700;font-size:13px;display:block;margin-bottom:4px;">Notes / Issues</label>
+      <textarea id="dailyLogNotes" rows="3" placeholder="Any issues, observations, or notes for this day..." style="width:100%;padding:10px;border:2px solid #dee2e6;border-radius:8px;font-size:13px;resize:vertical;box-sizing:border-box;margin-bottom:14px;"></textarea>
+      <div id="dailyLogSlaWarning" style="display:none;background:#fff3cd;border-left:4px solid #ffc107;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:12px;"></div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;">
+        <button onclick="closeDailyLogModal()" style="padding:10px 20px;background:#6c757d;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Cancel</button>
+        <button onclick="viewMyLogHistory()" style="padding:10px 18px;background:linear-gradient(135deg,#007bff,#0056b3);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">📋 History</button>
+        <button onclick="saveDailyLogEntry()" style="padding:10px 24px;background:linear-gradient(135deg,#28a745,#20c997);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;">💾 Save Entry</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="logHistoryModal" class="modal">
+  <div class="modal-content" style="max-width:700px;border-radius:14px;padding:0;overflow:hidden;">
+    <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);padding:18px 22px;color:#fff;display:flex;align-items:center;gap:12px;">
+      <span style="font-size:24px;">📋</span>
+      <div style="font-weight:800;font-size:15px;">Backup Log History</div>
+      <span class="close" onclick="document.getElementById('logHistoryModal').style.display='none'" style="margin-left:auto;color:#fff;font-size:24px;cursor:pointer;">&times;</span>
+    </div>
+    <div style="padding:20px;">
+      <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:center;">
+        <select id="logHistoryOpFilter" onchange="renderLogHistory()" style="padding:8px 12px;border:2px solid #dee2e6;border-radius:8px;font-size:13px;"></select>
+        <select id="logHistoryOutcomeFilter" onchange="renderLogHistory()" style="padding:8px 12px;border:2px solid #dee2e6;border-radius:8px;font-size:13px;">
+          <option value="">All Outcomes</option>
+          <option value="Completed">✅ Completed</option>
+          <option value="Partial">⚠️ Partial</option>
+          <option value="Failed">❌ Failed</option>
+          <option value="Holiday">🎉 Holiday</option>
+          <option value="Weekend">📅 Weekend</option>
+        </select>
+        <button onclick="exportLogHistoryCSV()" style="padding:8px 14px;background:linear-gradient(135deg,#28a745,#20c997);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;">📥 Export CSV</button>
+      </div>
+      <div id="logHistoryContent" style="max-height:420px;overflow-y:auto;"></div>
+    </div>
+  </div>
+</div>
+
+<div id="slaConfigModal" class="modal">
+  <div class="modal-content" style="max-width:460px;border-radius:14px;padding:0;overflow:hidden;">
+    <div style="background:linear-gradient(135deg,#fd7e14,#e06b00);padding:20px 24px;color:#fff;display:flex;align-items:center;gap:12px;">
+      <span style="font-size:26px;">⏱️</span>
+      <div><div style="font-weight:800;font-size:16px;">SLA Configuration</div>
+           <div style="font-size:12px;opacity:.7;">Set backup window — breaches will be flagged</div></div>
+      <span class="close" onclick="closeSlaConfigModal()" style="margin-left:auto;color:#fff;font-size:24px;cursor:pointer;">&times;</span>
+    </div>
+    <div style="padding:22px 24px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">
+        <div>
+          <label style="font-weight:700;font-size:13px;display:block;margin-bottom:4px;">Backup Must Start By</label>
+          <input type="time" id="slaStartBy" value="09:00" style="width:100%;padding:9px;border:2px solid #dee2e6;border-radius:8px;font-size:14px;box-sizing:border-box;">
+        </div>
+        <div>
+          <label style="font-weight:700;font-size:13px;display:block;margin-bottom:4px;">Backup Must End By</label>
+          <input type="time" id="slaEndBy" value="12:00" style="width:100%;padding:9px;border:2px solid #dee2e6;border-radius:8px;font-size:14px;box-sizing:border-box;">
+        </div>
+      </div>
+      <label style="font-weight:700;font-size:13px;display:block;margin-bottom:4px;">Max Allowed Duration (minutes)</label>
+      <input type="number" id="slaMaxDuration" value="180" min="30" max="480" style="width:100%;padding:9px;border:2px solid #dee2e6;border-radius:8px;font-size:14px;box-sizing:border-box;margin-bottom:16px;">
+      <div style="background:#e8f5e9;border-radius:8px;padding:12px;font-size:12px;color:#1b5e20;margin-bottom:16px;">
+        ℹ️ Backups logged outside this window will be flagged with a ⚠️ SLA breach indicator in the log history.
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;">
+        <button onclick="closeSlaConfigModal()" style="padding:10px 20px;background:#6c757d;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Cancel</button>
+        <button onclick="saveSlaConfig()" style="padding:10px 24px;background:linear-gradient(135deg,#fd7e14,#e06b00);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;">💾 Save SLA</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="monthlyReportModal" class="modal">
+  <div class="modal-content" style="max-width:750px;border-radius:14px;padding:0;overflow:hidden;">
+    <div style="background:linear-gradient(135deg,#6f42c1,#5a32a3);padding:18px 22px;color:#fff;display:flex;align-items:center;gap:12px;">
+      <span style="font-size:24px;">📊</span>
+      <div style="font-weight:800;font-size:15px;">Monthly Performance Report</div>
+      <span class="close" onclick="document.getElementById('monthlyReportModal').style.display='none'" style="margin-left:auto;color:#fff;font-size:24px;cursor:pointer;">&times;</span>
+    </div>
+    <div style="padding:20px;">
+      <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center;">
+        <label style="font-weight:700;font-size:13px;">Month:</label>
+        <input type="month" id="reportMonth" style="padding:8px 12px;border:2px solid #dee2e6;border-radius:8px;font-size:13px;">
+        <button onclick="generateMonthlyReport()" style="padding:8px 18px;background:linear-gradient(135deg,#6f42c1,#5a32a3);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:700;">📊 Generate</button>
+        <button onclick="printMonthlyReport()" style="padding:8px 14px;background:linear-gradient(135deg,#007bff,#0056b3);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;">🖨️ Print</button>
+        <button onclick="exportReportCSV()" style="padding:8px 14px;background:linear-gradient(135deg,#28a745,#20c997);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;">📥 Export</button>
+      </div>
+      <div id="monthlyReportContent"></div>
+    </div>
+  </div>
+</div>
+
+<div id="swapApprovalsModal" class="modal">
+  <div class="modal-content" style="max-width:680px;border-radius:14px;padding:0;overflow:hidden;">
+    <div style="background:linear-gradient(135deg,#00A8E8,#0087b8);padding:18px 22px;color:#fff;display:flex;align-items:center;gap:12px;">
+      <span style="font-size:24px;">🔄</span>
+      <div><div style="font-weight:800;font-size:15px;">Swap Requests</div>
+           <div style="font-size:12px;opacity:.7;">Review and approve or reject operator swap requests</div></div>
+      <span class="close" onclick="document.getElementById('swapApprovalsModal').style.display='none'" style="margin-left:auto;color:#fff;font-size:24px;cursor:pointer;">&times;</span>
+    </div>
+    <div style="padding:20px;" id="swapApprovalsContent"></div>
+  </div>
+</div>
+
+<div id="gapAlertModal" class="modal">
+  <div class="modal-content" style="max-width:560px;border-radius:14px;padding:0;overflow:hidden;">
+    <div style="background:linear-gradient(135deg,#dc3545,#c82333);padding:18px 22px;color:#fff;display:flex;align-items:center;gap:12px;">
+      <span style="font-size:24px;">⚠️</span>
+      <div><div style="font-weight:800;font-size:15px;">Coverage Gap Detection</div>
+           <div style="font-size:12px;opacity:.7;">Dates with no operator assigned</div></div>
+      <span class="close" onclick="document.getElementById('gapAlertModal').style.display='none'" style="margin-left:auto;color:#fff;font-size:24px;cursor:pointer;">&times;</span>
+    </div>
+    <div style="padding:20px;" id="gapAlertContent"></div>
+  </div>
+</div>
+
+<style>
+/* ===== PROFESSIONAL FEATURES STYLES ===== */
+
+/* Role-based dashboard hero */
+.role-dashboard {
+    max-width:1000px; margin:0 auto 18px auto;
+    border-radius:14px; overflow:hidden;
+    box-shadow:0 4px 20px rgba(0,0,0,0.1);
+    display:none;
+}
+.role-dashboard.visible { display:block; }
+.role-dashboard-header {
+    padding:18px 22px; color:#fff;
+    display:flex; align-items:center; gap:14px;
+}
+.role-dash-avatar {
+    width:48px; height:48px; border-radius:50%;
+    background:rgba(255,255,255,0.2);
+    display:flex; align-items:center; justify-content:center;
+    font-size:24px; flex-shrink:0;
+    border:2px solid rgba(255,255,255,0.4);
+}
+.role-dash-title { font-size:18px; font-weight:900; margin:0 0 2px; }
+.role-dash-sub   { font-size:12px; opacity:.75; margin:0; }
+.role-dash-time  { margin-left:auto; text-align:right; font-size:12px; opacity:.8; }
+.role-dashboard-body { background:#fff; padding:16px 20px; }
+body.dark-mode .role-dashboard-body { background:#16213e; color:#e0e0e0; }
+
+/* Swap request pending badge */
+.swap-pending-badge {
+    display:inline-flex; align-items:center; gap:5px;
+    background:linear-gradient(135deg,#ffc107,#e0a800);
+    color:#333; border-radius:20px; padding:3px 10px;
+    font-size:11px; font-weight:800; animation:badgePulse 2s infinite;
+}
+
+/* Daily log outcome chips */
+.log-chip { display:inline-block; padding:2px 10px; border-radius:12px; font-size:11px; font-weight:700; }
+.chip-log-completed { background:#d4edda; color:#155724; border:1px solid #c3e6cb; }
+.chip-log-partial   { background:#fff3cd; color:#856404; border:1px solid #ffc107; }
+.chip-log-failed    { background:#f8d7da; color:#721c24; border:1px solid #f5c6cb; }
+.chip-log-holiday   { background:#e2d9f3; color:#4a235a; border:1px solid #c39bd3; }
+.chip-log-weekend   { background:#e9ecef; color:#495057; border:1px solid #adb5bd; }
+
+/* SLA breach flag */
+.sla-breach { color:#dc3545; font-size:11px; font-weight:700; margin-left:4px; }
+
+/* Handover history entry */
+.handover-entry {
+    padding:12px 16px; margin-bottom:8px; border-radius:10px;
+    background:#f8f9fa; border-left:4px solid #94C83D; font-size:13px;
+}
+body.dark-mode .handover-entry { background:#0f3460; }
+
+/* Log history row */
+.log-history-row {
+    display:grid; grid-template-columns:90px 1fr 80px 80px 90px;
+    gap:8px; align-items:center; padding:9px 12px;
+    border-bottom:1px solid #f0f0f0; font-size:12px;
+}
+.log-history-row:last-child { border-bottom:none; }
+.log-history-row.sla-breached { background:#fff8f0; }
+body.dark-mode .log-history-row { border-bottom-color:#0f3460; }
+@media(max-width:600px){
+    .log-history-row { grid-template-columns:1fr 1fr; }
+}
+
+/* Monthly report table */
+.report-table { width:100%; border-collapse:collapse; font-size:13px; }
+.report-table th { background:linear-gradient(135deg,#6f42c1,#5a32a3); color:#fff; padding:10px 12px; text-align:left; }
+.report-table td { padding:9px 12px; border-bottom:1px solid #eee; }
+.report-table tr:nth-child(even) td { background:#fafafa; }
+.report-kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:12px; margin-bottom:16px; }
+.report-kpi-card { background:#f8f9fa; border-radius:10px; padding:14px; text-align:center; border-top:3px solid #6f42c1; }
+.report-kpi-val  { font-size:24px; font-weight:900; color:#333; }
+.report-kpi-lbl  { font-size:11px; color:#888; font-weight:600; text-transform:uppercase; margin-top:2px; }
+body.dark-mode .report-kpi-card { background:#0f3460; }
+body.dark-mode .report-kpi-val  { color:#e0e0e0; }
+
+/* Topbar live countdown */
+.topbar-countdown {
+    font-size:12px; font-weight:700; background:rgba(255,255,255,0.12);
+    border:1px solid rgba(255,255,255,0.2); border-radius:20px;
+    padding:4px 12px; white-space:nowrap; color:#94C83D;
+}
+
+/* Gap alert item */
+.gap-item {
+    padding:10px 14px; margin-bottom:8px; border-radius:8px;
+    background:#fff3cd; border-left:4px solid #ffc107; font-size:13px;
+}
+.gap-item.urgent { background:#f8d7da; border-left-color:#dc3545; }
+
+/* Keyboard shortcut badges in help modal */
+.kbd { display:inline-block; background:#f0f0f0; border:1px solid #ccc; border-radius:4px; padding:1px 7px; font-family:monospace; font-size:12px; }
+body.dark-mode .kbd { background:#0f3460; border-color:#1a4a8a; color:#e0e0e0; }
+
+/* Print-only styles for monthly report */
+@media print {
+    #monthlyReportModal .modal-content { box-shadow:none !important; border-radius:0 !important; }
+    .no-print { display:none !important; }
+    .print-header { display:block !important; }
+}
+.print-header {
+    display:none; text-align:center; border-bottom:2px solid #333;
+    padding-bottom:10px; margin-bottom:16px;
+}
+/* ===== END PROFESSIONAL FEATURES STYLES ===== */
+</style>
+
+<script>
+// ============================================================
+//  PROFESSIONAL ADVANCEMENT — FEATURE ENGINE
+//  13 features: Handover, Swap Workflow, Daily Log, Gap
+//  Detection, Role Dashboard, Monthly Report, Backup Trend
+//  Chart, SLA Compliance, Issue Tracker, Live Countdown,
+//  Shift Progress Bar, Print Schedule, Keyboard Nav
+// ============================================================
+
+const PRO_KEYS = {
+    dailyLog:      'proBackupLog',
+    handovers:     'proHandovers',
+    swapRequests:  'proSwapRequests',
+    slaConfig:     'proSlaConfig',
+};
+
+/* ──────────────────────────────────────────
+   STORAGE HELPERS
+────────────────────────────────────────── */
+function proGet(key)        { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch(e) { return null; } }
+function proSet(key, val)   { localStorage.setItem(key, JSON.stringify(val)); }
+function proGetLog()        { return proGet(PRO_KEYS.dailyLog) || {}; }
+function proGetHandovers()  { return proGet(PRO_KEYS.handovers) || []; }
+function proGetSwaps()      { return proGet(PRO_KEYS.swapRequests) || []; }
+function proGetSla()        { return proGet(PRO_KEYS.slaConfig) || { startBy:'09:00', endBy:'12:00', maxMinutes:180 }; }
+
+/* ──────────────────────────────────────────
+   FEATURE 1 — ROLE-BASED DASHBOARD
+────────────────────────────────────────── */
+function injectRoleDashboard() {
+    const el = document.getElementById('roleDashboard');
+    if (!el || !loggedInUser) return;
+
+    const roleMap = {
+        admin:       { icon:'🛡️', color:'linear-gradient(135deg,#1a1a2e,#0f3460)', label:'Administrator', sub:'Full schedule & system control' },
+        operator:    { icon:'👤', color:'linear-gradient(135deg,#28a745,#20c997)', label:'Backup Operator', sub:'View your shift & log daily backups' },
+        viewer:      { icon:'👁️', color:'linear-gradient(135deg,#6c757d,#495057)', label:'Viewer',           sub:'Read-only schedule view' },
+        manager:     { icon:'📋', color:'linear-gradient(135deg,#007bff,#0056b3)', label:'Manager',          sub:'Notifications & schedule overview' },
+        cybersecurity:{ icon:'🔒', color:'linear-gradient(135deg,#dc3545,#c82333)','label':'Cyber Security', sub:'Auditing & date-range export' },
+    };
+
+    const role = isAdmin ? 'admin' : isOperator ? 'operator' : isRestrictedAdmin ? 'viewer' : isManager ? 'manager' : isCyberSecurity ? 'cybersecurity' : 'viewer';
+    const r    = roleMap[role];
+
+    // Quick actions per role
+    let actions = '';
+    if (isAdmin) {
+        const pending = proGetSwaps().filter(s => s.status === 'pending').length;
+        const gaps    = detectCoverageGaps().length;
+        actions = `
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;">
+                <button onclick="openSwapApprovals()" style="padding:7px 14px;border:none;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;background:linear-gradient(135deg,#00A8E8,#0087b8);color:#fff;">
+                    🔄 Swap Requests ${pending>0?`<span class="swap-pending-badge">${pending}</span>`:''}
+                </button>
+                <button onclick="openGapAlert()" style="padding:7px 14px;border:none;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;background:${gaps>0?'linear-gradient(135deg,#dc3545,#c82333)':'linear-gradient(135deg,#28a745,#20c997)'};color:#fff;">
+                    ${gaps>0?`⚠️ ${gaps} Coverage Gap(s)`:'✅ No Coverage Gaps'}
+                </button>
+                <button onclick="openMonthlyReport()" style="padding:7px 14px;border:none;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;background:linear-gradient(135deg,#6f42c1,#5a32a3);color:#fff;">📊 Monthly Report</button>
+                <button onclick="openSlaConfig()" style="padding:7px 14px;border:none;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;background:linear-gradient(135deg,#fd7e14,#e06b00);color:#fff;">⏱️ SLA Config</button>
+            </div>`;
+    } else if (isOperator) {
+        const myShift = operators.find(op => {
+            const s = getCleanDate(op.start), e = getCleanDate(op.end);
+            return today.getTime() >= s.getTime() && today.getTime() <= e.getTime() && op.name.toUpperCase() === loggedInUser;
+        });
+        const todayStr = new Date().toISOString().split('T')[0];
+        const myLog    = (proGetLog()[loggedInUser] || {})[todayStr];
+        actions = `
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;">
+                <button onclick="openDailyLogModal()" style="padding:7px 14px;border:none;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;background:linear-gradient(135deg,#28a745,#20c997);color:#fff;">
+                    📓 ${myLog ? '✅ Today\'s Log (edit)' : '➕ Log Today\'s Backup'}
+                </button>
+                ${myShift ? `<button onclick="openSwapRequestModal(${operators.indexOf(myShift)})" style="padding:7px 14px;border:none;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;background:linear-gradient(135deg,#00A8E8,#0087b8);color:#fff;">🔄 Request Swap</button>` : ''}
+                <button onclick="viewMyLogHistory()" style="padding:7px 14px;border:none;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;background:linear-gradient(135deg,#007bff,#0056b3);color:#fff;">📋 My Log History</button>
+            </div>`;
+    } else if (isManager) {
+        actions = `
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;">
+                <button onclick="openMonthlyReport()" style="padding:7px 14px;border:none;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;background:linear-gradient(135deg,#6f42c1,#5a32a3);color:#fff;">📊 Monthly Report</button>
+                <button onclick="openGapAlert()" style="padding:7px 14px;border:none;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;background:linear-gradient(135deg,#fd7e14,#e06b00);color:#fff;">⚠️ Check Coverage</button>
+            </div>`;
+    }
+
+    const now = new Date();
+    el.querySelector('.role-dashboard-header').style.background = r.color;
+    el.querySelector('.role-dash-avatar').textContent   = r.icon;
+    el.querySelector('.role-dash-title').textContent    = `Welcome, ${loggedInUser.split(' ')[0]}`;
+    el.querySelector('.role-dash-sub').textContent      = `${r.label} — ${r.sub}`;
+    el.querySelector('.role-dash-time').innerHTML       = `<div>${now.toLocaleDateString('en-US',{weekday:'long',day:'2-digit',month:'short',year:'numeric'})}</div><div style="font-size:14px;font-weight:800;">${now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}</div>`;
+    el.querySelector('.role-dashboard-body').innerHTML  = actions;
+    el.classList.add('visible');
+}
+
+/* ──────────────────────────────────────────
+   FEATURE 2 — SHIFT HANDOVER CONFIRMATION
+────────────────────────────────────────── */
+let _handoverTargetIndex = null;
+
+function openHandoverModal(globalIndex) {
+    _handoverTargetIndex = globalIndex;
+    const op = operators[globalIndex];
+    if (!op) return;
+    document.getElementById('handoverShiftInfo').innerHTML =
+        `<strong>Operator:</strong> ${op.name} &nbsp;|&nbsp; <strong>Shift:</strong> ${formatDate(op.start)} – ${formatDate(op.end)}`;
+
+    // Populate "handover to" dropdown with the next operator
+    const sel = document.getElementById('handoverToOperator');
+    sel.innerHTML = '<option value="">-- Select next operator --</option>';
+    const nextOp = operators[globalIndex + 1];
+    initialOperators.filter(o => !o.deactivated).forEach(io => {
+        const opt = document.createElement('option');
+        opt.value = io.name;
+        opt.textContent = io.name + (nextOp && nextOp.name === io.name ? ' (Next Scheduled)' : '');
+        if (nextOp && nextOp.name === io.name) opt.selected = true;
+        sel.appendChild(opt);
+    });
+
+    document.getElementById('handoverNotes').value = '';
+    document.getElementById('handoverConfirmCheck').checked = false;
+    document.getElementById('handoverModal').style.display = 'block';
+}
+
+function closeHandoverModal() { document.getElementById('handoverModal').style.display = 'none'; }
+
+function confirmHandover() {
+    const notes    = document.getElementById('handoverNotes').value.trim();
+    const toOp     = document.getElementById('handoverToOperator').value;
+    const checked  = document.getElementById('handoverConfirmCheck').checked;
+
+    if (!notes)   return showToast('Please provide handover notes.', 'warning');
+    if (!toOp)    return showToast('Please select the operator you are handing over to.', 'warning');
+    if (!checked) return showToast('Please tick the confirmation checkbox.', 'warning');
+
+    const op = operators[_handoverTargetIndex];
+    // Save handover record
+    const handovers = proGetHandovers();
+    handovers.unshift({
+        timestamp:    new Date().toISOString(),
+        fromOperator: op.name,
+        toOperator:   toOp,
+        shiftStart:   op.start,
+        shiftEnd:     op.end,
+        notes:        notes,
+        confirmedBy:  loggedInUser,
+    });
+    proSet(PRO_KEYS.handovers, handovers);
+    logAuditAction('SHIFT_HANDOVER', `${op.name} confirmed handover to ${toOp}. Notes: ${notes}`);
+
+    // Mark shift as Finished
+    operators[_handoverTargetIndex].status = 'Finished';
+    localStorage.setItem('operators', JSON.stringify(operators));
+
+    closeHandoverModal();
+    renderTable();
+    showToast(`✅ Handover confirmed — shift marked Finished.`, 'success');
+}
+
+/* ──────────────────────────────────────────
+   FEATURE 3 — SWAP REQUEST WORKFLOW
+────────────────────────────────────────── */
+let _swapReqIndex = null;
+
+function openSwapRequestModal(globalIndex) {
+    _swapReqIndex = globalIndex;
+    const op = operators[globalIndex];
+    if (!op) return;
+    document.getElementById('swapReqShiftInfo').innerHTML =
+        `<strong>Your Shift:</strong> ${formatDate(op.start)} – ${formatDate(op.end)}`;
+
+    const sel = document.getElementById('swapReqTarget');
+    sel.innerHTML = '<option value="">-- Select operator --</option>';
+    initialOperators.filter(o => !o.deactivated && o.name.toUpperCase() !== loggedInUser).forEach(io => {
+        const opt = document.createElement('option');
+        opt.value = io.name;
+        opt.textContent = io.name;
+        sel.appendChild(opt);
+    });
+
+    document.getElementById('swapReqReason').value = '';
+    document.getElementById('swapRequestModal').style.display = 'block';
+}
+
+function closeSwapRequestModal() { document.getElementById('swapRequestModal').style.display = 'none'; }
+
+function submitSwapRequest() {
+    const target = document.getElementById('swapReqTarget').value;
+    const reason = document.getElementById('swapReqReason').value.trim();
+    if (!target) return showToast('Please select an operator to swap with.', 'warning');
+    if (!reason) return showToast('Please provide a reason for the swap.', 'warning');
+
+    const op      = operators[_swapReqIndex];
+    const swaps   = proGetSwaps();
+    swaps.unshift({
+        id:           Date.now(),
+        timestamp:    new Date().toISOString(),
+        requestedBy:  loggedInUser,
+        shiftIndex:   _swapReqIndex,
+        shiftStart:   op.start,
+        shiftEnd:     op.end,
+        swapWith:     target,
+        reason:       reason,
+        status:       'pending',
+    });
+    proSet(PRO_KEYS.swapRequests, swaps);
+    logAuditAction('SWAP_REQUEST', `${loggedInUser} requested swap with ${target} for shift ${op.start}–${op.end}. Reason: ${reason}`);
+
+    closeSwapRequestModal();
+    showToast('📤 Swap request submitted — pending admin approval.', 'success');
+    injectRoleDashboard(); // refresh pending count
+}
+
+function openSwapApprovals() {
+    if (!isAdmin && !isManager) return;
+    const modal   = document.getElementById('swapApprovalsModal');
+    const content = document.getElementById('swapApprovalsContent');
+    const swaps   = proGetSwaps();
+
+    if (swaps.length === 0) {
+        content.innerHTML = '<p style="color:#888;text-align:center;padding:20px;">No swap requests found.</p>';
+    } else {
+        content.innerHTML = swaps.map(s => {
+            const statusColor = s.status === 'pending' ? '#ffc107' : s.status === 'approved' ? '#28a745' : '#dc3545';
+            const statusLabel = s.status === 'pending' ? '⏳ Pending' : s.status === 'approved' ? '✅ Approved' : '❌ Rejected';
+            return `
+            <div style="background:#f8f9fa;border-radius:10px;padding:14px 16px;margin-bottom:10px;border-left:4px solid ${statusColor};">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;">
+                    <div>
+                        <div style="font-weight:700;font-size:13px;">🔄 ${s.requestedBy} → ${s.swapWith}</div>
+                        <div style="font-size:12px;color:#666;margin-top:3px;">Shift: ${formatDate(s.shiftStart)} – ${formatDate(s.shiftEnd)}</div>
+                        <div style="font-size:12px;color:#555;margin-top:3px;">Reason: ${s.reason}</div>
+                        <div style="font-size:11px;color:#999;margin-top:3px;">${new Date(s.timestamp).toLocaleString()}</div>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
+                        <span style="font-size:12px;font-weight:700;color:${statusColor};">${statusLabel}</span>
+                        ${s.status === 'pending' ? `
+                        <div style="display:flex;gap:6px;">
+                            <button onclick="resolveSwap(${s.id},'approved')" style="padding:5px 12px;background:#28a745;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:700;">✅ Approve</button>
+                            <button onclick="resolveSwap(${s.id},'rejected')" style="padding:5px 12px;background:#dc3545;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:700;">❌ Reject</button>
+                        </div>` : ''}
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+    }
+    modal.style.display = 'block';
+}
+
+function resolveSwap(swapId, decision) {
+    const swaps = proGetSwaps();
+    const idx   = swaps.findIndex(s => s.id === swapId);
+    if (idx === -1) return;
+    swaps[idx].status      = decision;
+    swaps[idx].resolvedBy  = loggedInUser;
+    swaps[idx].resolvedAt  = new Date().toISOString();
+    proSet(PRO_KEYS.swapRequests, swaps);
+
+    if (decision === 'approved') {
+        // Execute the swap in the schedule
+        const s           = swaps[idx];
+        const shiftIndex  = s.shiftIndex;
+        if (operators[shiftIndex]) {
+            const oldName = operators[shiftIndex].name;
+            operators[shiftIndex].name      = s.swapWith;
+            operators[shiftIndex].checkedBy = s.swapWith;
+            const masterOp = initialOperators.find(io => io.name === s.swapWith);
+            if (masterOp) {
+                operators[shiftIndex].mobile = masterOp.mobile;
+                operators[shiftIndex].email  = masterOp.email;
+            }
+            localStorage.setItem('operators', JSON.stringify(operators));
+            logAuditAction('SWAP_APPROVED', `Swap approved: ${oldName} → ${s.swapWith} for shift ${s.shiftStart}–${s.shiftEnd}`);
+            renderTable();
+            showToast(`✅ Swap approved & executed — ${s.swapWith} now covers the shift.`, 'success');
+        }
+    } else {
+        logAuditAction('SWAP_REJECTED', `Swap rejected for ${swaps[idx].requestedBy} (shift ${swaps[idx].shiftStart})`);
+        showToast('❌ Swap request rejected.', 'warning');
+    }
+    openSwapApprovals(); // refresh modal
+}
+
+/* ──────────────────────────────────────────
+   FEATURE 4 — DAILY BACKUP LOG WITH TIMESTAMPS
+────────────────────────────────────────── */
+function openDailyLogModal() {
+    const modal = document.getElementById('dailyLogModal');
+    setDailyLogToday();
+    loadDailyLogEntry();
+    modal.style.display = 'block';
+}
+
+function closeDailyLogModal() { document.getElementById('dailyLogModal').style.display = 'none'; }
+
+function setDailyLogToday() {
+    document.getElementById('dailyLogDate').value = new Date().toISOString().split('T')[0];
+}
+
+function loadDailyLogEntry() {
+    const date = document.getElementById('dailyLogDate').value;
+    // Use the logged-in user as the key — admins editing their own log
+    const opKey = loggedInUser;
+    const all   = proGetLog();
+    const entry = (all[opKey] || {})[date];
+    if (entry) {
+        document.getElementById('dailyLogStart').value   = entry.startTime  || '';
+        document.getElementById('dailyLogEnd').value     = entry.endTime    || '';
+        document.getElementById('dailyLogOutcome').value = entry.outcome    || 'Completed';
+        document.getElementById('dailyLogNotes').value   = entry.notes      || '';
+    } else {
+        document.getElementById('dailyLogStart').value   = '';
+        document.getElementById('dailyLogEnd').value     = '';
+        document.getElementById('dailyLogOutcome').value = 'Completed';
+        document.getElementById('dailyLogNotes').value   = '';
+    }
+    checkSlaWarning();
+}
+
+function checkSlaWarning() {
+    const sla   = proGetSla();
+    const start = document.getElementById('dailyLogStart').value;
+    const end   = document.getElementById('dailyLogEnd').value;
+    const warn  = document.getElementById('dailyLogSlaWarning');
+    if (!warn) return;
+    let msgs = [];
+    if (start && start > sla.startBy) msgs.push(`⚠️ Start time ${start} is after SLA window (must start by ${sla.startBy})`);
+    if (end   && end   > sla.endBy)   msgs.push(`⚠️ End time ${end} is after SLA window (must end by ${sla.endBy})`);
+    if (start && end) {
+        const [sh,sm] = start.split(':').map(Number);
+        const [eh,em] = end.split(':').map(Number);
+        const dur = (eh*60+em) - (sh*60+sm);
+        if (dur > sla.maxMinutes) msgs.push(`⚠️ Duration ${dur} min exceeds max allowed (${sla.maxMinutes} min)`);
+    }
+    if (msgs.length) { warn.innerHTML = msgs.join('<br>'); warn.style.display = 'block'; }
+    else              { warn.style.display = 'none'; }
+}
+
+document.addEventListener('change', e => {
+    if (['dailyLogStart','dailyLogEnd'].includes(e.target.id)) checkSlaWarning();
+});
+
+function saveDailyLogEntry() {
+    const date    = document.getElementById('dailyLogDate').value;
+    const start   = document.getElementById('dailyLogStart').value;
+    const end     = document.getElementById('dailyLogEnd').value;
+    const outcome = document.getElementById('dailyLogOutcome').value;
+    const notes   = document.getElementById('dailyLogNotes').value.trim();
+
+    if (!date)    return showToast('Please select a date.', 'warning');
+    if (!start)   return showToast('Please enter a start time.', 'warning');
+    if (!end)     return showToast('Please enter an end time.', 'warning');
+    if (end < start) return showToast('End time cannot be before start time.', 'warning');
+
+    const sla    = proGetSla();
+    const [sh,sm]= start.split(':').map(Number);
+    const [eh,em]= end.split(':').map(Number);
+    const dur    = (eh*60+em)-(sh*60+sm);
+    const slaBreached = start > sla.startBy || end > sla.endBy || dur > sla.maxMinutes;
+
+    const all    = proGetLog();
+    const opKey  = loggedInUser;
+    if (!all[opKey]) all[opKey] = {};
+    all[opKey][date] = { startTime:start, endTime:end, outcome, notes, slaBreached, savedAt:new Date().toISOString() };
+    proSet(PRO_KEYS.dailyLog, all);
+    logAuditAction('DAILY_LOG_SAVED', `${opKey} logged backup for ${date}: ${outcome}, ${start}–${end}${slaBreached?' [SLA BREACH]':''}`);
+
+    closeDailyLogModal();
+    showToast(slaBreached ? '⚠️ Log saved — SLA breach flagged.' : '✅ Daily log saved successfully.', slaBreached ? 'warning' : 'success');
+    injectRoleDashboard();
+}
+
+function viewMyLogHistory() {
+    closeDailyLogModal();
+    const modal = document.getElementById('logHistoryModal');
+    const opSel = document.getElementById('logHistoryOpFilter');
+    opSel.innerHTML = '';
+    if (isAdmin || isManager) {
+        initialOperators.forEach(io => {
+            const opt = document.createElement('option');
+            opt.value = io.name; opt.textContent = io.name;
+            opSel.appendChild(opt);
+        });
+    } else {
+        const opt = document.createElement('option');
+        opt.value = loggedInUser; opt.textContent = loggedInUser;
+        opSel.appendChild(opt);
+    }
+    renderLogHistory();
+    modal.style.display = 'block';
+}
+
+function renderLogHistory() {
+    const opKey    = document.getElementById('logHistoryOpFilter').value || loggedInUser;
+    const outcome  = document.getElementById('logHistoryOutcomeFilter').value;
+    const all      = proGetLog();
+    const entries  = Object.entries(all[opKey] || {})
+        .filter(([, v]) => !outcome || v.outcome === outcome)
+        .sort(([a],[b]) => b.localeCompare(a));
+
+    const chipClass = { Completed:'chip-log-completed', Partial:'chip-log-partial', Failed:'chip-log-failed', Holiday:'chip-log-holiday', Weekend:'chip-log-weekend' };
+
+    if (!entries.length) {
+        document.getElementById('logHistoryContent').innerHTML = '<p style="text-align:center;color:#999;padding:30px;">No log entries found.</p>';
+        return;
+    }
+
+    document.getElementById('logHistoryContent').innerHTML = `
+        <div style="display:grid;grid-template-columns:90px 1fr 70px 70px 90px;gap:8px;padding:8px 12px;background:#f8f9fa;border-radius:6px;font-size:11px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">
+            <div>Date</div><div>Notes</div><div>Start</div><div>End</div><div>Outcome</div>
+        </div>
+        ${entries.map(([date, v]) => `
+        <div class="log-history-row ${v.slaBreached ? 'sla-breached' : ''}">
+            <div style="font-weight:700;">${formatDate(date)}</div>
+            <div style="white-space:normal;font-size:11px;color:#555;">${v.notes || '—'}${v.slaBreached ? ' <span class="sla-breach">⚠️ SLA</span>' : ''}</div>
+            <div>${v.startTime || '—'}</div>
+            <div>${v.endTime || '—'}</div>
+            <div><span class="log-chip ${chipClass[v.outcome] || ''}">${v.outcome}</span></div>
+        </div>`).join('')}`;
+}
+
+function exportLogHistoryCSV() {
+    const opKey   = document.getElementById('logHistoryOpFilter').value || loggedInUser;
+    const all     = proGetLog();
+    const entries = Object.entries(all[opKey] || {}).sort(([a],[b]) => b.localeCompare(a));
+    if (!entries.length) return showToast('No entries to export.', 'warning');
+    const rows = [['Date','Operator','Start Time','End Time','Outcome','SLA Breach','Notes']];
+    entries.forEach(([date, v]) => rows.push([date, opKey, v.startTime||'', v.endTime||'', v.outcome, v.slaBreached?'YES':'NO', `"${(v.notes||'').replace(/"/g,'""')}"`]));
+    const csv  = rows.map(r => r.join(',')).join('\n');
+    const blob = new Blob([csv], { type:'text/csv' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a'); a.href=url; a.download=`BackupLog_${opKey}_${new Date().toISOString().split('T')[0]}.csv`; a.click();
+    URL.revokeObjectURL(url);
+}
+
+/* ──────────────────────────────────────────
+   FEATURE 5 — COVERAGE GAP DETECTION
+────────────────────────────────────────── */
+function detectCoverageGaps() {
+    const gaps = [];
+    if (operators.length < 2) return gaps;
+    const active = operators.filter(op => op.status === 'Active').sort((a,b) => a.start.localeCompare(b.start));
+    for (let i = 0; i < active.length - 1; i++) {
+        const thisEnd  = getCleanDate(active[i].end);
+        const nextStart= getCleanDate(active[i+1].start);
+        const diff     = daysBetween(thisEnd, nextStart);
+        if (diff > 1) {
+            const gapStart = new Date(thisEnd); gapStart.setDate(gapStart.getDate()+1);
+            const gapEnd   = new Date(nextStart); gapEnd.setDate(gapEnd.getDate()-1);
+            gaps.push({ from: gapStart.toISOString().split('T')[0], to: gapEnd.toISOString().split('T')[0], days: diff-1, after: active[i].name, before: active[i+1].name });
+        }
+    }
+    return gaps;
+}
+
+function openGapAlert() {
+    const gaps    = detectCoverageGaps();
+    const content = document.getElementById('gapAlertContent');
+    if (!gaps.length) {
+        content.innerHTML = '<div style="text-align:center;padding:24px;"><span style="font-size:40px;">✅</span><div style="font-weight:700;margin-top:8px;color:#28a745;">No coverage gaps detected!</div><div style="font-size:13px;color:#888;margin-top:4px;">All shifts are contiguous with no missing dates.</div></div>';
+    } else {
+        content.innerHTML = `<p style="font-size:13px;color:#666;margin-bottom:12px;">Found <strong>${gaps.length}</strong> gap(s) in the schedule where no operator is assigned:</p>` +
+        gaps.map(g => `
+            <div class="gap-item ${g.days >= 3 ? 'urgent' : ''}">
+                <div style="font-weight:700;">📅 ${formatDate(g.from)} – ${formatDate(g.to)}</div>
+                <div style="font-size:12px;margin-top:3px;color:#666;"><strong>${g.days} day(s)</strong> uncovered — after ${g.after}, before ${g.before}</div>
+                ${g.days >= 3 ? '<div style="font-size:11px;font-weight:700;color:#dc3545;margin-top:4px;">🚨 URGENT — 3+ days uncovered</div>' : ''}
+            </div>`).join('');
+    }
+    document.getElementById('gapAlertModal').style.display = 'block';
+}
+
+/* ──────────────────────────────────────────
+   FEATURE 6 — MONTHLY SUMMARY REPORT
+────────────────────────────────────────── */
+function openMonthlyReport() {
+    const modal = document.getElementById('monthlyReportModal');
+    const now   = new Date();
+    document.getElementById('reportMonth').value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+    generateMonthlyReport();
+    modal.style.display = 'block';
+}
+
+function generateMonthlyReport() {
+    const monthVal = document.getElementById('reportMonth').value;
+    if (!monthVal) return;
+    const [yr, mo] = monthVal.split('-').map(Number);
+    const monthStart = new Date(yr, mo-1, 1);
+    const monthEnd   = new Date(yr, mo, 0);
+    const monthName  = monthStart.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+
+    const all    = proGetLog();
+    const sla    = proGetSla();
+    const rows   = [];
+
+    initialOperators.forEach(io => {
+        const opLogs = all[io.name] || {};
+        let completed=0, partial=0, failed=0, holiday=0, weekend=0, slaBreaches=0, totalDur=0, durCount=0;
+        const entries = Object.entries(opLogs).filter(([d]) => {
+            const dt = new Date(d);
+            return dt >= monthStart && dt <= monthEnd;
+        });
+        entries.forEach(([, v]) => {
+            if (v.outcome === 'Completed') completed++;
+            else if (v.outcome === 'Partial') partial++;
+            else if (v.outcome === 'Failed') failed++;
+            else if (v.outcome === 'Holiday') holiday++;
+            else if (v.outcome === 'Weekend') weekend++;
+            if (v.slaBreached) slaBreaches++;
+            if (v.startTime && v.endTime) {
+                const [sh,sm] = v.startTime.split(':').map(Number);
+                const [eh,em] = v.endTime.split(':').map(Number);
+                totalDur += (eh*60+em)-(sh*60+sm);
+                durCount++;
+            }
+        });
+        const total  = completed + partial + failed;
+        const compPct= total > 0 ? Math.round((completed/total)*100) : 0;
+        const avgDur = durCount > 0 ? Math.round(totalDur/durCount) : 0;
+        rows.push({ name:io.name, completed, partial, failed, holiday, weekend, slaBreaches, compPct, avgDur, total });
+    });
+
+    const totalCompleted = rows.reduce((s,r)=>s+r.completed,0);
+    const totalFailed    = rows.reduce((s,r)=>s+r.failed,0);
+    const totalSla       = rows.reduce((s,r)=>s+r.slaBreaches,0);
+    const overallPct     = (totalCompleted+totalFailed) > 0 ? Math.round(totalCompleted/(totalCompleted+totalFailed)*100) : 0;
+
+    document.getElementById('monthlyReportContent').innerHTML = `
+        <div class="print-header">
+            <h2 style="margin:0;">Oromia Bank — Backup Operations</h2>
+            <div style="font-size:14px;margin-top:4px;">Monthly Performance Report — ${monthName}</div>
+            <div style="font-size:12px;color:#666;margin-top:2px;">Generated: ${new Date().toLocaleString()}</div>
+        </div>
+        <div class="report-kpi-grid">
+            <div class="report-kpi-card"><div class="report-kpi-val">${totalCompleted}</div><div class="report-kpi-lbl">Completed</div></div>
+            <div class="report-kpi-card"><div class="report-kpi-val">${totalFailed}</div><div class="report-kpi-lbl">Failed</div></div>
+            <div class="report-kpi-card"><div class="report-kpi-val">${overallPct}%</div><div class="report-kpi-lbl">Success Rate</div></div>
+            <div class="report-kpi-card"><div class="report-kpi-val" style="color:${totalSla>0?'#dc3545':'#28a745'}">${totalSla}</div><div class="report-kpi-lbl">SLA Breaches</div></div>
+        </div>
+        <table class="report-table">
+            <thead><tr><th>Operator</th><th>✅ Done</th><th>⚠️ Partial</th><th>❌ Failed</th><th>Success %</th><th>Avg Duration</th><th>SLA Breaches</th></tr></thead>
+            <tbody>${rows.map(r => `
+                <tr>
+                    <td><strong>${r.name}</strong></td>
+                    <td>${r.completed}</td>
+                    <td>${r.partial}</td>
+                    <td style="color:${r.failed>0?'#dc3545':'inherit'};font-weight:${r.failed>0?700:400}">${r.failed}</td>
+                    <td><strong style="color:${r.compPct>=90?'#28a745':r.compPct>=70?'#ffc107':'#dc3545'}">${r.compPct}%</strong></td>
+                    <td>${r.avgDur > 0 ? r.avgDur+' min' : '—'}</td>
+                    <td style="color:${r.slaBreaches>0?'#dc3545':'#28a745'};font-weight:700">${r.slaBreaches>0?'⚠️ '+r.slaBreaches:'✅ 0'}</td>
+                </tr>`).join('')}
+            </tbody>
+        </table>
+        <div style="text-align:center;margin-top:16px;font-size:11px;color:#999;">SLA window: Backup must start by ${sla.startBy}, end by ${sla.endBy}, max ${sla.maxMinutes} min duration</div>`;
+}
+
+function printMonthlyReport() {
+    document.querySelector('#monthlyReportModal .print-header').style.display = 'block';
+    window.print();
+    setTimeout(() => document.querySelector('#monthlyReportModal .print-header').style.display = 'none', 500);
+}
+
+function exportReportCSV() {
+    const content = document.querySelector('#monthlyReportContent table');
+    if (!content) return showToast('Generate a report first.', 'warning');
+    const rows = [...content.querySelectorAll('tr')].map(tr =>
+        [...tr.querySelectorAll('th,td')].map(c => `"${c.textContent.replace(/"/g,'""').trim()}"`).join(',')
+    );
+    const blob = new Blob([rows.join('\n')], { type:'text/csv' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href=url; a.download=`Monthly_Report_${document.getElementById('reportMonth').value}.csv`; a.click();
+    URL.revokeObjectURL(url);
+}
+
+/* ──────────────────────────────────────────
+   FEATURE 7 — BACKUP TIME TREND CHART
+────────────────────────────────────────── */
+function renderBackupTrendChart() {
+    const section = document.getElementById('backupTrendSection');
+    if (!section) return;
+    section.style.display = 'block';
+    const all     = proGetLog();
+    const opNames = initialOperators.map(io => io.name);
+    const colors  = ['#94C83D','#007bff','#e83e8c','#fd7e14','#6f42c1','#17a2b8','#28a745','#dc3545'];
+
+    // Collect all unique dates sorted
+    const datesSet = new Set();
+    opNames.forEach(n => Object.keys(all[n] || {}).forEach(d => datesSet.add(d)));
+    const dates = [...datesSet].sort().slice(-30); // last 30 logged days
+
+    const datasets = opNames.map((name, i) => ({
+        label: name.split(' ')[0],
+        data: dates.map(d => {
+            const v = (all[name] || {})[d];
+            if (!v || !v.startTime || !v.endTime) return null;
+            const [sh,sm] = v.startTime.split(':').map(Number);
+            const [eh,em] = v.endTime.split(':').map(Number);
+            return (eh*60+em)-(sh*60+sm);
+        }),
+        borderColor: colors[i % colors.length],
+        backgroundColor: colors[i % colors.length] + '22',
+        tension: 0.4,
+        spanGaps: true,
+        pointRadius: 4,
+    }));
+
+    const ctx = document.getElementById('backupTrendChart');
+    if (!ctx) return;
+    if (window._backupTrendChartInst) window._backupTrendChartInst.destroy();
+    window._backupTrendChartInst = new Chart(ctx, {
+        type: 'line',
+        data: { labels: dates.map(d => formatDate(d)), datasets },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position:'top' },
+                tooltip: { callbacks: { label: c => `${c.dataset.label}: ${c.parsed.y} min` } }
+            },
+            scales: {
+                y: { beginAtZero:true, title:{ display:true, text:'Duration (minutes)' } },
+                x: { ticks: { maxRotation:45 } }
+            }
+        }
+    });
+}
+
+/* ──────────────────────────────────────────
+   FEATURE 8 — SLA CONFIGURATION
+────────────────────────────────────────── */
+function openSlaConfig() {
+    if (!isAdmin) return;
+    const sla = proGetSla();
+    document.getElementById('slaStartBy').value     = sla.startBy;
+    document.getElementById('slaEndBy').value       = sla.endBy;
+    document.getElementById('slaMaxDuration').value = sla.maxMinutes;
+    document.getElementById('slaConfigModal').style.display = 'block';
+}
+
+function closeSlaConfigModal() { document.getElementById('slaConfigModal').style.display = 'none'; }
+
+function saveSlaConfig() {
+    const startBy    = document.getElementById('slaStartBy').value;
+    const endBy      = document.getElementById('slaEndBy').value;
+    const maxMinutes = parseInt(document.getElementById('slaMaxDuration').value);
+    if (!startBy || !endBy || isNaN(maxMinutes)) return showToast('Please fill all SLA fields.', 'warning');
+    proSet(PRO_KEYS.slaConfig, { startBy, endBy, maxMinutes });
+    logAuditAction('SLA_CONFIG', `SLA updated: start by ${startBy}, end by ${endBy}, max ${maxMinutes} min`);
+    closeSlaConfigModal();
+    showToast('⏱️ SLA configuration saved.', 'success');
+}
+
+/* ──────────────────────────────────────────
+   FEATURE 9 — ISSUE TRACKER (notes on failed days)
+   (Integrated into Daily Log — see dailyLogNotes field)
+   Admin view in Log History filtered by Failed outcome
+────────────────────────────────────────── */
+function openIssueTracker() {
+    viewMyLogHistory();
+    setTimeout(() => {
+        document.getElementById('logHistoryOutcomeFilter').value = 'Failed';
+        renderLogHistory();
+    }, 100);
+}
+
+/* ──────────────────────────────────────────
+   FEATURE 10 — REAL-TIME COUNTDOWN IN TOPBAR
+────────────────────────────────────────── */
+let _countdownInterval = null;
+
+function startLiveCountdown() {
+    stopLiveCountdown();
+    const el = document.getElementById('topbarLiveCountdown');
+    if (!el) return;
+
+    function tick() {
+        const now = new Date();
+        // Find active shift end or next shift start
+        const active = operators.find(op => {
+            const s = getCleanDate(op.start), e = getCleanDate(op.end);
+            return now >= s && now <= new Date(e.getTime() + 86400000) && op.status === 'Active';
+        });
+        const next = operators.find(op => getCleanDate(op.start).getTime() > now.getTime() && op.status === 'Active');
+
+        let target, label;
+        if (active) {
+            // Countdown to end of active shift (midnight on end date)
+            target = new Date(getCleanDate(active.end).getTime() + 86400000);
+            label  = `⏳ ${active.name.split(' ')[0]}'s shift ends`;
+        } else if (next) {
+            target = getCleanDate(next.start);
+            label  = `⏭️ ${next.name.split(' ')[0]}'s shift starts`;
+        } else {
+            el.innerHTML = ''; return;
+        }
+
+        const diff = target - now;
+        if (diff <= 0) { el.innerHTML = ''; return; }
+
+        const d = Math.floor(diff / 86400000);
+        const h = Math.floor((diff % 86400000) / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const s = Math.floor((diff % 60000) / 1000);
+
+        el.innerHTML = `<span class="topbar-countdown">${label}: ${d>0?d+'d ':''} ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}</span>`;
+    }
+
+    tick();
+    _countdownInterval = setInterval(tick, 1000);
+}
+
+function stopLiveCountdown() {
+    if (_countdownInterval) { clearInterval(_countdownInterval); _countdownInterval = null; }
+}
+
+/* ──────────────────────────────────────────
+   FEATURE 11 — SHIFT PROGRESS BAR IN TABLE
+   (already partially in existing code — enhanced here)
+────────────────────────────────────────── */
+// buildShiftProgressBar is defined below — using the same enhanced version
+
+/* ──────────────────────────────────────────
+   FEATURE 12 — PRINT-READY SCHEDULE
+────────────────────────────────────────── */
+function printSchedule() {
+    // Inject a print header temporarily
+    const printHeader = document.createElement('div');
+    printHeader.id = '_printHeader';
+    printHeader.style.cssText = 'text-align:center;padding:16px 0 12px;border-bottom:2px solid #333;margin-bottom:16px;';
+    printHeader.innerHTML = `
+        <div style="font-size:22px;font-weight:900;color:#333;">OROMIA BANK</div>
+        <div style="font-size:15px;font-weight:700;margin-top:4px;">Backup Operators Schedule</div>
+        <div style="font-size:12px;color:#666;margin-top:4px;">Printed: ${new Date().toLocaleString('en-US',{day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'})}</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;font-size:11px;border-top:1px solid #eee;padding-top:10px;">
+            <div><strong>Prepared by:</strong> ${loggedInUser}</div>
+            <div><strong>Total Operators:</strong> ${initialOperators.length}</div>
+            <div><strong>Active Shifts:</strong> ${operators.filter(o=>o.status==='Active').length}</div>
+        </div>`;
+    const tableContainer = document.getElementById('scheduleView');
+    tableContainer.insertBefore(printHeader, tableContainer.firstChild);
+    window.print();
+    setTimeout(() => { if (document.getElementById('_printHeader')) document.getElementById('_printHeader').remove(); }, 800);
+    logAuditAction('PRINT_SCHEDULE', `Schedule printed by ${loggedInUser}`);
+}
+
+/* ──────────────────────────────────────────
+   FEATURE 13 — KEYBOARD NAVIGATION
+────────────────────────────────────────── */
+(function initKeyboardNav() {
+    let selectedRow = -1;
+
+    document.addEventListener('keydown', function(e) {
+        if (!loggedInUser) return;
+        // Ignore when typing in an input/textarea
+        if (['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) return;
+
+        const rows = [...document.querySelectorAll('#scheduleTable tbody tr')];
+        if (!rows.length) return;
+
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            selectedRow = Math.min(selectedRow + 1, rows.length - 1);
+            rows.forEach((r,i) => r.style.outline = i === selectedRow ? '2px solid #94C83D' : '');
+            rows[selectedRow].scrollIntoView({ block:'nearest' });
+        }
+        if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            selectedRow = Math.max(selectedRow - 1, 0);
+            rows.forEach((r,i) => r.style.outline = i === selectedRow ? '2px solid #94C83D' : '');
+            rows[selectedRow].scrollIntoView({ block:'nearest' });
+        }
+        if (e.key === 'Enter' && selectedRow >= 0 && rows[selectedRow]) {
+            rows[selectedRow].click();
+        }
+        if (e.key === 'Escape') {
+            selectedRow = -1;
+            rows.forEach(r => r.style.outline = '');
+        }
+
+        // Global shortcuts (only when not in a modal)
+        const anyModalOpen = [...document.querySelectorAll('.modal')].some(m => m.style.display === 'block');
+        if (!anyModalOpen) {
+            // Ctrl+P — print schedule
+            if ((e.ctrlKey||e.metaKey) && e.key === 'p' && loggedInUser) { e.preventDefault(); printSchedule(); }
+            // Ctrl+G — gap detection
+            if ((e.ctrlKey||e.metaKey) && e.key === 'g' && isAdmin)       { e.preventDefault(); openGapAlert(); }
+            // Ctrl+R — monthly report
+            if ((e.ctrlKey||e.metaKey) && e.key === 'r' && (isAdmin||isManager)) { e.preventDefault(); openMonthlyReport(); }
+            // Ctrl+L — daily log
+            if ((e.ctrlKey||e.metaKey) && e.key === 'l' && isOperator)    { e.preventDefault(); openDailyLogModal(); }
+        }
+    });
+
+    // Reset row selection when table re-renders — patch via postRender hook
+    // instead of wrapping renderTable again to avoid breaking the existing chain.
+    const _existingRender = typeof renderTable === 'function' ? renderTable : null;
+    if (_existingRender) {
+        renderTable = function() {
+            selectedRow = -1;
+            rows.forEach(r => { try { r.style.outline = ''; } catch(e){} });
+            _existingRender.apply(this, arguments);
+        };
+    }
+})();
+
+/* ──────────────────────────────────────────
+   WIRING — inject HTML elements & hook into
+   existing app lifecycle
+────────────────────────────────────────── */
+
+// Inject Role Dashboard container right after KPI bar
+(function injectDashboardContainer() {
+    const kpiBar = document.getElementById('kpiBar');
+    if (!kpiBar) return;
+    const div = document.createElement('div');
+    div.id = 'roleDashboard';
+    div.className = 'role-dashboard';
+    div.innerHTML = `
+        <div class="role-dashboard-header">
+            <div class="role-dash-avatar"></div>
+            <div>
+                <div class="role-dash-title"></div>
+                <div class="role-dash-sub"></div>
+            </div>
+            <div class="role-dash-time"></div>
+        </div>
+        <div class="role-dashboard-body"></div>`;
+    kpiBar.insertAdjacentElement('afterend', div);
+})();
+
+// Inject Backup Trend Chart section after completion chart
+(function injectTrendSection() {
+    const compSec = document.getElementById('completionChartSection');
+    if (!compSec) return;
+    const div = document.createElement('div');
+    div.id    = 'backupTrendSection';
+    div.style.cssText = 'display:none;max-width:1000px;margin:0 auto 20px auto;';
+    div.innerHTML = `
+        <div style="background:#fff;border-radius:14px;box-shadow:0 4px 20px rgba(0,0,0,0.1);overflow:hidden;">
+            <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;">
+                <div style="display:flex;align-items:center;gap:10px;color:#fff;">
+                    <span style="font-size:20px;">📈</span>
+                    <div><div style="font-weight:800;font-size:14px;">Backup Duration Trend</div>
+                         <div style="font-size:11px;opacity:.65;">Average backup time per operator over last 30 logged days</div></div>
+                </div>
+                <button onclick="document.getElementById('backupTrendSection').style.display='none'"
+                        style="background:rgba(255,255,255,0.15);border:none;color:#fff;border-radius:8px;padding:5px 10px;cursor:pointer;font-size:12px;">✕</button>
+            </div>
+            <div style="padding:18px;"><canvas id="backupTrendChart" height="110"></canvas></div>
+        </div>`;
+    compSec.insertAdjacentElement('afterend', div);
+})();
+
+// Inject live countdown span into topbar
+(function injectCountdownSpan() {
+    const actions = document.getElementById('topbarActions');
+    if (!actions) return;
+    const span = document.createElement('span');
+    span.id = 'topbarLiveCountdown';
+    actions.insertBefore(span, actions.firstChild);
+})();
+
+// Inject Print Schedule & Issue Tracker buttons into topbar
+(function injectTopbarButtons() {
+    const actions = document.getElementById('topbarActions');
+    if (!actions) return;
+    const logoutBtn = document.getElementById('topbarLogoutBtn');
+
+    const printBtn = document.createElement('button');
+    printBtn.className = 'topbar-btn';
+    printBtn.id        = 'topbarPrintScheduleBtn';
+    printBtn.innerHTML = '🖨️ Print Schedule';
+    printBtn.onclick   = printSchedule;
+
+    const issueBtn = document.createElement('button');
+    issueBtn.className = 'topbar-btn';
+    issueBtn.id        = 'topbarIssueBtn';
+    issueBtn.innerHTML = '🐛 Issues';
+    issueBtn.onclick   = openIssueTracker;
+
+    const trendBtn = document.createElement('button');
+    trendBtn.className = 'topbar-btn';
+    trendBtn.id        = 'topbarTrendBtn';
+    trendBtn.innerHTML = '📈 Trend';
+    trendBtn.onclick   = () => {
+        renderBackupTrendChart();
+        document.getElementById('backupTrendSection').scrollIntoView({ behavior:'smooth' });
+    };
+
+    if (logoutBtn) {
+        actions.insertBefore(trendBtn, logoutBtn);
+        actions.insertBefore(issueBtn, logoutBtn);
+        actions.insertBefore(printBtn, logoutBtn);
+    } else {
+        actions.appendChild(printBtn);
+        actions.appendChild(issueBtn);
+        actions.appendChild(trendBtn);
+    }
+})();
+
+// Hook into existing authenticate / show-dashboard lifecycle
+// (merged with existing override at top of this script block)
+// showStickyTopbar and hideStickyTopbar are already wrapped above.
+// We extend them here by patching the current window version.
+(function extendStickyTopbarHooks() {
+    const _prev = window.showStickyTopbar;
+    window.showStickyTopbar = function() {
+        if (_prev) _prev.apply(this, arguments);
+        injectRoleDashboard();
+        startLiveCountdown();
+        if (isOperator) {
+            const el = document.getElementById('topbarIssueBtn');
+            if (el) el.style.display = '';
+        }
+        if (!isAdmin && !isManager) {
+            const el = document.getElementById('topbarTrendBtn');
+            if (el) el.style.display = 'none';
+        }
+    };
+
+    const _prevHide = window.hideStickyTopbar;
+    window.hideStickyTopbar = function() {
+        if (_prevHide) _prevHide.apply(this, arguments);
+        stopLiveCountdown();
+        const db = document.getElementById('roleDashboard');
+        if (db) db.classList.remove('visible');
+    };
+})();
+
+// Hook markShiftFinished to use handover flow for operators
+const _origMarkShiftFinished = window.markShiftFinished;
+window.markShiftFinished = function(globalIndex) {
+    if (isOperator) {
+        // Use handover flow instead of direct finish
+        openHandoverModal(globalIndex);
+    } else if (_origMarkShiftFinished) {
+        _origMarkShiftFinished.apply(this, arguments);
+    }
+};
+
+// Add Handover button in admin panel section 1
+(function injectAdminHandoverBtn() {
+    const grid = document.querySelector('[data-section="schedule"] .admin-btn-grid');
+    if (!grid) return;
+    const btn = document.createElement('button');
+    btn.className = 'admin-btn btn-teal';
+    btn.innerHTML = '🤝 View Handovers';
+    btn.onclick   = openHandoverHistory;
+    grid.appendChild(btn);
+
+    const swapBtn = document.createElement('button');
+    swapBtn.className = 'admin-btn btn-blue';
+    swapBtn.innerHTML = '🔄 Swap Requests';
+    swapBtn.onclick   = openSwapApprovals;
+    grid.appendChild(swapBtn);
+
+    const gapBtn = document.createElement('button');
+    gapBtn.className = 'admin-btn btn-red';
+    gapBtn.innerHTML = '⚠️ Coverage Gaps';
+    gapBtn.onclick   = openGapAlert;
+    grid.appendChild(gapBtn);
+
+    const reportBtn = document.createElement('button');
+    reportBtn.className = 'admin-btn btn-purple';
+    reportBtn.innerHTML = '📊 Monthly Report';
+    reportBtn.onclick   = openMonthlyReport;
+    grid.appendChild(reportBtn);
+
+    const slaBtn = document.createElement('button');
+    slaBtn.className = 'admin-btn btn-orange';
+    slaBtn.innerHTML = '⏱️ SLA Config';
+    slaBtn.onclick   = openSlaConfig;
+    grid.appendChild(slaBtn);
+
+    const issueBtn = document.createElement('button');
+    issueBtn.className = 'admin-btn btn-gray';
+    issueBtn.innerHTML = '🐛 Issue Tracker';
+    issueBtn.onclick   = openIssueTracker;
+    grid.appendChild(issueBtn);
+
+    const logBtn = document.createElement('button');
+    logBtn.className = 'admin-btn btn-green';
+    logBtn.innerHTML = '📓 All Backup Logs';
+    logBtn.onclick   = viewMyLogHistory;
+    grid.appendChild(logBtn);
+})();
+
+function openHandoverHistory() {
+    const handovers = proGetHandovers();
+    const content   = `
+        <div class="modal-content" style="max-width:660px;border-radius:14px;padding:0;overflow:hidden;">
+            <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);padding:16px 20px;color:#fff;display:flex;align-items:center;justify-content:space-between;">
+                <div style="font-weight:800;">🤝 Handover History</div>
+                <span onclick="this.closest('.modal').style.display='none'" style="cursor:pointer;font-size:22px;">&times;</span>
+            </div>
+            <div style="padding:18px;max-height:500px;overflow-y:auto;">
+                ${handovers.length === 0
+                    ? '<p style="text-align:center;color:#999;padding:30px;">No handover records found.</p>'
+                    : handovers.map(h => `
+                        <div class="handover-entry">
+                            <div style="font-weight:700;font-size:13px;">${h.fromOperator} → ${h.toOperator}</div>
+                            <div style="font-size:12px;color:#666;margin-top:3px;">Shift: ${formatDate(h.shiftStart)} – ${formatDate(h.shiftEnd)}</div>
+                            <div style="font-size:12px;color:#555;margin-top:3px;white-space:pre-wrap;">${h.notes}</div>
+                            <div style="font-size:11px;color:#999;margin-top:4px;">Confirmed by ${h.confirmedBy} on ${new Date(h.timestamp).toLocaleString()}</div>
+                        </div>`).join('')}
+            </div>
+        </div>`;
+    const modal       = document.createElement('div');
+    modal.className   = 'modal';
+    modal.style.display = 'block';
+    modal.innerHTML   = content;
+    modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+    document.body.appendChild(modal);
+}
+
+// Update help modal keyboard shortcuts
+(function extendHelpModal() {
+    const helpContent = document.querySelector('#helpModal .modal-content');
+    if (!helpContent) return;
+    const extra = document.createElement('div');
+    extra.style.marginTop = '16px';
+    extra.innerHTML = `
+        <h4 style="margin:0 0 8px;color:#333;">🚀 New Professional Shortcuts</h4>
+        <ul style="margin:0;padding-left:20px;font-size:13px;line-height:1.9;">
+            <li><span class="kbd">↑</span> <span class="kbd">↓</span> Navigate table rows</li>
+            <li><span class="kbd">Enter</span> Open detail for selected row</li>
+            <li><span class="kbd">Ctrl+P</span> Print schedule</li>
+            <li><span class="kbd">Ctrl+G</span> Coverage gap check <em>(admin)</em></li>
+            <li><span class="kbd">Ctrl+R</span> Monthly report <em>(admin/manager)</em></li>
+            <li><span class="kbd">Ctrl+L</span> Daily log entry <em>(operator)</em></li>
+        </ul>`;
+    helpContent.appendChild(extra);
+})();
+
+console.log('✅ Professional advancement features loaded (13 features).');
 </script>
 </body>
 </html>

@@ -790,10 +790,10 @@ body:not(.login-active) {
     text-align: center;
     animation: slideUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), containerGlow 4s ease-in-out infinite alternate, float3D 6s ease-in-out infinite;
     position: relative;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     margin: 20px;
     max-height: calc(100vh - 40px);
-    overflow-y: auto;
     border: 2px solid rgba(255, 255, 255, 0.2);
     transform-style: preserve-3d;
     transition: transform 0.3s ease;
@@ -1975,10 +1975,6 @@ tbody tr {
 
 .backup-info strong {
     color: #333;
-}
-
-.backup-status-buttons {
-    margin-bottom: 20px;
 }
 
 .backup-status-buttons h4 {
@@ -7644,7 +7640,7 @@ async function sendEmailNotification(operatorData, shiftData, notificationType =
 
     // Ensure config is loaded (in case called before initAdvancedFeatures)
     if (!EMAIL_API_CONFIG.serviceId)  EMAIL_API_CONFIG.serviceId  = 'service_lsvcr99';
-    if (!EMAIL_API_CONFIG.templateId) EMAIL_API_CONFIG.templateId = 'template_1s9it4q';
+    if (!EMAIL_API_CONFIG.templateId) EMAIL_API_CONFIG.templateId = 'template_1x9it4q';
     if (!EMAIL_API_CONFIG.publicKey)  EMAIL_API_CONFIG.publicKey  = 'AkOxQ1p_UcC3AvL1N';
 
     // Re-init EmailJS just in case
@@ -9219,12 +9215,6 @@ function enhanceLoginButton() {
 }
 
 // Initialize advanced features when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    // createFloatingParticles(); // DISABLED - per user request (removes moving dots)
-    enhanceInputInteractions();
-    enhanceLoginButton();
-});
-
 // Add CSS animations for new effects
 const advancedStyles = `
     @keyframes ripple {
@@ -11501,15 +11491,6 @@ function downloadPdf() {
     
     doc.save("Backup_Operators_Schedule.pdf");
     logAuditAction('DOWNLOAD', `PDF schedule downloaded by ${loggedInUser}.`);
-}
-
-// --- HELP MODAL FUNCTIONS ---
-function showHelpModal() {
-    document.getElementById('helpModal').style.display = 'block';
-}
-
-function closeHelpModal() {
-    document.getElementById('helpModal').style.display = 'none';
 }
 
 // --- NOTIFICATION CONFIGURATION FUNCTIONS ---

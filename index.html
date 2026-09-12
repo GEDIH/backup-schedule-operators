@@ -13918,6 +13918,48 @@ function exportLogHistoryCSV() {
 }
 
 /* ──────────────────────────────────────────
+   MERGED LOG HELPER
+   Returns combined proBackupLog + legacy backup_ entries
+   so monthly report and trend chart have full history
+────────────────────────────────────────── */
+function getMergedLogForOperator(opName) {
+    // Start with new proBackupLog entries
+    const merged = Object.assign({}, (proGetLog()[opName] || {}));
+
+    // Pull in legacy backup_ keys if not already covered
+    const statusMap = {
+        'Completely Backed Up': 'Completed',
+        'Issue Encountered':    'Failed',
+        'Holiday':              'Holiday',
+        'Weekend / Day Off':    'Weekend',
+        'Weekend':              'Weekend',
+    };
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (!key || !key.startsWith(`backup_${opName}_`)) continue;
+        try {
+            const v    = JSON.parse(localStorage.getItem(key));
+            const date = v.date || key.replace(`backup_${opName}_`, '').replace(/_/g, '-');
+            // Normalise date to YYYY-MM-DD if possible
+            const dt = new Date(date);
+            const normDate = isNaN(dt) ? date : dt.toISOString().split('T')[0];
+            if (!merged[normDate]) {
+                merged[normDate] = {
+                    startTime:   v.startTime || '',
+                    endTime:     v.endTime   || '',
+                    outcome:     statusMap[v.status] || 'Completed',
+                    notes:       v.notes     || '',
+                    slaBreached: false,
+                    savedAt:     v.lastUpdated || '',
+                    legacy:      true
+                };
+            }
+        } catch (_) {}
+    }
+    return merged;
+}
+
+/* ──────────────────────────────────────────
    FEATURE 5 — COVERAGE GAP DETECTION
 ────────────────────────────────────────── */
 function detectCoverageGaps() {
@@ -13973,12 +14015,12 @@ function generateMonthlyReport() {
     const monthEnd   = new Date(yr, mo, 0);
     const monthName  = monthStart.toLocaleDateString('en-US',{month:'long',year:'numeric'});
 
-    const all    = proGetLog();
+    const all    = proGetLog(); // kept for legacy compat — report uses getMergedLogForOperator
     const sla    = proGetSla();
     const rows   = [];
 
     initialOperators.forEach(io => {
-        const opLogs = all[io.name] || {};
+        const opLogs = getMergedLogForOperator(io.name);
         let completed=0, partial=0, failed=0, holiday=0, weekend=0, slaBreaches=0, totalDur=0, durCount=0;
         const entries = Object.entries(opLogs).filter(([d]) => {
             const dt = new Date(d);
